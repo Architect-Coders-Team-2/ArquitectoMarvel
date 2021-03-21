@@ -1,3 +1,6 @@
+# variables no expuestas (api keys, etc.)
+app/secret.properties
+
 # Built application files
 *.apk
 *.aar
