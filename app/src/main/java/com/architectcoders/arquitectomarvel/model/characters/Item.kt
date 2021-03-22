@@ -1,9 +1,9 @@
-package com.architectcoders.arquitectomarvel.model.personajes
+package com.architectcoders.arquitectomarvel.model.characters
 
 
 import com.google.gson.annotations.SerializedName
 
-data class ItemX(
+data class Item(
     @SerializedName("name")
     val name: String?,
     @SerializedName("resourceURI")

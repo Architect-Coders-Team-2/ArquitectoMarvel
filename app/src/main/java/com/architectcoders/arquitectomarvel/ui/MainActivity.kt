@@ -2,13 +2,12 @@ package com.architectcoders.arquitectomarvel.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import com.architectcoders.arquitectomarvel.BuildConfig
 import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
 import com.architectcoders.arquitectomarvel.model.MarvelApiRest
-import com.architectcoders.arquitectomarvel.model.TAG
 import com.architectcoders.arquitectomarvel.model.md5
+import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,8 +24,9 @@ class MainActivity : AppCompatActivity() {
         val hash = "$ts$privateKey$publicKey".md5
 
         lifecycleScope.launchWhenResumed {
-            val personajes = MarvelApiRest.service.listPersonajes(ts,publicKey,hash)
-            Log.d(TAG, "onCreate: $personajes")
+            val characters = MarvelApiRest.service.getCharacters(ts,publicKey,hash)
+            Timber.d("characters = $characters")
+            Timber.d("characters.data?.results?.size ${characters.data?.results?.size}")
         }
 
     }

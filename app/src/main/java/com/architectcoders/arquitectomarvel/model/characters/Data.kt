@@ -1,7 +1,6 @@
-package com.architectcoders.arquitectomarvel.model.personajes
+package com.architectcoders.arquitectomarvel.model.characters
 
 
-import com.architectcoders.arquitectomarvel.model.personajes.Result
 import com.google.gson.annotations.SerializedName
 
 data class Data(
