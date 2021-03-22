@@ -1,9 +1,9 @@
-package com.architectcoders.arquitectomarvel.model.personajes
+package com.architectcoders.arquitectomarvel.model.characters
 
 
 import com.google.gson.annotations.SerializedName
 
-data class Comics(
+data class Series(
     @SerializedName("available")
     val available: Int?,
     @SerializedName("collectionURI")

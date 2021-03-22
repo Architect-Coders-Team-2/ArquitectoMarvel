@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.model.personajes
+package com.architectcoders.arquitectomarvel.model.characters
 
 import com.google.gson.annotations.SerializedName
 
@@ -17,4 +17,8 @@ data class Characters(
     val etag: String?,
     @SerializedName("status")
     val status: String?
-)
+) {
+    override fun toString(): String {
+        return "Characters(attributionHTML=$attributionHTML, attributionText=$attributionText, code=$code, copyright=$copyright, `data`=$`data`, etag=$etag, status=$status)"
+    }
+}
