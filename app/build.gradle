@@ -3,6 +3,17 @@ plugins {
     id 'kotlin-android'
 }
 
+/**
+ * Método que devuelve un objeto properties para consultar valores puestos en un archivo no expuesto en git (declarado en .gitignore)
+ * El archivo debe llamarse secret.properties y encontrarse al nivel de este build.gradle (ArquitectoMarvel/app/secret.properties)
+ * Se llamarán MARVEL_API_KEY y MARVEL_PRIVATE_KEY
+ * Registrarse en: https://www.marvel.com/signin?referer=https%3A%2F%2Fdeveloper.marvel.com%2Fdocumentation%2Fauthorization para su obtención
+ * Los valores se añaden sin comillas en secret.properties, tal que así:
+ * MARVEL_API_KEY=asas1121sdsd343
+ * MARVEL_PRIVATE_KEY=dfdfeerer3434gdgd
+ * todo: (eliminar comentarío una vez validado pull request por el equipo)
+ * @return
+ */
 def secretProperties() {
     def file = file("secret.properties")
     def properties = new Properties()
