@@ -1,13 +1,15 @@
 package com.architectcoders.arquitectomarvel.model.characters
 
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class ItemStories(
-    @SerializedName("name")
-    val name: String?,
-    @SerializedName("resourceURI")
+    @Json(name = "resourceURI")
     val resourceURI: String?,
-    @SerializedName("type")
+    @Json(name = "name")
+    val name: String?,
+    @Json(name = "type")
     val type: String?
 )

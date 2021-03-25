@@ -1,11 +1,13 @@
 package com.architectcoders.arquitectomarvel.model.characters
 
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class Item(
-    @SerializedName("name")
-    val name: String?,
-    @SerializedName("resourceURI")
-    val resourceURI: String?
+    @Json(name = "resourceURI")
+    val resourceURI: String?,
+    @Json(name = "name")
+    val name: String?
 )

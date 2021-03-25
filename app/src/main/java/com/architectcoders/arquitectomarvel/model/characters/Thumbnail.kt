@@ -1,11 +1,13 @@
 package com.architectcoders.arquitectomarvel.model.characters
 
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class Thumbnail(
-    @SerializedName("extension")
-    val extension: String?,
-    @SerializedName("path")
-    val path: String?
+    @Json(name = "path")
+    val path: String?,
+    @Json(name = "extension")
+    val extension: String?
 )
