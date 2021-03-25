@@ -1,17 +1,19 @@
 package com.architectcoders.arquitectomarvel.model.characters
 
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class Data(
-    @SerializedName("count")
-    val count: Int?,
-    @SerializedName("limit")
-    val limit: Int?,
-    @SerializedName("offset")
+    @Json(name = "offset")
     val offset: Int?,
-    @SerializedName("results")
-    val results: List<Result>?,
-    @SerializedName("total")
-    val total: Int?
+    @Json(name = "limit")
+    val limit: Int?,
+    @Json(name = "total")
+    val total: Int?,
+    @Json(name = "count")
+    val count: Int?,
+    @Json(name = "results")
+    val results: List<Result>?
 )

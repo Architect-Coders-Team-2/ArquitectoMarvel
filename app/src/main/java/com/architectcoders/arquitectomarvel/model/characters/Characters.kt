@@ -1,24 +1,23 @@
 package com.architectcoders.arquitectomarvel.model.characters
 
-import com.google.gson.annotations.SerializedName
 
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
 data class Characters(
-    @SerializedName("attributionHTML")
-    val attributionHTML: String?,
-    @SerializedName("attributionText")
-    val attributionText: String?,
-    @SerializedName("code")
+    @Json(name = "code")
     val code: Int?,
-    @SerializedName("copyright")
+    @Json(name = "status")
+    val status: String?,
+    @Json(name = "copyright")
     val copyright: String?,
-    @SerializedName("data")
-    val `data`: Data?,
-    @SerializedName("etag")
+    @Json(name = "attributionText")
+    val attributionText: String?,
+    @Json(name = "attributionHTML")
+    val attributionHTML: String?,
+    @Json(name = "etag")
     val etag: String?,
-    @SerializedName("status")
-    val status: String?
-) {
-    override fun toString(): String {
-        return "Characters(attributionHTML=$attributionHTML, attributionText=$attributionText, code=$code, copyright=$copyright, `data`=$`data`, etag=$etag, status=$status)"
-    }
-}
+    @Json(name = "data")
+    val `data`: Data?
+)

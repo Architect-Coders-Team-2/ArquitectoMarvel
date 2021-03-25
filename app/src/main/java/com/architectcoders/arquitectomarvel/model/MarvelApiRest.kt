@@ -3,7 +3,7 @@ package com.architectcoders.arquitectomarvel.model
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 object MarvelApiRest {
 
@@ -15,7 +15,7 @@ object MarvelApiRest {
     val service: ApiService = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .client(okHttpClient)
-        .addConverterFactory(GsonConverterFactory.create())
+        .addConverterFactory(MoshiConverterFactory.create())
         .build()
         .run {
             create(ApiService::class.java)
