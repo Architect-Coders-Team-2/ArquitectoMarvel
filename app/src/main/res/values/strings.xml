@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ArquitectoMarvel</string>
+
+    <!-- Content descriptions -->
+    <string name="add_to_favorites_button">Add to favorites button</string>
+    <string name="hero_image">Hero image</string>
+
 </resources>
