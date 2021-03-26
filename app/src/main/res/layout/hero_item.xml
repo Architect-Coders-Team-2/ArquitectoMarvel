@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/hero_image"
         android:src="@mipmap/ic_launcher"
+        android:adjustViewBounds="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,6 +24,7 @@
         android:background="@color/primaryColor"
         android:ellipsize="end"
         android:gravity="center"
+        android:minLines="2"
         android:maxLines="2"
         android:padding="5dp"
         android:textColor="@color/primaryTextColor"

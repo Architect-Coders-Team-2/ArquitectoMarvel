@@ -1,13 +1,16 @@
-package com.architectcoders.arquitectomarvel.ui
+package com.architectcoders.arquitectomarvel
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.architectcoders.arquitectomarvel.BuildConfig
+import androidx.recyclerview.widget.GridLayoutManager
 import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
 import com.architectcoders.arquitectomarvel.model.MarvelApiRest
+import com.architectcoders.arquitectomarvel.model.characters.Result
 import com.architectcoders.arquitectomarvel.model.md5
+import com.architectcoders.arquitectomarvel.ui.main.AdapterList
 import timber.log.Timber
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,11 +26,29 @@ class MainActivity : AppCompatActivity() {
         val privateKey = BuildConfig.MARVEL_PRIVATE_KEY
         val hash = "$ts$privateKey$publicKey".md5
 
+
         lifecycleScope.launchWhenResumed {
-            val characters = MarvelApiRest.service.getCharacters(ts,publicKey,hash)
+            val characters = MarvelApiRest.service.getCharacters(ts, publicKey, hash)
             Timber.d("characters = $characters")
             Timber.d("characters.data?.results?.size ${characters.data?.results?.size}")
+
+            showData(characters.data!!.results!!)
+
         }
 
     }
+
+    fun showData(heroList: List<Result>?) {
+
+        binding.mainHeroList.apply {
+            val LayoutManager = GridLayoutManager(this@MainActivity, 5)
+
+            binding.mainHeroList.layoutManager = LayoutManager
+         //   binding.mainHeroList.itemAnimator = DefaultItemAnimator()
+            adapter = AdapterList(this@MainActivity, heroList)
+        }
+
+    }
+
+
 }
