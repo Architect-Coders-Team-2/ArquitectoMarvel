@@ -1,54 +1,44 @@
 package com.architectcoders.arquitectomarvel.ui.main
 
-import android.app.Activity
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.HeroItemBinding
-import com.architectcoders.arquitectomarvel.model.characters.Item
 import com.architectcoders.arquitectomarvel.model.characters.Result
 import com.architectcoders.arquitectomarvel.model.loadUrl
-import com.bumptech.glide.Glide
+import kotlin.properties.Delegates
 
-class AdapterList(val act: Activity, private val services: List<Result>?): RecyclerView.Adapter<AdapterList.ViewHolder>() {
+class AdapterList(val clickListener: ClickListener) :
+    RecyclerView.Adapter<AdapterList.HeroViewHolder>() {
 
-
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.hero_item, parent, false)
-
-        return ViewHolder(view)
+    var services: List<Result> by Delegates.observable(emptyList()) {_, _, _ ->
+        notifyDataSetChanged()
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = services!!.get(position)
-        holder.bind(item, act)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeroViewHolder {
+        val binding = HeroItemBinding
+            .inflate(LayoutInflater.from(parent.context), parent, false)
+        return HeroViewHolder(binding)
     }
 
-    override fun getItemCount(): Int = services!!.size
+    override fun onBindViewHolder(holder: HeroViewHolder, position: Int) {
+        holder.bind(services[position])
+    }
 
-    class ViewHolder(view: View): RecyclerView.ViewHolder(view){
+    override fun getItemCount(): Int = services.size
 
-        private val binding = HeroItemBinding.bind(view)
+    inner class HeroViewHolder(private val binding: HeroItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(mediaService: Result, activity: Activity){
+        fun bind(mediaService: Result) {
             binding.heroText.text = mediaService.name
-            binding.heroImage.loadUrl(mediaService.thumbnail!!.path, mediaService.thumbnail!!.extension)
-
-
-         //   butDetail.setOnClickListener{
-        //        activity.startActivity(Intent(activity, DetailActivity::class.java))
-        //    }
-
-
+            binding.heroImage.loadUrl(
+                mediaService.thumbnail?.path,
+                mediaService.thumbnail?.extension
+            )
+            binding.root.setOnClickListener {
+                clickListener.onClick(mediaService)
+            }
         }
-
-
     }
-
-
-
 }
