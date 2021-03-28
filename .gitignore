@@ -1,4 +1,4 @@
-# variables no expuestas (api keys, etc.)
+# No exposed variables (api keys, etc.)
 app/secret.properties
 
 # Built application files
