@@ -1,6 +1,8 @@
 package com.architectcoders.arquitectomarvel.model
 
 import android.widget.ImageView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.architectcoders.arquitectomarvel.R
 import com.bumptech.glide.Glide
 import java.math.BigInteger
@@ -11,12 +13,16 @@ val String.md5: String get()  {
     return BigInteger(1, md.digest(this.toByteArray())).toString(16).padStart(32, '0')
 }
 
-
 fun ImageView.loadUrl(url: String?, extension: String?) {
     Glide.with(this)
             .asBitmap()
-            .load(url+"/portrait_medium"+"."+extension)
+            .load("$url/portrait_medium.$extension")
             .fitCenter()
             .error(R.drawable.marvel_error)
             .into(this)
+}
+
+fun RecyclerView.autoFitColumnsForGridLayout(columnWidthInDP: Float) {
+    val numberOfColumns: Int = ((resources.displayMetrics.widthPixels / resources.displayMetrics.density) / columnWidthInDP).toInt()
+    layoutManager = GridLayoutManager(context, numberOfColumns)
 }
