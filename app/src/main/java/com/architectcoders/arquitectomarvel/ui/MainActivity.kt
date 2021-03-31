@@ -1,9 +1,11 @@
 package com.architectcoders.arquitectomarvel.ui
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.architectcoders.arquitectomarvel.BuildConfig
+import com.architectcoders.arquitectomarvel.BuildConfig.MARVEL_API_KEY
+import com.architectcoders.arquitectomarvel.BuildConfig.MARVEL_PRIVATE_KEY
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
 import com.architectcoders.arquitectomarvel.model.MarvelApiRest
@@ -26,15 +28,17 @@ class MainActivity : AppCompatActivity(), ClickListener {
         setContentView(binding.root)
 
         val ts = System.currentTimeMillis()
-        val publicKey = BuildConfig.MARVEL_API_KEY
-        val privateKey = BuildConfig.MARVEL_PRIVATE_KEY
+        val publicKey = MARVEL_API_KEY
+        val privateKey = MARVEL_PRIVATE_KEY
         val hash = "$ts$privateKey$publicKey".md5
         initRecyclerView()
 
         lifecycleScope.launchWhenResumed {
+            binding.progress.visibility = View.VISIBLE
             val characters = MarvelApiRest.service.getCharacters(ts, publicKey, hash)
             val results = characters.data?.results ?: emptyList()
             adapterList.submitList(results)
+            binding.progress.visibility = View.GONE
         }
     }
 
