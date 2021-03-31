@@ -9,11 +9,6 @@ import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
 import com.architectcoders.arquitectomarvel.model.MarvelApiRest
 import com.architectcoders.arquitectomarvel.model.autoFitColumnsForGridLayout
 import com.architectcoders.arquitectomarvel.model.characters.Result
-import com.architectcoders.arquitectomarvel.model.database.ResultDatabase
-import com.architectcoders.arquitectomarvel.model.database.dbItemComics
-import com.architectcoders.arquitectomarvel.model.database.dbObject
-import com.architectcoders.arquitectomarvel.model.database.relations.ResultWithItemsComics
-import com.architectcoders.arquitectomarvel.model.database.relations.toListResult
 import com.architectcoders.arquitectomarvel.model.md5
 import com.architectcoders.arquitectomarvel.ui.main.AdapterList
 import com.architectcoders.arquitectomarvel.ui.main.ClickListener
@@ -31,12 +26,14 @@ class MainActivity : AppCompatActivity(), ClickListener {
         setContentView(binding.root)
 
         val ts = System.currentTimeMillis()
-        val publicKey = BuildConfig.MARVEL_API_KEY
-        val privateKey = BuildConfig.MARVEL_PRIVATE_KEY
+        val publicKey = MARVEL_API_KEY
+        val privateKey = MARVEL_PRIVATE_KEY
         val hash = "$ts$privateKey$publicKey".md5
         initRecyclerView()
 
         lifecycleScope.launchWhenResumed {
+
+            binding.progress.visibility = View.VISIBLE
             val characters = MarvelApiRest.service.getCharacters(ts, publicKey, hash)
             val results = characters.data?.results ?: emptyList()
             adapterList.submitList(results)
@@ -60,6 +57,7 @@ class MainActivity : AppCompatActivity(), ClickListener {
             }
 
             adapterList.submitList(listaLocal.toListResult)
+            binding.progress.visibility = View.GONE
         }
     }
 
