@@ -4,16 +4,17 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.architectcoders.arquitectomarvel.databinding.HeroItemBinding
+import com.architectcoders.arquitectomarvel.model.basicDiffUtil
 import com.architectcoders.arquitectomarvel.model.characters.Result
 import com.architectcoders.arquitectomarvel.model.loadUrl
-import kotlin.properties.Delegates
 
 class AdapterList(val clickListener: ClickListener) :
     RecyclerView.Adapter<AdapterList.HeroViewHolder>() {
 
-    var services: List<Result> by Delegates.observable(emptyList()) {_, _, _ ->
-        notifyDataSetChanged()
-    }
+    var services: List<Result> by basicDiffUtil(
+        emptyList(),
+        areContentsTheSame = {old, new -> old.id == new.id}
+    )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeroViewHolder {
         val binding = HeroItemBinding
