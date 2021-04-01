@@ -7,7 +7,11 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class Item(
     @Json(name = "resourceURI")
-    val resourceURI: String?,
+    val resourceURI: String,
     @Json(name = "name")
     val name: String?
-)
+) {
+    override fun toString(): String {
+        return "Item(resourceURI=$resourceURI, name=$name)"
+    }
+}

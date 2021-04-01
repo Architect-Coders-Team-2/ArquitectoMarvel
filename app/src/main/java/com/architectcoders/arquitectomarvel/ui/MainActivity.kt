@@ -9,6 +9,11 @@ import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
 import com.architectcoders.arquitectomarvel.model.MarvelApiRest
 import com.architectcoders.arquitectomarvel.model.autoFitColumnsForGridLayout
 import com.architectcoders.arquitectomarvel.model.characters.Result
+import com.architectcoders.arquitectomarvel.model.database.ResultDatabase
+import com.architectcoders.arquitectomarvel.model.database.dbItemComics
+import com.architectcoders.arquitectomarvel.model.database.dbObject
+import com.architectcoders.arquitectomarvel.model.database.relations.ResultWithItemsComics
+import com.architectcoders.arquitectomarvel.model.database.relations.toListResult
 import com.architectcoders.arquitectomarvel.model.md5
 import com.architectcoders.arquitectomarvel.ui.main.AdapterList
 import com.architectcoders.arquitectomarvel.ui.main.ClickListener
@@ -32,10 +37,26 @@ class MainActivity : AppCompatActivity(), ClickListener {
 
         lifecycleScope.launchWhenResumed {
             val characters = MarvelApiRest.service.getCharacters(ts, publicKey, hash)
-            Timber.d("characters = $characters")
-            Timber.d("characters.data?.results?.size ${characters.data?.results?.size}")
-            (binding.mainHeroList.adapter as AdapterList).services =
-                characters.data?.results ?: emptyList()
+
+            val resultsRemote = characters.data?.results?: emptyList()
+
+            val dao = ResultDatabase.getInstance(this@MainActivity).resultDao
+            resultsRemote.forEach {  result ->
+                dao.insertResult(result.dbObject)
+                val colectionUri = result.comics.collectionURI
+                result.comics.items.forEach { item ->
+                    dao.insertComics(item.dbItemComics(colectionUri))
+                }
+            }
+
+            val listaLocal = mutableListOf<ResultWithItemsComics>()
+            val tmpResult = dao.getResults()
+            tmpResult.forEach {
+                val itemForListaLocal = dao.getResultWithItemsComics(it.comicsCollectionURI)
+                listaLocal.addAll(itemForListaLocal)
+            }
+
+            (binding.mainHeroList.adapter as AdapterList).services = listaLocal.toListResult
         }
     }
 
@@ -46,5 +67,6 @@ class MainActivity : AppCompatActivity(), ClickListener {
 
     override fun onClick(mediaService: Result) {
         //TODO go to hero detail activity
+        Timber.d("qq_MainActivity.onClick: ${mediaService.comics}")
     }
 }
