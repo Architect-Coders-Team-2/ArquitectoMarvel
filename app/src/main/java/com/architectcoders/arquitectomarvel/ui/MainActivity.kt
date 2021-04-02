@@ -2,6 +2,7 @@ package com.architectcoders.arquitectomarvel.ui
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.architectcoders.arquitectomarvel.BuildConfig.MARVEL_API_KEY
@@ -20,6 +21,7 @@ import com.architectcoders.arquitectomarvel.model.md5
 import com.architectcoders.arquitectomarvel.ui.main.AdapterList
 import com.architectcoders.arquitectomarvel.ui.main.ClickListener
 import timber.log.Timber
+import java.net.UnknownHostException
 
 
 class MainActivity : AppCompatActivity(), ClickListener {
@@ -42,16 +44,22 @@ class MainActivity : AppCompatActivity(), ClickListener {
 
             binding.progress.visibility = View.VISIBLE
 
-            val characters = MarvelApiRest.service.getCharacters(ts, publicKey, hash)
-            val resultsRemote = characters.data?.results?: emptyList()
-
             val dao = ResultDatabase.getInstance(this@MainActivity).resultDao
-            resultsRemote.forEach {  result ->
-                dao.insertResult(result.dbObject)
-                val colectionUri = result.comics.collectionURI
-                result.comics.items.forEach { item ->
-                    dao.insertComics(item.dbItemComics(colectionUri))
+            try {
+                val characters = MarvelApiRest.service.getCharacters(ts, publicKey, hash)
+                val resultsRemote = characters.data?.results?: emptyList()
+
+                resultsRemote.forEach {  result ->
+                    dao.insertResult(result.dbObject)
+                    val colectionUri = result.comics.collectionURI
+                    result.comics.items.forEach { item ->
+                        dao.insertComics(item.dbItemComics(colectionUri))
+                    }
                 }
+            } catch (e: UnknownHostException) {
+                Toast.makeText(applicationContext, "Sin conexión (DB data)", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Toast.makeText(applicationContext, "$e", Toast.LENGTH_SHORT).show()
             }
 
             val listaLocal = mutableListOf<ResultWithItemsComics>()
