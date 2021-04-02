@@ -18,6 +18,7 @@ import timber.log.Timber
 class MainActivity : AppCompatActivity(), ClickListener {
 
     private lateinit var binding: ActivityMainBinding
+    private val adapterList by lazy { AdapterList(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,16 +33,14 @@ class MainActivity : AppCompatActivity(), ClickListener {
 
         lifecycleScope.launchWhenResumed {
             val characters = MarvelApiRest.service.getCharacters(ts, publicKey, hash)
-            Timber.d("characters = $characters")
-            Timber.d("characters.data?.results?.size ${characters.data?.results?.size}")
-            (binding.mainHeroList.adapter as AdapterList).services =
-                characters.data?.results ?: emptyList()
+            val results = characters.data?.results ?: emptyList()
+            adapterList.submitList(results)
         }
     }
 
     private fun initRecyclerView() {
         binding.mainHeroList.autoFitColumnsForGridLayout(resources.getDimension(R.dimen.avatar_width))
-        binding.mainHeroList.adapter = AdapterList(this)
+        binding.mainHeroList.adapter = adapterList
     }
 
     override fun onClick(mediaService: Result) {

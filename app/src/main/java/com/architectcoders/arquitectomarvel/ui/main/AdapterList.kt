@@ -2,19 +2,20 @@ package com.architectcoders.arquitectomarvel.ui.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.architectcoders.arquitectomarvel.databinding.HeroItemBinding
-import com.architectcoders.arquitectomarvel.model.basicDiffUtil
 import com.architectcoders.arquitectomarvel.model.characters.Result
 import com.architectcoders.arquitectomarvel.model.loadUrl
 
 class AdapterList(val clickListener: ClickListener) :
-    RecyclerView.Adapter<AdapterList.HeroViewHolder>() {
+    ListAdapter<Result, AdapterList.HeroViewHolder>(DiffCallback) {
 
-    var services: List<Result> by basicDiffUtil(
-        emptyList(),
-        areContentsTheSame = {old, new -> old.id == new.id}
-    )
+    companion object DiffCallback: DiffUtil.ItemCallback<Result>() {
+        override fun areItemsTheSame(oldItem: Result, newItem: Result) = oldItem == newItem
+        override fun areContentsTheSame(oldItem: Result, newItem: Result) = oldItem.id == newItem.id
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeroViewHolder {
         val binding = HeroItemBinding
@@ -23,10 +24,8 @@ class AdapterList(val clickListener: ClickListener) :
     }
 
     override fun onBindViewHolder(holder: HeroViewHolder, position: Int) {
-        holder.bind(services[position])
+        holder.bind(getItem(position))
     }
-
-    override fun getItemCount(): Int = services.size
 
     inner class HeroViewHolder(private val binding: HeroItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
