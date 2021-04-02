@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.architectcoders.arquitectomarvel.BuildConfig
 import com.architectcoders.arquitectomarvel.BuildConfig.MARVEL_API_KEY
 import com.architectcoders.arquitectomarvel.BuildConfig.MARVEL_PRIVATE_KEY
 import com.architectcoders.arquitectomarvel.R
