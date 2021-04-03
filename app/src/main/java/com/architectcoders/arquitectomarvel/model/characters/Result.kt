@@ -7,30 +7,28 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class Result(
     @Json(name = "id")
-    val id: Int?,
+    val id: Int = -1,
     @Json(name = "name")
-    val name: String?,
+    val name: String? = null,
     @Json(name = "description")
-    val description: String?,
+    val description: String? = null,
     @Json(name = "modified")
-    val modified: String?,
+    val modified: String? = null,
     @Json(name = "thumbnail")
-    val thumbnail: Thumbnail?,
+    val thumbnail: Thumbnail? = null,
     @Json(name = "resourceURI")
-    val resourceURI: String?,
+    val resourceURI: String? = null,
     @Json(name = "comics")
-    val comics: Comics?,
+    val comics: Comics = Comics(),
     @Json(name = "series")
-    val series: Series?,
+    val series: Series? = null,
     @Json(name = "stories")
-    val stories: Stories?,
+    val stories: Stories? = null,
     @Json(name = "events")
-    val events: Events?,
+    val events: Events? = null,
     @Json(name = "urls")
-    val urls: List<Url>?
+    val urls: List<Url>? = null
 ) {
-
-    // override for areItemsTheSame method run ok with equals operator '=='
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -53,13 +51,13 @@ data class Result(
     }
 
     override fun hashCode(): Int {
-        var result = id ?: 0
+        var result = id
         result = 31 * result + (name?.hashCode() ?: 0)
         result = 31 * result + (description?.hashCode() ?: 0)
         result = 31 * result + (modified?.hashCode() ?: 0)
         result = 31 * result + (thumbnail?.hashCode() ?: 0)
         result = 31 * result + (resourceURI?.hashCode() ?: 0)
-        result = 31 * result + (comics?.hashCode() ?: 0)
+        result = 31 * result + comics.hashCode()
         result = 31 * result + (series?.hashCode() ?: 0)
         result = 31 * result + (stories?.hashCode() ?: 0)
         result = 31 * result + (events?.hashCode() ?: 0)
@@ -67,3 +65,4 @@ data class Result(
         return result
     }
 }
+
