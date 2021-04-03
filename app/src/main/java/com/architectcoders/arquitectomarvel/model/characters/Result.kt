@@ -1,9 +1,11 @@
 package com.architectcoders.arquitectomarvel.model.characters
 
-
+import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 @JsonClass(generateAdapter = true)
 data class Result(
     @Json(name = "id")
@@ -28,7 +30,7 @@ data class Result(
     val events: Events?,
     @Json(name = "urls")
     val urls: List<Url>?
-) {
+) : Parcelable {
 
     // override for areItemsTheSame method run ok with equals operator '=='
     override fun equals(other: Any?): Boolean {

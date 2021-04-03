@@ -1,5 +1,6 @@
 package com.architectcoders.arquitectomarvel.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -7,13 +8,13 @@ import androidx.lifecycle.lifecycleScope
 import com.architectcoders.arquitectomarvel.BuildConfig
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
+import com.architectcoders.arquitectomarvel.model.EXTRA_MEDIA_SERVICE
 import com.architectcoders.arquitectomarvel.model.MarvelApiRest
 import com.architectcoders.arquitectomarvel.model.autoFitColumnsForGridLayout
 import com.architectcoders.arquitectomarvel.model.characters.Result
 import com.architectcoders.arquitectomarvel.model.md5
 import com.architectcoders.arquitectomarvel.ui.main.AdapterList
 import com.architectcoders.arquitectomarvel.ui.main.ClickListener
-
 
 class MainActivity : AppCompatActivity(), ClickListener {
 
@@ -34,7 +35,7 @@ class MainActivity : AppCompatActivity(), ClickListener {
         lifecycleScope.launchWhenResumed {
             binding.progress.visibility = View.VISIBLE
             val characters = MarvelApiRest.service.getCharacters(ts, publicKey, hash)
-            val results = characters.data?.results ?: emptyList()
+            val results = characters.characterData?.results ?: emptyList()
             adapterList.submitList(results)
             binding.progress.visibility = View.GONE
         }

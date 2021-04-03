@@ -1,9 +1,11 @@
 package com.architectcoders.arquitectomarvel.model.characters
 
-
+import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 @JsonClass(generateAdapter = true)
 data class Characters(
     @Json(name = "code")
@@ -19,5 +21,5 @@ data class Characters(
     @Json(name = "etag")
     val etag: String?,
     @Json(name = "data")
-    val `data`: Data?
-)
+    val characterData: Data?
+) : Parcelable
