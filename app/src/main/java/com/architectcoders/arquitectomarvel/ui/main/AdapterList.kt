@@ -9,7 +9,7 @@ import com.architectcoders.arquitectomarvel.databinding.HeroItemBinding
 import com.architectcoders.arquitectomarvel.model.characters.Result
 import com.architectcoders.arquitectomarvel.model.loadUrl
 
-class AdapterList(val clickListener: ClickListener) :
+class AdapterList(private val listener: (Result) -> Unit) :
     ListAdapter<Result, AdapterList.HeroViewHolder>(DiffCallback) {
 
     companion object DiffCallback: DiffUtil.ItemCallback<Result>() {
@@ -24,7 +24,11 @@ class AdapterList(val clickListener: ClickListener) :
     }
 
     override fun onBindViewHolder(holder: HeroViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val result = getItem(position)
+        holder.bind(result)
+        holder.itemView.setOnClickListener {
+            listener(result)
+        }
     }
 
     inner class HeroViewHolder(private val binding: HeroItemBinding) :
@@ -36,9 +40,6 @@ class AdapterList(val clickListener: ClickListener) :
                 mediaService.thumbnail?.path,
                 mediaService.thumbnail?.extension
             )
-            binding.root.setOnClickListener {
-                clickListener.onClick(mediaService)
-            }
         }
     }
 }
