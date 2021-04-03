@@ -12,7 +12,7 @@ import com.architectcoders.arquitectomarvel.model.loadUrl
 class AdapterList(val clickListener: ClickListener) :
     ListAdapter<Result, AdapterList.HeroViewHolder>(DiffCallback) {
 
-    companion object DiffCallback: DiffUtil.ItemCallback<Result>() {
+    companion object DiffCallback : DiffUtil.ItemCallback<Result>() {
         override fun areItemsTheSame(oldItem: Result, newItem: Result) = oldItem == newItem
         override fun areContentsTheSame(oldItem: Result, newItem: Result) = oldItem.id == newItem.id
     }

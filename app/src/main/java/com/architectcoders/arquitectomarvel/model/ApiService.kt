@@ -12,5 +12,4 @@ interface ApiService {
         @Query("apikey") apikey: String,
         @Query("hash") hash: String
     ): Characters
-
 }

@@ -1,6 +1,5 @@
 package com.architectcoders.arquitectomarvel.model.characters
 
-
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
