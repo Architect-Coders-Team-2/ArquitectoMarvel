@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.ui
+package com.architectcoders.arquitectomarvel.ui.main
 
 import android.os.Bundle
 import android.view.View
