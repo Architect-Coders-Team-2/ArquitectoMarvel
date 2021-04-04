@@ -1,11 +1,11 @@
-name: Android Pull Request CI Test
+name: On PR check Build and Unit Test
 
 on:
   pull_request:
 
 jobs:
   test:
-    name: Run Unit Tests
+    name: Build and Unit Test
     runs-on: ubuntu-18.04
 
     steps:
@@ -14,6 +14,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+
+      - name: Android Build
+        run : bash /.gradlew build
 
       - name: Unit tests
         run: bash ./gradlew test
