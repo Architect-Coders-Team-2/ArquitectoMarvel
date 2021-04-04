@@ -12,7 +12,7 @@ import androidx.room.RoomDatabase
     ],
     version = 1
 )
-abstract class ResultDatabase: RoomDatabase() {
+abstract class ResultDatabase : RoomDatabase() {
 
     abstract val resultDao: ResultDao
 
@@ -21,8 +21,8 @@ abstract class ResultDatabase: RoomDatabase() {
         private var INSTANCE: ResultDatabase? = null
 
         fun getInstance(context: Context): ResultDatabase {
-            synchronized(this) {
-                return INSTANCE ?: Room.databaseBuilder(
+            return INSTANCE ?: synchronized(this) {
+                Room.databaseBuilder(
                     context.applicationContext,
                     ResultDatabase::class.java,
                     "result_db"
