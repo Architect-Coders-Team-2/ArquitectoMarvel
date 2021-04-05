@@ -12,4 +12,8 @@ data class Item(
     val resourceURI: String?,
     @Json(name = "name")
     val name: String?
-) : Parcelable
+) : Parcelable {
+    override fun toString(): String {
+        return "Item(resourceURI=$resourceURI, name=$name)"
+    }
+}
