@@ -1,7 +1,7 @@
-package com.architectcoders.arquitectomarvel.model.database
+package com.architectcoders.arquitectomarvel.model.database.character
 
 import androidx.room.*
-import com.architectcoders.arquitectomarvel.model.database.relations.ResultWithItemsComics
+import com.architectcoders.arquitectomarvel.model.database.character.relations.ResultWithItemsComics
 
 @Dao
 interface ResultDao {

@@ -1,12 +1,12 @@
-package com.architectcoders.arquitectomarvel.model.database.relations
+package com.architectcoders.arquitectomarvel.model.database.character.relations
 
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.architectcoders.arquitectomarvel.model.characters.Comics
 import com.architectcoders.arquitectomarvel.model.characters.Result
-import com.architectcoders.arquitectomarvel.model.database.ItemComics
-import com.architectcoders.arquitectomarvel.model.database.ResultRoom
-import com.architectcoders.arquitectomarvel.model.database.toItems
+import com.architectcoders.arquitectomarvel.model.database.character.ItemComics
+import com.architectcoders.arquitectomarvel.model.database.character.ResultRoom
+import com.architectcoders.arquitectomarvel.model.database.character.toItems
 
 data class ResultWithItemsComics(
 

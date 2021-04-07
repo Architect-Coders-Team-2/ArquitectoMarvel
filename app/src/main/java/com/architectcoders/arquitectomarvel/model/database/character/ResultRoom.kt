@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.model.database
+package com.architectcoders.arquitectomarvel.model.database.character
 
 import androidx.room.Embedded
 import androidx.room.Entity
