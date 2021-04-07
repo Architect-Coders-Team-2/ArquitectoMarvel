@@ -1,9 +1,13 @@
 package com.architectcoders.arquitectomarvel.ui.main
 
+import android.view.View
+import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.model.Repository
 import com.architectcoders.arquitectomarvel.model.characters.Result
-import com.architectcoders.arquitectomarvel.model.database.relations.ResultWithItemsComics
-import com.architectcoders.arquitectomarvel.model.database.relations.toListResult
+import com.architectcoders.arquitectomarvel.model.database.character.dbItemComics
+import com.architectcoders.arquitectomarvel.model.database.character.dbObject
+import com.architectcoders.arquitectomarvel.model.database.character.relations.ResultWithItemsComics
+import com.architectcoders.arquitectomarvel.model.database.character.relations.toListResult
 import com.architectcoders.arquitectomarvel.ui.common.Scope
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -19,8 +23,8 @@ class MainPresenter(private val repository: Repository) : Scope by Scope.Impl() 
         fun hideProgress()
         fun updateData(list: List<Result>)
         fun initViews()
-        fun showToast(msg: String)
-        fun navigateTo(result: Result)
+        fun showToast(msgResource: Int)
+        fun navigateTo(result: Result, view: android.view.View)
     }
 
     fun onCreate(view: View) {
@@ -32,38 +36,37 @@ class MainPresenter(private val repository: Repository) : Scope by Scope.Impl() 
             view.showProgress()
             try {
                 val characters = repository.getCharactersRemote()
-                val resultsRemote = characters.data?.results ?: emptyList()
+                val resultsRemote = characters.characterData?.results ?: emptyList()
 
                 resultsRemote.forEach { result ->
                     dao.insertResult(result.dbObject)
-                    val colectionUri = result.comics.collectionURI
+                    val collectionUri = result.comics.collectionURI
                     result.comics.items.forEach { item ->
-                        dao.insertComics(item.dbItemComics(colectionUri))
+                        dao.insertComics(item.dbItemComics(collectionUri))
                     }
                 }
             } catch (e: UnknownHostException) {
                 Timber.e("qq_MainPresenter.onCreate: $e")
-                view.showToast("Sin conexión (DB data)")
+                view.showToast(R.string.no_internet)
             }
 
-            val listaLocal = mutableListOf<ResultWithItemsComics>()
+            val localList = mutableListOf<ResultWithItemsComics>()
             val tmpResult = dao.getResults()
             tmpResult.forEach {
-                val itemForListaLocal = dao.getResultWithItemsComics(it.comicsCollectionURI)
-                listaLocal.addAll(itemForListaLocal)
+                val itemForLocalList = dao.getResultWithItemsComics(it.comicsCollectionURI)
+                localList.addAll(itemForLocalList)
             }
-            view.updateData(listaLocal.toListResult)
+            view.updateData(localList.toListResult)
             view.hideProgress()
         }
     }
 
-    fun onResultClick(result: Result) {
-        view?.navigateTo(result)
+    fun onResultClick(result: Result, view: android.view.View) {
+        this.view?.navigateTo(result, view)
     }
 
     fun onDestroy() {
         cancelScope()
         view = null
     }
-
 }
