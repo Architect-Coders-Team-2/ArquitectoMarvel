@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
+import androidx.core.view.isVisible
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
 import com.architectcoders.arquitectomarvel.model.EXTRA_SELECTED_HERO
@@ -34,11 +35,11 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
     }
 
     override fun showProgress() {
-        binding.progress.visibility = View.VISIBLE
+        binding.progress.isVisible = true
     }
 
     override fun hideProgress() {
-        binding.progress.visibility = View.GONE
+        binding.progress.isVisible = false
     }
 
     override fun updateData(list: List<Result>) {
