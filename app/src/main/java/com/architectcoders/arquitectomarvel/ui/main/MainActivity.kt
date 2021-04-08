@@ -9,6 +9,7 @@ import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
 import com.architectcoders.arquitectomarvel.model.Repository
 import com.architectcoders.arquitectomarvel.model.autoFitColumnsForGridLayout
 import com.architectcoders.arquitectomarvel.model.characters.Result
+import com.architectcoders.arquitectomarvel.ui.common.NetworkMonitor
 import com.architectcoders.arquitectomarvel.ui.main.AdapterList
 import com.architectcoders.arquitectomarvel.ui.main.MainPresenter
 import timber.log.Timber
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         presenter.onCreate(this)
+        NetworkMonitor(application).startNetworkCallback()
     }
 
     override fun initViews() {
@@ -53,6 +55,7 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
 
     override fun onDestroy() {
         presenter.onDestroy()
+        NetworkMonitor(application).stopNetworkCallback()
         super.onDestroy()
     }
 }
