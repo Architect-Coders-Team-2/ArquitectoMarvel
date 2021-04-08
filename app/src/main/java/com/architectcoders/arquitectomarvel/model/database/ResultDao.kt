@@ -21,12 +21,21 @@ interface ResultDao {
     suspend fun getResultWithItemsComics(comicsCollectionURI: String): List<ResultWithItemsComics>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCharacters(characterEntity: CharacterEntity)
+    suspend fun insertFavoriteCharacter(characterEntity: CharacterEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertDetailedComics(detailedComicEntity: DetailedComicEntity)
+    suspend fun insertFavoriteDetailedComic(detailedComicEntity: DetailedComicEntity)
+
+    @Delete
+    suspend fun deleteFavoriteCharacter(characterEntity: CharacterEntity)
+
+    @Delete
+    suspend fun deleteFavoriteDetailedComic(detailedComicEntity: DetailedComicEntity)
 
     @Transaction
     @Query("SELECT * FROM characterentity WHERE comicCollectionUri = :comicCollectionUri")
     suspend fun getCharacterWithComics(comicCollectionUri: String): List<CharacterWithComics>
+
+    @Query("SELECT id FROM characterentity WHERE id = :id")
+    suspend fun isCharacterFavorite(id: Int): Int?
 }
