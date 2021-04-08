@@ -1,13 +1,12 @@
 package com.architectcoders.arquitectomarvel.ui.main
 
-import android.view.View
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.model.Repository
 import com.architectcoders.arquitectomarvel.model.characters.Result
-import com.architectcoders.arquitectomarvel.model.database.character.dbItemComics
-import com.architectcoders.arquitectomarvel.model.database.character.dbObject
-import com.architectcoders.arquitectomarvel.model.database.character.relations.ResultWithItemsComics
-import com.architectcoders.arquitectomarvel.model.database.character.relations.toListResult
+import com.architectcoders.arquitectomarvel.model.database.dbItemComics
+import com.architectcoders.arquitectomarvel.model.database.dbObject
+import com.architectcoders.arquitectomarvel.model.database.relations.ResultWithItemsComics
+import com.architectcoders.arquitectomarvel.model.database.relations.toListResult
 import com.architectcoders.arquitectomarvel.ui.common.Scope
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -37,27 +36,12 @@ class MainPresenter(private val repository: Repository) : Scope by Scope.Impl() 
             try {
                 val characters = repository.getCharactersRemote()
                 val resultsRemote = characters.characterData?.results ?: emptyList()
-
-                resultsRemote.forEach { result ->
-                    dao.insertResult(result.dbObject)
-                    val collectionUri = result.comics.collectionURI
-                    result.comics.items.forEach { item ->
-                        dao.insertComics(item.dbItemComics(collectionUri))
-                    }
-                }
+                view.updateData(resultsRemote)
+                view.hideProgress()
             } catch (e: UnknownHostException) {
                 Timber.e("qq_MainPresenter.onCreate: $e")
                 view.showToast(R.string.no_internet)
             }
-
-            val localList = mutableListOf<ResultWithItemsComics>()
-            val tmpResult = dao.getResults()
-            tmpResult.forEach {
-                val itemForLocalList = dao.getResultWithItemsComics(it.comicsCollectionURI)
-                localList.addAll(itemForLocalList)
-            }
-            view.updateData(localList.toListResult)
-            view.hideProgress()
         }
     }
 
