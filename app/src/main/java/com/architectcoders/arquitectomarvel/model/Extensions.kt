@@ -3,10 +3,13 @@ package com.architectcoders.arquitectomarvel.model
 import android.content.Context
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.annotation.DrawableRes
+import androidx.annotation.RawRes
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.architectcoders.arquitectomarvel.R
 import com.bumptech.glide.Glide
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.math.BigInteger
 import java.security.MessageDigest
 
@@ -21,6 +24,18 @@ fun ImageView.loadUrl(url: String?, extension: String? = "") {
         .asBitmap()
         .load(if (extension.isNullOrEmpty()) url else "$url.$extension")
         .centerCrop()
+        .error(R.drawable.marvel_error)
+        .into(this)
+}
+
+fun FloatingActionButton.loadImage(
+    @RawRes @DrawableRes resourceIdActive: Int,
+    @RawRes @DrawableRes resourceIdInactive: Int,
+    isActive: Boolean
+) {
+    Glide.with(this)
+        .asBitmap()
+        .load(if (isActive) resourceIdActive else resourceIdInactive)
         .error(R.drawable.marvel_error)
         .into(this)
 }
