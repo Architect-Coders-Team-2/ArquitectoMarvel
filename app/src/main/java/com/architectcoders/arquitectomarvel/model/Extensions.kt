@@ -16,10 +16,10 @@ val String.md5: String
         return BigInteger(1, md.digest(this.toByteArray())).toString(16).padStart(32, '0')
     }
 
-fun ImageView.loadUrl(url: String?, extension: String?) {
+fun ImageView.loadUrl(url: String?, extension: String? = "") {
     Glide.with(this)
         .asBitmap()
-        .load("$url.$extension")
+        .load(if (extension.isNullOrEmpty()) url else "$url.$extension")
         .centerCrop()
         .error(R.drawable.marvel_error)
         .into(this)
