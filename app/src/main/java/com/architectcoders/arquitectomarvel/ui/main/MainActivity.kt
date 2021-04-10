@@ -1,16 +1,19 @@
 package com.architectcoders.arquitectomarvel.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.view.isVisible
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
+import com.architectcoders.arquitectomarvel.model.EXTRA_SELECTED_HERO
 import com.architectcoders.arquitectomarvel.model.Repository
 import com.architectcoders.arquitectomarvel.model.autoFitColumnsForGridLayout
 import com.architectcoders.arquitectomarvel.model.characters.Result
-import com.architectcoders.arquitectomarvel.ui.main.AdapterList
-import com.architectcoders.arquitectomarvel.ui.main.MainPresenter
+import com.architectcoders.arquitectomarvel.model.toast
+import com.architectcoders.arquitectomarvel.ui.detail.HeroDetailActivity
 import timber.log.Timber
 
 class MainActivity : AppCompatActivity(), MainPresenter.View {
@@ -32,23 +35,34 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
     }
 
     override fun showProgress() {
-        binding.progress.visibility = View.VISIBLE
+        binding.progress.isVisible = true
     }
 
     override fun hideProgress() {
-        binding.progress.visibility = View.GONE
+        binding.progress.isVisible = false
     }
 
     override fun updateData(list: List<Result>) {
         adapterList.submitList(list)
     }
 
-    override fun showToast(msg: String) {
-        Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
+    override fun showToast(msgResource: Int) {
+        toast(msgResource)
     }
 
-    override fun navigateTo(result: Result) {
+    override fun navigateTo(result: Result, view: View) {
         Timber.d("qq_MainActivity.navigateTo: ${result.comics.collectionURI}")
+        Intent(this, HeroDetailActivity::class.java).apply {
+            putExtra(EXTRA_SELECTED_HERO, result)
+        }.also {
+            val options =
+                ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    this,
+                    view,
+                    getString(R.string.hero_image)
+                )
+            startActivity(it, options.toBundle())
+        }
     }
 
     override fun onDestroy() {

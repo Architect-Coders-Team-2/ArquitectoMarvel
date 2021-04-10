@@ -6,7 +6,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlin.coroutines.CoroutineContext
 
-interface Scope: CoroutineScope {
+interface Scope : CoroutineScope {
 
     var job: Job
 
@@ -21,8 +21,7 @@ interface Scope: CoroutineScope {
         job.cancel()
     }
 
-    class Impl: Scope {
+    class Impl : Scope {
         override lateinit var job: Job
     }
-
 }

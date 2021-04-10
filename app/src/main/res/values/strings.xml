@@ -1,8 +1,16 @@
 <resources>
     <string name="app_name">ArquitectoMarvel</string>
 
+    <!-- Common -->
+    <string name="content_not_available">Content not available</string>
+    <string name="no_internet">No internet connection</string>
+
     <!-- Content descriptions -->
     <string name="add_to_favorites_button">Add to favorites button</string>
     <string name="hero_image">Hero image</string>
+    <string name="comics">Comics</string>
+
+    <!-- Hero detail -->
+    <string name="no_comics">No comic data</string>
 
 </resources>
