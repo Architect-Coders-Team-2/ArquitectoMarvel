@@ -31,7 +31,7 @@ class AdapterList(private val listener: (Result) -> Unit) :
         }
     }
 
-    inner class HeroViewHolder(private val binding: HeroItemBinding) :
+    inner class HeroViewHolder(private val binding: HeroItemBinding):
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(mediaService: Result) {

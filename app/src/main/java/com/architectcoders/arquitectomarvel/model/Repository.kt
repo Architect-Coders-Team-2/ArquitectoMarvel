@@ -1,12 +1,13 @@
 package com.architectcoders.arquitectomarvel.model
 
 import android.app.Activity
+import android.app.Application
 import com.architectcoders.arquitectomarvel.BuildConfig
 import com.architectcoders.arquitectomarvel.model.characters.Characters
 import com.architectcoders.arquitectomarvel.model.database.ResultDao
 import com.architectcoders.arquitectomarvel.model.database.ResultDatabase
 
-class Repository(private val activity: Activity) {
+class Repository(private val application: Application) {
 
     suspend fun getCharactersRemote(): Characters {
         val ts = System.currentTimeMillis()
@@ -16,6 +17,6 @@ class Repository(private val activity: Activity) {
         return MarvelApiRest.service.getCharacters(ts, publicKey, hash)
     }
 
-    val dao: ResultDao get() = ResultDatabase.getInstance(activity).resultDao
+    val dao: ResultDao get() = ResultDatabase.getInstance(application).resultDao
 
 }

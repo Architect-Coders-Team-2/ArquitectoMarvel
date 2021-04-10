@@ -1,5 +1,8 @@
 package com.architectcoders.arquitectomarvel.ui.main
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.architectcoders.arquitectomarvel.model.Repository
 import com.architectcoders.arquitectomarvel.model.characters.Result
 import com.architectcoders.arquitectomarvel.model.database.dbItemComics
@@ -11,30 +14,37 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.net.UnknownHostException
 
-class MainPresenter(private val repository: Repository) : Scope by Scope.Impl() {
+class MainViewModel(private val repository: Repository) : ViewModel(), Scope by Scope.Impl() {
 
-    var view: View? = null
-    private val dao by lazy { repository.dao }
-
-    interface View {
-        fun showProgress()
-        fun hideProgress()
-        fun updateData(list: List<Result>)
-        fun initViews()
-        fun showToast(msg: String)
-        fun navigateTo(result: Result)
+    sealed class UiModel {
+        object Loading : UiModel()
+        class GetRemoteData(val results: List<Result>) : UiModel()
+        class UpdateLocalData(val results: List<Result>) : UiModel()
+        class GetErrorMessage(val message: String) : UiModel()
+        class Navigation(val result: Result) : UiModel()
     }
 
-    fun onCreate(view: View) {
-        this.view = view
+    private val dao by lazy { repository.dao }
+    private val _model = MutableLiveData<UiModel>()
+    val model: LiveData<UiModel>
+        get() {
+            if (_model.value == null) refresh()
+            return _model
+        }
+
+    init {
         initScope()
-        view.initViews()
+    }
+
+    private fun refresh() {
+
 
         launch {
-            view.showProgress()
             try {
+                _model.value = UiModel.Loading
                 val characters = repository.getCharactersRemote()
                 val resultsRemote = characters.data?.results ?: emptyList()
+                _model.value = UiModel.GetRemoteData(resultsRemote)
 
                 resultsRemote.forEach { result ->
                     dao.insertResult(result.dbObject)
@@ -43,9 +53,11 @@ class MainPresenter(private val repository: Repository) : Scope by Scope.Impl() 
                         dao.insertComics(item.dbItemComics(colectionUri))
                     }
                 }
+
+
             } catch (e: UnknownHostException) {
                 Timber.e("qq_MainPresenter.onCreate: $e")
-                view.showToast("Sin conexión (DB data)")
+                _model.value = UiModel.GetErrorMessage("No connection. Error DB")
             }
 
             val listaLocal = mutableListOf<ResultWithItemsComics>()
@@ -54,18 +66,18 @@ class MainPresenter(private val repository: Repository) : Scope by Scope.Impl() 
                 val itemForListaLocal = dao.getResultWithItemsComics(it.comicsCollectionURI)
                 listaLocal.addAll(itemForListaLocal)
             }
-            view.updateData(listaLocal.toListResult)
-            view.hideProgress()
+            _model.value = UiModel.UpdateLocalData(listaLocal.toListResult)
+
         }
     }
 
     fun onResultClick(result: Result) {
-        view?.navigateTo(result)
+        _model.value = UiModel.Navigation(result)
     }
 
-    fun onDestroy() {
+    override fun onCleared() {
         cancelScope()
-        view = null
     }
+
 
 }
