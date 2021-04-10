@@ -10,13 +10,9 @@ import com.architectcoders.arquitectomarvel.model.characters.Thumbnail
 data class ResultRoom(
     @PrimaryKey(autoGenerate = false)
     val id: Int,
-
     val name: String?,
-
     @Embedded
     val thumbnail: Thumbnail?, // path, extension
-
-    // TODO: 1/4/21 check with team, if it is more readable
     val comicsCollectionURI: String, // foreign key
     val comicsAvailable: Int?
 )
