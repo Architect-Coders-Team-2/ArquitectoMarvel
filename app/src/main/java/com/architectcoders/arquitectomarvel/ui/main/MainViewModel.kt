@@ -9,6 +9,7 @@ import com.architectcoders.arquitectomarvel.model.database.dbItemComics
 import com.architectcoders.arquitectomarvel.model.database.dbObject
 import com.architectcoders.arquitectomarvel.model.database.relations.ResultWithItemsComics
 import com.architectcoders.arquitectomarvel.model.database.relations.toListResult
+import com.architectcoders.arquitectomarvel.ui.common.Event
 import com.architectcoders.arquitectomarvel.ui.common.Scope
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -19,12 +20,11 @@ class MainViewModel(private val repository: Repository) : ViewModel(), Scope by 
     sealed class UiModel {
         object Loading : UiModel()
         class GetRemoteData(val results: List<Result>) : UiModel()
-        class UpdateLocalData(val results: List<Result>) : UiModel()
         class GetErrorMessage(val message: String) : UiModel()
-        class Navigation(val result: Result) : UiModel()
     }
 
     private val dao by lazy { repository.dao }
+
     private val _model = MutableLiveData<UiModel>()
     val model: LiveData<UiModel>
         get() {
@@ -32,6 +32,8 @@ class MainViewModel(private val repository: Repository) : ViewModel(), Scope by 
             return _model
         }
 
+    private val _navigation = MutableLiveData<Event<Result>>()
+    val navigation: LiveData<Event<Result>> = _navigation
     init {
         initScope()
     }
@@ -43,7 +45,7 @@ class MainViewModel(private val repository: Repository) : ViewModel(), Scope by 
             try {
                 _model.value = UiModel.Loading
                 val characters = repository.getCharactersRemote()
-                val resultsRemote = characters.data?.results ?: emptyList()
+                val resultsRemote = characters.characterData?.results ?: emptyList()
                 _model.value = UiModel.GetRemoteData(resultsRemote)
 
                 resultsRemote.forEach { result ->
@@ -66,13 +68,12 @@ class MainViewModel(private val repository: Repository) : ViewModel(), Scope by 
                 val itemForListaLocal = dao.getResultWithItemsComics(it.comicsCollectionURI)
                 listaLocal.addAll(itemForListaLocal)
             }
-            _model.value = UiModel.UpdateLocalData(listaLocal.toListResult)
 
         }
     }
 
     fun onResultClick(result: Result) {
-        _model.value = UiModel.Navigation(result)
+        _navigation.value = Event(result)
     }
 
     override fun onCleared() {

@@ -50,5 +50,4 @@ class Repository(private val application: Application) {
     suspend fun isCharacterFavorite(characterId: Int): Boolean =
         dao.isCharacterFavorite(characterId) != null
 
-    val dao: ResultDao get() = ResultDatabase.getInstance(activity).resultDao
 }

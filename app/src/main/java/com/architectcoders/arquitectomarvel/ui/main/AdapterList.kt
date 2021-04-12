@@ -9,8 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.architectcoders.arquitectomarvel.databinding.HeroItemBinding
 import com.architectcoders.arquitectomarvel.model.characters.Result
 import com.architectcoders.arquitectomarvel.model.loadUrl
+import kotlin.reflect.KFunction1
 
-class AdapterList(private val listener: (Result, View) -> Unit) :
+class AdapterList(private val listener: (Result) -> Unit) :
     ListAdapter<Result, AdapterList.HeroViewHolder>(DiffCallback) {
 
     companion object DiffCallback : DiffUtil.ItemCallback<Result>() {
@@ -28,7 +29,7 @@ class AdapterList(private val listener: (Result, View) -> Unit) :
         val result = getItem(position)
         holder.bind(result)
         holder.itemView.setOnClickListener {
-            listener(result, it)
+            listener(result)
         }
     }
 
