@@ -4,13 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/space_between_items"
-    android:transitionName="@string/hero_image">
+    android:layout_margin="@dimen/space_between_items">
 
     <ImageView
-        android:id="@+id/hero_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/comic_image"
+        android:layout_width="150dp"
+        android:layout_height="200dp"
         android:adjustViewBounds="true"
         android:contentDescription="@string/hero_image"
         android:src="@mipmap/ic_launcher"
@@ -19,10 +18,10 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/hero_text"
+        android:id="@+id/comic_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/primaryColor"
+        android:background="@drawable/black_background"
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="2"
@@ -30,9 +29,8 @@
         android:padding="5dp"
         android:textColor="@color/primaryTextColor"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/hero_image"
-        app:layout_constraintStart_toStartOf="@+id/hero_image"
-        app:layout_constraintTop_toBottomOf="@+id/hero_image"
+        app:layout_constraintEnd_toEndOf="@+id/comic_image"
+        app:layout_constraintStart_toStartOf="@+id/comic_image"
         tools:text="@tools:sample/lorem/random" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

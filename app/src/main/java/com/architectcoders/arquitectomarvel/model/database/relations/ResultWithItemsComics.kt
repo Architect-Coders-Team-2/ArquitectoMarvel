@@ -9,14 +9,12 @@ import com.architectcoders.arquitectomarvel.model.database.ResultRoom
 import com.architectcoders.arquitectomarvel.model.database.toItems
 
 data class ResultWithItemsComics(
-
     @Embedded val resultRoom: ResultRoom,
     @Relation(
         parentColumn = "comicsCollectionURI",
         entityColumn = "collectionURI"
     )
     val itemsComics: List<ItemComics>
-
 )
 
 val ResultWithItemsComics.toRemoteResult: Result

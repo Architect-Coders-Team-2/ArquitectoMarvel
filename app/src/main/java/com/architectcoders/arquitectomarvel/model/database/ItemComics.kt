@@ -14,7 +14,7 @@ data class ItemComics(
 
 fun Item.dbItemComics(collectionURI: String): ItemComics {
     return ItemComics(
-        resourceURI = resourceURI,
+        resourceURI = resourceURI ?: "",
         name = name,
         collectionURI = collectionURI
     )
@@ -22,6 +22,5 @@ fun Item.dbItemComics(collectionURI: String): ItemComics {
 
 val ItemComics.toItem get() = Item(resourceURI, name)
 
-val List<ItemComics>.toItems : List<Item>
+val List<ItemComics>.toItems: List<Item>
     get() = map { it.toItem }
-

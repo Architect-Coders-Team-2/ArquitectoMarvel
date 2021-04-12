@@ -1,6 +1,7 @@
 package com.architectcoders.arquitectomarvel.ui.main
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -9,10 +10,10 @@ import com.architectcoders.arquitectomarvel.databinding.HeroItemBinding
 import com.architectcoders.arquitectomarvel.model.characters.Result
 import com.architectcoders.arquitectomarvel.model.loadUrl
 
-class AdapterList(private val listener: (Result) -> Unit) :
+class AdapterList(private val listener: (Result, View) -> Unit) :
     ListAdapter<Result, AdapterList.HeroViewHolder>(DiffCallback) {
 
-    companion object DiffCallback: DiffUtil.ItemCallback<Result>() {
+    companion object DiffCallback : DiffUtil.ItemCallback<Result>() {
         override fun areItemsTheSame(oldItem: Result, newItem: Result) = oldItem == newItem
         override fun areContentsTheSame(oldItem: Result, newItem: Result) = oldItem.id == newItem.id
     }
@@ -27,7 +28,7 @@ class AdapterList(private val listener: (Result) -> Unit) :
         val result = getItem(position)
         holder.bind(result)
         holder.itemView.setOnClickListener {
-            listener(result)
+            listener(result, it)
         }
     }
 

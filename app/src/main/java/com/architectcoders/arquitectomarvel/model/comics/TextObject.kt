@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.model.characters
+package com.architectcoders.arquitectomarvel.model.comics
 
 import android.os.Parcelable
 import com.squareup.moshi.Json
@@ -7,9 +7,11 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @JsonClass(generateAdapter = true)
-data class Url(
+data class TextObject(
+    @Json(name = "language")
+    val language: String?,
+    @Json(name = "text")
+    val text: String?,
     @Json(name = "type")
-    val type: String?,
-    @Json(name = "url")
-    val url: String?
+    val type: String?
 ) : Parcelable

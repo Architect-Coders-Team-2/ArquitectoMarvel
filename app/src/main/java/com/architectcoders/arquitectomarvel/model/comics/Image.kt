@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.model.characters
+package com.architectcoders.arquitectomarvel.model.comics
 
 import android.os.Parcelable
 import com.squareup.moshi.Json
@@ -7,9 +7,9 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @JsonClass(generateAdapter = true)
-data class Thumbnail(
-    @Json(name = "path")
-    val path: String?,
+data class Image(
     @Json(name = "extension")
-    val extension: String?
+    val extension: String?,
+    @Json(name = "path")
+    val path: String?
 ) : Parcelable

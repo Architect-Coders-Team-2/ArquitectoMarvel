@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.model.characters
+package com.architectcoders.arquitectomarvel.model.comics
 
 import android.os.Parcelable
 import com.squareup.moshi.Json
@@ -7,11 +7,11 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @JsonClass(generateAdapter = true)
-data class ItemStories(
-    @Json(name = "resourceURI")
-    val resourceURI: String?,
+data class CreatorsItem(
     @Json(name = "name")
     val name: String?,
-    @Json(name = "type")
-    val type: String?
+    @Json(name = "resourceURI")
+    val resourceURI: String?,
+    @Json(name = "role")
+    val role: String?
 ) : Parcelable
