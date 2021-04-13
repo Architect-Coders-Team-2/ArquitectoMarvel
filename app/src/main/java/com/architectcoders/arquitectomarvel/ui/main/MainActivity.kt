@@ -19,7 +19,7 @@ import timber.log.Timber
 class MainActivity : AppCompatActivity(), MainPresenter.View {
 
     private lateinit var binding: ActivityMainBinding
-    private val presenter by lazy { MainPresenter(Repository(this)) }
+    private val presenter by lazy { MainPresenter(Repository(application)) }
     private val adapterList by lazy { AdapterList(presenter::onResultClick) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
