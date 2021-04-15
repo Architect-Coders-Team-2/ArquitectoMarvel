@@ -29,8 +29,15 @@ android {
     def MARVEL_API_KEY = 'MARVEL_API_KEY'
     def MARVEL_PRIVATE_KEY = 'MARVEL_PRIVATE_KEY'
 
-    def apikey = secretProperties()[MARVEL_API_KEY]
-    def privatekey = secretProperties()[MARVEL_PRIVATE_KEY]
+    def apikey = "default-apikey"
+    def privatekey = "default-privatekey"
+    try {
+        apikey = secretProperties()[MARVEL_API_KEY]
+        privatekey = secretProperties()[MARVEL_PRIVATE_KEY]
+    } catch (FileNotFoundException exception) {
+        println(exception.message)
+        println("This exception is handled and intended to be thrown when github actions runs \"gradle build\" on the project.")
+    }
 
     buildTypes {
         release {

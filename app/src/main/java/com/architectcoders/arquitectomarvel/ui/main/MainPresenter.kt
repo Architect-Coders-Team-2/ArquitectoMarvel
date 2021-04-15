@@ -3,10 +3,6 @@ package com.architectcoders.arquitectomarvel.ui.main
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.model.Repository
 import com.architectcoders.arquitectomarvel.model.characters.Result
-import com.architectcoders.arquitectomarvel.model.database.dbItemComics
-import com.architectcoders.arquitectomarvel.model.database.dbObject
-import com.architectcoders.arquitectomarvel.model.database.relations.ResultWithItemsComics
-import com.architectcoders.arquitectomarvel.model.database.relations.toListResult
 import com.architectcoders.arquitectomarvel.ui.common.Scope
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -22,7 +18,8 @@ class MainPresenter(private val repository: Repository) : Scope by Scope.Impl() 
         fun hideProgress()
         fun updateData(list: List<Result>)
         fun initViews()
-        fun showToast(msgResource: Int)
+        fun showToastResource(msgResource: Int)
+        fun showToastString(msgString: String)
         fun navigateTo(result: Result, view: android.view.View)
     }
 
@@ -39,9 +36,13 @@ class MainPresenter(private val repository: Repository) : Scope by Scope.Impl() 
                 view.updateData(resultsRemote)
                 view.hideProgress()
             } catch (e: UnknownHostException) {
-                Timber.e("qq_MainPresenter.onCreate: $e")
-                view.showToast(R.string.no_internet)
+                view.showToastResource(R.string.no_internet)
+                view.hideProgress()
+            } catch (e: Exception) {
+                view.showToastString(e.message?: e.toString())
+                view.hideProgress()
             }
+
         }
     }
 

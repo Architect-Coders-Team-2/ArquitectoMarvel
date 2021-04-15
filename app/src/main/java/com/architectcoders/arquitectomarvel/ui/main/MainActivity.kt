@@ -46,8 +46,12 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
         adapterList.submitList(list)
     }
 
-    override fun showToast(msgResource: Int) {
+    override fun showToastResource(msgResource: Int) {
         toast(msgResource)
+    }
+
+    override fun showToastString(msgString: String) {
+        toast(msgString)
     }
 
     override fun navigateTo(result: Result, view: View) {
