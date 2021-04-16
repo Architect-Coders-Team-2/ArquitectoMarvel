@@ -14,7 +14,7 @@ import com.architectcoders.arquitectomarvel.model.database.toDetailedComicEntity
 class HeroDetailActivity : AppCompatActivity(), HeroDetailPresenter.View {
 
     lateinit var binding: ActivityHeroDetailBinding
-    private val presenter: HeroDetailPresenter by lazy { HeroDetailPresenter(Repository(this)) }
+    private val presenter: HeroDetailPresenter by lazy { HeroDetailPresenter(Repository(application)) }
     val adapter by lazy { ComicAdapter() }
     var selectedCharacter: Result? = null
     var isCharacterFavorite = false

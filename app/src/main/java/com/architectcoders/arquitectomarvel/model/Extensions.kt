@@ -3,6 +3,7 @@ package com.architectcoders.arquitectomarvel.model
 import android.content.Context
 import android.app.Activity
 import android.content.Intent
+import android.os.Bundle
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
@@ -55,34 +56,12 @@ fun RecyclerView.autoFitColumnsForGridLayout(columnWidthInDP: Float) {
 }
 
 
-
-
 fun <T> Context.toast(msgResource: T, length: Int = Toast.LENGTH_SHORT) {
     when (msgResource) {
         is Int -> Toast.makeText(this, msgResource, length).show()
         is String -> Toast.makeText(this, msgResource, length).show()
     }
 }
-
-inline fun <VH : RecyclerView.ViewHolder, T> RecyclerView.Adapter<VH>.basicDiffUtil(
-    initialValue: List<T>,
-    crossinline areItemsTheSame: (T, T) -> Boolean = { old, new -> old == new },
-    crossinline areContentsTheSame: (T, T) -> Boolean = { old, new -> old == new }
-) =
-    Delegates.observable(initialValue) { _, old, new ->
-        DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-                areItemsTheSame(old[oldItemPosition], new[newItemPosition])
-
-            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-                areContentsTheSame(old[oldItemPosition], new[newItemPosition])
-
-            override fun getOldListSize(): Int = old.size
-
-            override fun getNewListSize(): Int = new.size
-        }).dispatchUpdatesTo(this@basicDiffUtil)
-    }
-
 
 @Suppress("UNCHECKED_CAST")
 inline fun <reified T : ViewModel> FragmentActivity.getViewModel(crossinline factory: () -> T): T {
@@ -94,10 +73,10 @@ inline fun <reified T : ViewModel> FragmentActivity.getViewModel(crossinline fac
     return ViewModelProvider(this, vmFactory).get()
 }
 
-
 inline fun <reified T : Activity> Context.intentFor(body: Intent.() -> Unit): Intent =
     Intent(this, T::class.java).apply(body)
 
-inline fun <reified T : Activity> Context.startActivity(body: Intent.() -> Unit) {
-    startActivity(intentFor<T>(body))
+inline fun <reified T : Activity> Context.startActivity(options: Bundle? = null,
+                                                        body: Intent.() -> Unit) {
+    startActivity(intentFor<T>(body),options)
 }

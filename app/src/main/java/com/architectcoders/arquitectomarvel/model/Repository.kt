@@ -13,6 +13,8 @@ import com.architectcoders.arquitectomarvel.model.database.toCharacterEntity
 
 class Repository(private val application: Application) {
 
+    val dao: ResultDao get() = ResultDatabase.getInstance(application).resultDao
+
     suspend fun getCharactersRemote(): Characters {
         val ts = System.currentTimeMillis()
         val publicKey = BuildConfig.MARVEL_API_KEY
@@ -20,8 +22,6 @@ class Repository(private val application: Application) {
         val hash = "$ts$privateKey$publicKey".md5
         return MarvelApiRest.service.getCharacters(ts, publicKey, hash)
     }
-
-    val dao: ResultDao get() = ResultDatabase.getInstance(application).resultDao
 
     suspend fun getComicsFromCharacterRemote(characterId: Int): Comic? {
         val ts = System.currentTimeMillis()

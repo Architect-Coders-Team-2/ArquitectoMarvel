@@ -11,7 +11,7 @@ import com.architectcoders.arquitectomarvel.model.characters.Result
 import com.architectcoders.arquitectomarvel.model.loadUrl
 import kotlin.reflect.KFunction1
 
-class AdapterList(private val listener: (Result) -> Unit) :
+class AdapterList(private val listener: (Result, View) -> Unit) :
     ListAdapter<Result, AdapterList.HeroViewHolder>(DiffCallback) {
 
     companion object DiffCallback : DiffUtil.ItemCallback<Result>() {
@@ -29,7 +29,7 @@ class AdapterList(private val listener: (Result) -> Unit) :
         val result = getItem(position)
         holder.bind(result)
         holder.itemView.setOnClickListener {
-            listener(result)
+            listener(result,it)
         }
     }
 

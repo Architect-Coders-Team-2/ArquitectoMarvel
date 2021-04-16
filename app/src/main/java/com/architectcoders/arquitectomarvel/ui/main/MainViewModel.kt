@@ -1,5 +1,6 @@
 package com.architectcoders.arquitectomarvel.ui.main
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -34,6 +35,10 @@ class MainViewModel(private val repository: Repository) : ViewModel(), Scope by 
 
     private val _navigation = MutableLiveData<Event<Result>>()
     val navigation: LiveData<Event<Result>> = _navigation
+
+    private val _viewItem = MutableLiveData<View>()
+    val viewItem: LiveData<View> = _viewItem
+
     init {
         initScope()
     }
@@ -55,8 +60,6 @@ class MainViewModel(private val repository: Repository) : ViewModel(), Scope by 
                         dao.insertComics(item.dbItemComics(colectionUri))
                     }
                 }
-
-
             } catch (e: UnknownHostException) {
                 Timber.e("qq_MainPresenter.onCreate: $e")
                 _model.value = UiModel.GetErrorMessage("No connection. Error DB")
@@ -72,8 +75,10 @@ class MainViewModel(private val repository: Repository) : ViewModel(), Scope by 
         }
     }
 
-    fun onResultClick(result: Result) {
+    fun onResultClick(result: Result, view: View) {
+        _viewItem.value = view
         _navigation.value = Event(result)
+
     }
 
     override fun onCleared() {
