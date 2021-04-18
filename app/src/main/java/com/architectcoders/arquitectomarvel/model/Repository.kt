@@ -1,6 +1,7 @@
 package com.architectcoders.arquitectomarvel.model
 
 import android.app.Activity
+import android.app.Application
 import com.architectcoders.arquitectomarvel.BuildConfig
 import com.architectcoders.arquitectomarvel.model.characters.Characters
 import com.architectcoders.arquitectomarvel.model.characters.Result
@@ -10,7 +11,9 @@ import com.architectcoders.arquitectomarvel.model.database.ResultDao
 import com.architectcoders.arquitectomarvel.model.database.ResultDatabase
 import com.architectcoders.arquitectomarvel.model.database.toCharacterEntity
 
-class Repository(private val activity: Activity) {
+class Repository(private val application: Application) {
+
+    val dao: ResultDao get() = ResultDatabase.getInstance(application).resultDao
 
     suspend fun getCharactersRemote(): Characters {
         val ts = System.currentTimeMillis()
@@ -47,5 +50,4 @@ class Repository(private val activity: Activity) {
     suspend fun isCharacterFavorite(characterId: Int): Boolean =
         dao.isCharacterFavorite(characterId) != null
 
-    val dao: ResultDao get() = ResultDatabase.getInstance(activity).resultDao
 }
