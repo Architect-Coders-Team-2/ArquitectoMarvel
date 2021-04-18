@@ -1,5 +1,6 @@
 package com.architectcoders.arquitectomarvel.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -16,7 +17,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
     private lateinit var adapter: AdapterList
-    private lateinit var viewItem: View
+    private var viewItem: View? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,21 +37,21 @@ class MainActivity : AppCompatActivity() {
         binding.mainHeroList.adapter = adapter
         viewModel.model.observe(this, Observer(::updateUI))
         viewModel.navigation.observe(this, Observer { event ->
-            event.getContentIfNotHandled()?.let {
+            event.getContentIfNotHandled()?.let { result ->
                 viewModel.viewItem.value?.let {
                     viewItem = it
                 }
-                val options =
-                    ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        this,
-                        viewItem,
-                        getString(R.string.hero_image)
-                    )
-                startActivity<HeroDetailActivity>(options = options.toBundle()) {
-                    putExtra(EXTRA_SELECTED_HERO, it)
+                viewItem?.let {
+                    val options =
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            this,
+                            viewItem!!,
+                            getString(R.string.hero_image)
+                        )
+                    startActivity<HeroDetailActivity>(options = options.toBundle()) {
+                        putExtra(EXTRA_SELECTED_HERO, result)
+                    }
                 }
-
-
             }
         })
     }
