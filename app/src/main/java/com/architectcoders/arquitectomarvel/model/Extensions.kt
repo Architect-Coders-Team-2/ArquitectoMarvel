@@ -1,6 +1,9 @@
 package com.architectcoders.arquitectomarvel.model
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
@@ -59,8 +62,18 @@ fun <T> Context.toast(msgResource: T, length: Int = Toast.LENGTH_SHORT) {
 
 @Suppress("UNCHECKED_CAST")
 inline fun <reified T : ViewModel> FragmentActivity.getViewModel(crossinline factory: () -> T): T {
-    val viewModelFactory = object : ViewModelProvider.Factory {
+    val vmFactory = object : ViewModelProvider.Factory {
         override fun <U : ViewModel> create(modelClass: Class<U>): U = factory() as U
     }
-    return ViewModelProvider(this, viewModelFactory).get()
+    return ViewModelProvider(this, vmFactory).get()
+}
+
+inline fun <reified T : Activity> Context.intentFor(body: Intent.() -> Unit): Intent =
+    Intent(this, T::class.java).apply(body)
+
+inline fun <reified T : Activity> Context.startActivity(
+    options: Bundle? = null,
+    body: Intent.() -> Unit
+) {
+    startActivity(intentFor<T>(body), options)
 }
