@@ -9,7 +9,6 @@ import com.architectcoders.arquitectomarvel.model.characters.Result
 import com.architectcoders.arquitectomarvel.model.database.dbItemComics
 import com.architectcoders.arquitectomarvel.model.database.dbObject
 import com.architectcoders.arquitectomarvel.model.database.relations.ResultWithItemsComics
-import com.architectcoders.arquitectomarvel.model.database.relations.toListResult
 import com.architectcoders.arquitectomarvel.ui.common.Event
 import com.architectcoders.arquitectomarvel.ui.common.Scope
 import kotlinx.coroutines.launch
@@ -20,7 +19,7 @@ class MainViewModel(private val repository: Repository) : ViewModel(), Scope by 
 
     sealed class UiModel {
         object Loading : UiModel()
-        class GetRemoteData(val results: List<Result>) : UiModel()
+        class SetRemoteData(val results: List<Result>) : UiModel()
         class GetErrorMessage(val message: String) : UiModel()
     }
 
@@ -44,46 +43,42 @@ class MainViewModel(private val repository: Repository) : ViewModel(), Scope by 
     }
 
     private fun refresh() {
-
-
         launch {
             try {
                 _model.value = UiModel.Loading
                 val characters = repository.getCharactersRemote()
                 val resultsRemote = characters.characterData?.results ?: emptyList()
-                _model.value = UiModel.GetRemoteData(resultsRemote)
+                _model.value = UiModel.SetRemoteData(resultsRemote)
 
-                resultsRemote.forEach { result ->
+                // TODO Should we store data from the main list?
+               /* resultsRemote.forEach { result ->
                     dao.insertResult(result.dbObject)
-                    val colectionUri = result.comics.collectionURI
+                    val collectionUri = result.comics.collectionURI
                     result.comics.items.forEach { item ->
-                        dao.insertComics(item.dbItemComics(colectionUri))
+                        dao.insertComics(item.dbItemComics(collectionUri))
                     }
-                }
+                }*/
             } catch (e: UnknownHostException) {
                 Timber.e("qq_MainPresenter.onCreate: $e")
                 _model.value = UiModel.GetErrorMessage("No connection. Error DB")
             }
 
-            val listaLocal = mutableListOf<ResultWithItemsComics>()
+            // TODO Should we store data from the main list?
+           /* val localList = mutableListOf<ResultWithItemsComics>()
             val tmpResult = dao.getResults()
             tmpResult.forEach {
-                val itemForListaLocal = dao.getResultWithItemsComics(it.comicsCollectionURI)
-                listaLocal.addAll(itemForListaLocal)
-            }
-
+                val itemForLocalList = dao.getResultWithItemsComics(it.comicsCollectionURI)
+                localList.addAll(itemForLocalList)
+            }*/
         }
     }
 
     fun onResultClick(result: Result, view: View) {
         _viewItem.value = view
         _navigation.value = Event(result)
-
     }
 
     override fun onCleared() {
         cancelScope()
     }
-
-
 }

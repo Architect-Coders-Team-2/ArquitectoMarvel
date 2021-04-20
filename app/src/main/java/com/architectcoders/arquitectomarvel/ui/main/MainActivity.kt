@@ -1,6 +1,5 @@
 package com.architectcoders.arquitectomarvel.ui.main
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -59,10 +58,8 @@ class MainActivity : AppCompatActivity() {
     private fun updateUI(model: MainViewModel.UiModel) {
         binding.progress.isVisible = (model == MainViewModel.UiModel.Loading)
         when (model) {
-            is MainViewModel.UiModel.GetRemoteData -> adapter.submitList(model.results)
+            is MainViewModel.UiModel.SetRemoteData -> adapter.submitList(model.results)
             is MainViewModel.UiModel.GetErrorMessage -> toast(model.message)
         }
-
     }
-
 }

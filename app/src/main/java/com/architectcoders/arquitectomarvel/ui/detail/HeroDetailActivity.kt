@@ -5,17 +5,21 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.Observer
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityHeroDetailBinding
 import com.architectcoders.arquitectomarvel.model.*
 import com.architectcoders.arquitectomarvel.model.characters.Result
+import com.architectcoders.arquitectomarvel.model.database.DetailedComicEntity
 import com.architectcoders.arquitectomarvel.model.database.toDetailedComicEntityList
+import com.architectcoders.arquitectomarvel.ui.detail.HeroDetailViewModel.UiModel
+import com.architectcoders.arquitectomarvel.model.comics.Result as ComicResult
 
-class HeroDetailActivity : AppCompatActivity(), HeroDetailPresenter.View {
+class HeroDetailActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityHeroDetailBinding
-    private val presenter: HeroDetailPresenter by lazy { HeroDetailPresenter(Repository(application)) }
-    val adapter by lazy { ComicAdapter() }
+    private lateinit var heroDetailViewModel: HeroDetailViewModel
+    private val adapter by lazy { ComicAdapter() }
     var selectedCharacter: Result? = null
     var isCharacterFavorite = false
 
@@ -25,14 +29,22 @@ class HeroDetailActivity : AppCompatActivity(), HeroDetailPresenter.View {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        presenter.onCreate(this)
-    }
-
-    override fun initComicListAdapter() {
         binding.contentHeroDetail.comicList.adapter = adapter
+        heroDetailViewModel = getViewModel { HeroDetailViewModel(Repository(application)) }
+        heroDetailViewModel.model.observe(this, Observer(::updateUi))
     }
 
-    override fun setHeroDetails() {
+    private fun updateUi(model: UiModel) {
+        binding.contentHeroDetail.progress.isVisible = model is UiModel.Loading
+        when (model) {
+            is UiModel.SetHeroDetails -> setHeroDetails(model.onHeroShown)
+            is UiModel.ShowToast -> toast(model.msgResource)
+            is UiModel.UpdateFAB -> updateFAB(model.isCharacterFavorite, model.listener)
+            is UiModel.UpdateComics -> updateComics(model.comicList)
+        }
+    }
+
+    private fun setHeroDetails(onHeroShown: (Int) -> Unit) {
         intent.extras?.getParcelable<Result>(EXTRA_SELECTED_HERO)?.let { selectedHero ->
             this.selectedCharacter = selectedHero
             binding.headerHeroImage.loadUrl(
@@ -47,7 +59,7 @@ class HeroDetailActivity : AppCompatActivity(), HeroDetailPresenter.View {
                 } else {
                     selectedHero.description
                 }
-            presenter.onHeroShown(selectedHero.id)
+            onHeroShown(selectedHero.id)
         }
     }
 
@@ -55,7 +67,14 @@ class HeroDetailActivity : AppCompatActivity(), HeroDetailPresenter.View {
      * Initially saves if the character is favorite, updates the FAB image and sets the click listener
      * if the character is available
      */
-    override fun updateFAB(isCharacterFavorite: Boolean) {
+    private fun updateFAB(
+        isCharacterFavorite: Boolean,
+        listener: (
+            selectedHero: Result,
+            comicList: MutableList<DetailedComicEntity>,
+            isCharacterFavorite: Boolean,
+        ) -> Unit,
+    ) {
         this.isCharacterFavorite = isCharacterFavorite
         binding.fab.loadImage(
             android.R.drawable.star_on,
@@ -70,24 +89,12 @@ class HeroDetailActivity : AppCompatActivity(), HeroDetailPresenter.View {
                     android.R.drawable.star_off,
                     this.isCharacterFavorite
                 )
-                presenter.onFabClick(character, adapter.currentList, this.isCharacterFavorite)
+                listener(character, adapter.currentList, this.isCharacterFavorite)
             }
         }
     }
 
-    override fun showProgress() {
-        binding.contentHeroDetail.progress.isVisible = true
-    }
-
-    override fun hideProgress() {
-        binding.contentHeroDetail.progress.isVisible = false
-    }
-
-    override fun showToast(msgResource: Int) {
-        toast(msgResource)
-    }
-
-    override fun updateComics(comicList: List<com.architectcoders.arquitectomarvel.model.comics.Result>) {
+    private fun updateComics(comicList: List<ComicResult>) {
         if (comicList.isEmpty()) {
             binding.contentHeroDetail.noComics.isVisible = true
         }
@@ -100,10 +107,5 @@ class HeroDetailActivity : AppCompatActivity(), HeroDetailPresenter.View {
             return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onDestroy() {
-        presenter.onDestroy()
-        super.onDestroy()
     }
 }

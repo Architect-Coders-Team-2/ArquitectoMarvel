@@ -1,6 +1,5 @@
 package com.architectcoders.arquitectomarvel.model
 
-import android.app.Activity
 import android.app.Application
 import com.architectcoders.arquitectomarvel.BuildConfig
 import com.architectcoders.arquitectomarvel.model.characters.Characters
@@ -49,5 +48,4 @@ class Repository(private val application: Application) {
 
     suspend fun isCharacterFavorite(characterId: Int): Boolean =
         dao.isCharacterFavorite(characterId) != null
-
 }
