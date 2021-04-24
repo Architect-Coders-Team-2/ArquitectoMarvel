@@ -77,3 +77,9 @@ inline fun <reified T : Activity> Context.startActivity(
 ) {
     startActivity(intentFor<T>(body), options)
 }
+
+class Factory(val repository: Repository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T =
+        modelClass.getConstructor(Repository::class.java)
+            .newInstance(repository)
+}
