@@ -41,6 +41,7 @@ class AdapterList(private val listener: (Result, View) -> Unit) :
                 mediaService.thumbnail?.path,
                 mediaService.thumbnail?.extension
             )
+            itemView.transitionName = mediaService.name
         }
     }
 }
