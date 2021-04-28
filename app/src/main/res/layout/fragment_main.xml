@@ -10,10 +10,11 @@
             type="com.architectcoders.arquitectomarvel.ui.main.MainViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.main.MainActivity">
+        android:fitsSystemWindows="true"
+        tools:context=".ui.main.MainFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/main_hero_list"
@@ -36,5 +37,5 @@
             app:layout_constraintTop_toTopOf="parent"
             app:loading="@{viewmodel.loading}" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
