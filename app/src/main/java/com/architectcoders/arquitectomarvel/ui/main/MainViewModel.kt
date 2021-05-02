@@ -6,6 +6,7 @@ import androidx.paging.*
 import com.architectcoders.arquitectomarvel.model.Repository
 import com.architectcoders.arquitectomarvel.model.characters.Result
 import com.architectcoders.arquitectomarvel.ui.common.Event
+import timber.log.Timber
 
 class MainViewModel(private val repository: Repository) : ViewModel() {
 
@@ -18,13 +19,14 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     val pager = Pager(
         config = PagingConfig(
             pageSize = 18,
-            maxSize = 54,
+//            maxSize = 54,
             enablePlaceholders = false
         ),
-        pagingSourceFactory = { ExamplePagingSource(repository) }
-    ).liveData.cachedIn(viewModelScope)
+        pagingSourceFactory = { ResultPagingSource(repository) }
+    ).flow.cachedIn(viewModelScope)
 
     fun onResultClick(result: Result, view: View) {
+        Timber.d("qq_MainViewModel.onResultClick: ${result.description} (result.description)")
         _viewItem.value = view
         _navigation.value = Event(result)
     }

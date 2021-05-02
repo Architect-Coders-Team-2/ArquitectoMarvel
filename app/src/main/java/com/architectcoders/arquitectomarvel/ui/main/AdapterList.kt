@@ -54,22 +54,20 @@ class AdapterList(private val listener: (Result, View) -> Unit) :
 }
 
 const val INICIAL = 36
-
-class ExamplePagingSource(
+class ResultPagingSource(
     val repository: Repository
 ) : PagingSource<Int, Result>() {
     override suspend fun load(
         params: LoadParams<Int>
     ): LoadResult<Int, Result> {
         return try {
-            // Start refresh at page 1 if undefined.
-
             val offset = params.key ?: INICIAL
             val response = repository.getCharactersRemote(offset)
             val results = response.characterData?.results!!
             LoadResult.Page(
                 data = results,
-                prevKey = if (offset == INICIAL) null else offset + INICIAL,
+//                prevKey = if (offset == INICIAL) null else offset + INICIAL,
+                prevKey = null, // Only paging forward.
                 nextKey = if (results.isEmpty()) null else offset + INICIAL
             )
         } catch (e: IOException) {
@@ -89,7 +87,7 @@ class ExamplePagingSource(
         //    just return null.
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
-            anchorPage?.prevKey?.plus(60) ?: anchorPage?.nextKey?.minus(30)
+            anchorPage?.prevKey?.plus(INICIAL) ?: anchorPage?.nextKey?.minus(INICIAL)
         }
     }
 }

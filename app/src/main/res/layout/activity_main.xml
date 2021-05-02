@@ -12,8 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        tools:listitem="@layout/hero_item"
-        tools:spanCount="5" />
+        tools:listitem="@layout/hero_item" />
 
     <ProgressBar
         android:id="@+id/progress"
