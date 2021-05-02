@@ -1,24 +1,17 @@
 package com.architectcoders.arquitectomarvel.ui.main
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
-import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView.*
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
-import com.architectcoders.arquitectomarvel.databinding.ReposLoadStateFooterViewItemBinding
 import com.architectcoders.arquitectomarvel.model.*
 import com.architectcoders.arquitectomarvel.ui.detail.HeroDetailActivity
 import kotlinx.coroutines.flow.collectLatest
@@ -45,16 +38,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpViews() {
-        val mLayoutManager = GridLayoutManager(this@MainActivity, 3)
+        val columns = calculateColumsForGridLayout(resources.getDimension(R.dimen.avatar_width))
+        val layoutManager = GridLayoutManager(this@MainActivity, columns)
         val footerAdapter = ResultsLoadStateAdapter(adapter::retry)
         binding.apply {
-            mainHeroList.autoFitColumnsForGridLayout(resources.getDimension(R.dimen.avatar_width))
-            mainHeroList.layoutManager = mLayoutManager
+            mainHeroList.layoutManager = layoutManager
             mainHeroList.adapter = adapter.withLoadStateFooter(footerAdapter)
-            mLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+
+            // This helps to centre the ProgressBar by using the number of columns from the main list
+            layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
                     return if (position == adapter.itemCount && footerAdapter.itemCount > 0) {
-                        3
+                        columns
                     } else {
                         1
                     }

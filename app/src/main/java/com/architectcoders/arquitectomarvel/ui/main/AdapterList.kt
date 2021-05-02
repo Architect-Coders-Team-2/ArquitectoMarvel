@@ -53,7 +53,7 @@ class AdapterList(private val listener: (Result, View) -> Unit) :
     }
 }
 
-const val INICIAL = 36
+const val INITIAL = 36
 class ResultPagingSource(
     val repository: Repository
 ) : PagingSource<Int, Result>() {
@@ -61,14 +61,13 @@ class ResultPagingSource(
         params: LoadParams<Int>
     ): LoadResult<Int, Result> {
         return try {
-            val offset = params.key ?: INICIAL
+            val offset = params.key ?: INITIAL
             val response = repository.getCharactersRemote(offset)
             val results = response.characterData?.results!!
             LoadResult.Page(
                 data = results,
-//                prevKey = if (offset == INICIAL) null else offset + INICIAL,
                 prevKey = null, // Only paging forward.
-                nextKey = if (results.isEmpty()) null else offset + INICIAL
+                nextKey = if (results.isEmpty()) null else offset + INITIAL
             )
         } catch (e: IOException) {
             LoadResult.Error(e)
@@ -87,7 +86,7 @@ class ResultPagingSource(
         //    just return null.
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
-            anchorPage?.prevKey?.plus(INICIAL) ?: anchorPage?.nextKey?.minus(INICIAL)
+            anchorPage?.prevKey?.plus(INITIAL) ?: anchorPage?.nextKey?.minus(INITIAL)
         }
     }
 }

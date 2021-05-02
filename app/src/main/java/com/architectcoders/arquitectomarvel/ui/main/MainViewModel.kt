@@ -18,15 +18,12 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
 
     val pager = Pager(
         config = PagingConfig(
-            pageSize = 18,
-//            maxSize = 54,
-            enablePlaceholders = false
+            pageSize = 18
         ),
         pagingSourceFactory = { ResultPagingSource(repository) }
     ).flow.cachedIn(viewModelScope)
 
     fun onResultClick(result: Result, view: View) {
-        Timber.d("qq_MainViewModel.onResultClick: ${result.description} (result.description)")
         _viewItem.value = view
         _navigation.value = Event(result)
     }

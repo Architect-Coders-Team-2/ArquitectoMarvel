@@ -12,8 +12,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.architectcoders.arquitectomarvel.R
 import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -47,10 +45,8 @@ fun FloatingActionButton.loadImage(
         .into(this)
 }
 
-fun RecyclerView.autoFitColumnsForGridLayout(columnWidthInDP: Float) {
-    val numberOfColumns: Int =
-        ((resources.displayMetrics.widthPixels / resources.displayMetrics.density) / columnWidthInDP).toInt()
-    layoutManager = GridLayoutManager(context, numberOfColumns)
+fun Context.calculateColumsForGridLayout(columnWidthInDP: Float): Int {
+    return ((resources.displayMetrics.widthPixels / resources.displayMetrics.density) / columnWidthInDP).toInt()
 }
 
 fun <T> Context.toast(msgResource: T, length: Int = Toast.LENGTH_SHORT) {
