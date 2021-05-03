@@ -9,17 +9,22 @@ import com.architectcoders.arquitectomarvel.model.database.DetailedComicEntity
 import com.architectcoders.arquitectomarvel.model.database.ResultDao
 import com.architectcoders.arquitectomarvel.model.database.ResultDatabase
 import com.architectcoders.arquitectomarvel.model.database.toCharacterEntity
+import timber.log.Timber
 
 class Repository(private val application: Application) {
 
     val dao: ResultDao get() = ResultDatabase.getInstance(application).resultDao
 
-    suspend fun getCharactersRemote(): Characters {
+    suspend fun getCharactersRemote(offset: Int): Characters {
         val ts = System.currentTimeMillis()
         val publicKey = BuildConfig.MARVEL_API_KEY
         val privateKey = BuildConfig.MARVEL_PRIVATE_KEY
         val hash = "$ts$privateKey$publicKey".md5
-        return MarvelApiRest.service.getCharacters(ts, publicKey, hash)
+        val response = MarvelApiRest.service.getCharacters(ts, publicKey, hash, offset)
+        Timber.d("qq_Repository.getCharactersRemote: ----- ()")
+        Timber.d("qq_Repository.getCharactersRemote: ${offset} (offset)")
+        Timber.d("qq_Repository.getCharactersRemote: ${response.characterData?.results?.size} (response.characterData?.results?.size)")
+        return response
     }
 
     suspend fun getComicsFromCharacterRemote(characterId: Int): Comic? {
