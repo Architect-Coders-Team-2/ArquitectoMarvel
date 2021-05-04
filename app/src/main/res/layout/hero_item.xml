@@ -7,6 +7,20 @@
     android:layout_margin="@dimen/space_between_items"
     android:transitionName="@string/hero_image">
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="2dp"
+        android:backgroundTint="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
     <ImageView
         android:id="@+id/hero_image"
         android:layout_width="wrap_content"
@@ -16,7 +30,9 @@
         android:src="@mipmap/ic_launcher"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/hero_text"
+        />
 
     <TextView
         android:id="@+id/hero_text"
@@ -27,12 +43,14 @@
         android:gravity="center"
         android:maxLines="2"
         android:minLines="2"
-        android:padding="5dp"
         android:textColor="@color/primaryTextColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/hero_image"
         app:layout_constraintStart_toStartOf="@+id/hero_image"
         app:layout_constraintTop_toBottomOf="@+id/hero_image"
         tools:text="@tools:sample/lorem/random" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

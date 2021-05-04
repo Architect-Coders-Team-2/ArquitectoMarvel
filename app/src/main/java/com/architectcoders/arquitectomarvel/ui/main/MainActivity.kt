@@ -2,40 +2,73 @@ package com.architectcoders.arquitectomarvel.ui.main
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView.*
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
 import com.architectcoders.arquitectomarvel.model.*
 import com.architectcoders.arquitectomarvel.ui.detail.HeroDetailActivity
+import kotlinx.coroutines.flow.collectLatest
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: MainViewModel
-    private lateinit var adapter: AdapterList
+
+    private val viewModel by viewModels<MainViewModel> {
+        Factory(Repository(application))
+    }
+    private val adapter: AdapterList by lazy {
+        AdapterList(viewModel::onResultClick)
+    }
     private var viewItem: View? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initBinding()
-        initViewModel()
-    }
-
-    private fun initBinding() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.mainHeroList.autoFitColumnsForGridLayout(resources.getDimension(R.dimen.avatar_width))
+
+        setUpViews()
+        observersViewModel()
     }
 
-    private fun initViewModel() {
-        viewModel = getViewModel { MainViewModel(Repository(application)) }
-        adapter = AdapterList(viewModel::onResultClick)
-        binding.mainHeroList.adapter = adapter
-        viewModel.model.observe(this, Observer(::updateUI))
-        viewModel.navigation.observe(this, Observer { event ->
+    private fun setUpViews() {
+        val columns = calculateColumsForGridLayout(resources.getDimension(R.dimen.avatar_width))
+        val layoutManager = GridLayoutManager(this@MainActivity, columns)
+        val footerAdapter = ResultsLoadStateAdapter(adapter::retry)
+        binding.apply {
+            mainHeroList.layoutManager = layoutManager
+            mainHeroList.adapter = adapter.withLoadStateFooter(footerAdapter)
+
+            // This helps to centre the ProgressBar by using the number of columns from the main list
+            layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return if (position == adapter.itemCount && footerAdapter.itemCount > 0) {
+                        columns
+                    } else {
+                        1
+                    }
+                }
+            }
+        }
+        adapter.addLoadStateListener {
+            binding.progress.isVisible = it.refresh is LoadState.Loading
+        }
+    }
+
+    private fun observersViewModel() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.pager.collectLatest {
+                adapter.submitData(lifecycle, it)
+            }
+        }
+
+        viewModel.navigation.observe(this) { event ->
             event.getContentIfNotHandled()?.let { result ->
                 viewModel.viewItem.value?.let {
                     viewItem = it
@@ -52,14 +85,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-        })
-    }
-
-    private fun updateUI(model: MainViewModel.UiModel) {
-        binding.progress.isVisible = (model == MainViewModel.UiModel.Loading)
-        when (model) {
-            is MainViewModel.UiModel.SetRemoteData -> adapter.submitList(model.results)
-            is MainViewModel.UiModel.GetErrorMessage -> toast(model.message)
         }
     }
+
 }

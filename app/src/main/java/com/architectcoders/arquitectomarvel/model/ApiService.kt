@@ -12,7 +12,9 @@ interface ApiService {
     suspend fun getCharacters(
         @Query("ts") ts: Long,
         @Query("apikey") apikey: String,
-        @Query("hash") hash: String
+        @Query("hash") hash: String,
+        @Query("offset") offset: Int,
+        @Query("limit") limit: Int = 90
     ): Characters
 
     @GET("/v1/public/characters/{characterId}/comics")
