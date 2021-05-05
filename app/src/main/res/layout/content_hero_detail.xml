@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_hero_detail">
+    tools:showIn="@layout/fragment_hero_detail">
 
     <LinearLayout
         android:layout_width="match_parent"

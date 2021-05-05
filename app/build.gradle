@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 def secretProperties() {
@@ -29,8 +30,15 @@ android {
     def MARVEL_API_KEY = 'MARVEL_API_KEY'
     def MARVEL_PRIVATE_KEY = 'MARVEL_PRIVATE_KEY'
 
-    def apikey = secretProperties()[MARVEL_API_KEY]
-    def privatekey = secretProperties()[MARVEL_PRIVATE_KEY]
+    def apikey = "default-apikey"
+    def privatekey = "default-privatekey"
+    try {
+        apikey = secretProperties()[MARVEL_API_KEY]
+        privatekey = secretProperties()[MARVEL_PRIVATE_KEY]
+    } catch (FileNotFoundException exception) {
+        println(exception.message)
+        println("This exception is handled and intended to be thrown when github actions runs \"gradle build\" on the project.")
+    }
 
     buildTypes {
         release {
@@ -58,6 +66,7 @@ android {
 
     buildFeatures {
         viewBinding true
+        dataBinding true
     }
 }
 
@@ -67,6 +76,8 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
 
     // test Default
     testImplementation 'junit:junit:4.13.2'
@@ -95,9 +106,9 @@ dependencies {
     kapt 'com.github.bumptech.glide:compiler:4.12.0'
 
     // Room
-    implementation 'androidx.room:room-runtime:2.2.6'
-    implementation 'androidx.room:room-ktx:2.2.6'
-    kapt 'androidx.room:room-compiler:2.2.6'
+    implementation 'androidx.room:room-runtime:2.3.0'
+    implementation 'androidx.room:room-ktx:2.3.0'
+    kapt 'androidx.room:room-compiler:2.3.0'
 
     //Lifecycle ViewModel
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'

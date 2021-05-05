@@ -1,6 +1,6 @@
 package com.architectcoders.arquitectomarvel.model
 
-import android.app.Application
+import android.content.Context
 import com.architectcoders.arquitectomarvel.BuildConfig
 import com.architectcoders.arquitectomarvel.model.characters.Characters
 import com.architectcoders.arquitectomarvel.model.characters.Result
@@ -10,9 +10,9 @@ import com.architectcoders.arquitectomarvel.model.database.ResultDao
 import com.architectcoders.arquitectomarvel.model.database.ResultDatabase
 import com.architectcoders.arquitectomarvel.model.database.toCharacterEntity
 
-class Repository(private val application: Application) {
+class Repository(private val context: Context) {
 
-    val dao: ResultDao get() = ResultDatabase.getInstance(application).resultDao
+    val dao: ResultDao get() = ResultDatabase.getInstance(context).resultDao
 
     suspend fun getCharactersRemote(): Characters {
         val ts = System.currentTimeMillis()
