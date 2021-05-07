@@ -13,8 +13,13 @@ import androidx.recyclerview.widget.RecyclerView.*
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
 import com.architectcoders.arquitectomarvel.model.*
+import com.architectcoders.arquitectomarvel.model.database.ResultDatabase
+import com.architectcoders.arquitectomarvel.model.database.RoomDataSource
 import com.architectcoders.arquitectomarvel.ui.detail.HeroDetailActivity
+import com.architectcoders.module.data.CredentialsApiRepository
+import com.architectcoders.module.data.LocalDataSource
 import com.architectcoders.module.data.MarvelRepository
+import com.architectcoders.module.data.RemoteDataSource
 import com.architectcoders.module.usescases.UseCaseGetCharactersRemote
 import kotlinx.coroutines.flow.collectLatest
 
@@ -22,12 +27,18 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private lateinit var viewModel: MainViewModel // FIXME: 7/5/21 only for one commit
-//    private val viewModel by viewModels<MainViewModel> {
-//        Factory(UseCaseGetCharactersRemote(MarvelRepository(
-//            TODO()
-//        )))
-//    }
+    private val roomDataSource: LocalDataSource = RoomDataSource(ResultDatabase.getInstance(application))
+    private val credentialsApiRepository: CredentialsApiRepository = CredentialApiRepositoryImpl()
+    private val retrofitDataSource: RemoteDataSource = RetrofitDataSource(credentialsApiRepository)
+    private val marvelRepository = MarvelRepository(
+        roomDataSource,
+        retrofitDataSource
+    )
+    private val useCaseGetCharactersRemote = UseCaseGetCharactersRemote(marvelRepository)
+
+    private val viewModel by viewModels<MainViewModel> {
+        Factory(useCaseGetCharactersRemote)
+    }
     private val adapter: AdapterList by lazy {
         AdapterList(viewModel::onResultClick)
     }

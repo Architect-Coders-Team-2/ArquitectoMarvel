@@ -5,6 +5,8 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.Parcelize
 
+import com.architectcoders.module.domain.remote_models.Characters.Characters as CharactersDomain
+
 @Parcelize
 @JsonClass(generateAdapter = true)
 data class Characters(
@@ -23,3 +25,15 @@ data class Characters(
     @Json(name = "data")
     val characterData: Data?
 ) : Parcelable
+
+fun Characters.toCharactersModel(): CharactersDomain {
+    return CharactersDomain(
+        code,
+        status,
+        copyright,
+        attributionText,
+        attributionHTML,
+        etag,
+        data = characterData?.toCharacterDataDomain()
+    )
+}

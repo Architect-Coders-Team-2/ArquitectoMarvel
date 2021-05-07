@@ -5,6 +5,8 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.Parcelize
 
+import com.architectcoders.module.domain.remote_models.Characters.Result as CharactersResultDomain
+
 @Parcelize
 @JsonClass(generateAdapter = true)
 data class Result(
@@ -30,42 +32,18 @@ data class Result(
     val events: Events? = null,
     @Json(name = "urls")
     val urls: List<Url>? = null
-) : Parcelable {
+) : Parcelable
 
-    // override for areItemsTheSame method run ok with equals operator '=='
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+fun Result.toCharacterResultDomain(): CharactersResultDomain =
+    CharactersResultDomain(
+        id,
+        name,
+        description,
+        modified,
+        thumbnail?.toThumbailDomain(),
+        resourceURI,
+        comics.toCharactersComicsDomain()
+    )
 
-        other as Result
+fun List<Result>.toListCharacterResultDomain() = map { it.toCharacterResultDomain() }
 
-        if (id != other.id) return false
-        if (name != other.name) return false
-        if (description != other.description) return false
-        if (modified != other.modified) return false
-        if (thumbnail != other.thumbnail) return false
-        if (resourceURI != other.resourceURI) return false
-        if (comics != other.comics) return false
-        if (series != other.series) return false
-        if (stories != other.stories) return false
-        if (events != other.events) return false
-        if (urls != other.urls) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = id
-        result = 31 * result + (name?.hashCode() ?: 0)
-        result = 31 * result + (description?.hashCode() ?: 0)
-        result = 31 * result + (modified?.hashCode() ?: 0)
-        result = 31 * result + (thumbnail?.hashCode() ?: 0)
-        result = 31 * result + (resourceURI?.hashCode() ?: 0)
-        result = 31 * result + comics.hashCode()
-        result = 31 * result + (series?.hashCode() ?: 0)
-        result = 31 * result + (stories?.hashCode() ?: 0)
-        result = 31 * result + (events?.hashCode() ?: 0)
-        result = 31 * result + (urls?.hashCode() ?: 0)
-        return result
-    }
-}

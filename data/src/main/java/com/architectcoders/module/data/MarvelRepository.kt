@@ -7,15 +7,20 @@ import com.architectcoders.module.domain.remote_models.Characters.Result as Char
 
 class MarvelRepository(
     private val localDataSource: LocalDataSource,
-    private val remoteDataSource: RemoteDataSource,
-    private val credentialsApiRepository: CredentialsApiRepository
+    private val remoteDataSource: RemoteDataSource
 ) {
 
-    suspend fun getCharactersRemote(offset: Int): Characters {
+    suspend fun getCharactersRemote(
+        credentialsApiRepository: CredentialsApiRepository,
+        offset: Int
+    ): Characters {
         return remoteDataSource.getCharacters(credentialsApiRepository, offset)
     }
 
-    suspend fun getComicsFromCharacterRemote(characterId: Int): Comics {
+    suspend fun getComicsFromCharacterRemote(
+        credentialsApiRepository: CredentialsApiRepository,
+        characterId: Int
+    ): Comics {
         return remoteDataSource.getComics(credentialsApiRepository, characterId)
     }
 
@@ -48,8 +53,15 @@ interface LocalDataSource {
 }
 
 interface RemoteDataSource {
-    suspend fun getCharacters(credentialsApiRepository: CredentialsApiRepository, offset: Int) : Characters
-    suspend fun getComics(credentialsApiRepository: CredentialsApiRepository, characterId: Int): Comics
+    suspend fun getCharacters(
+        credentialsApiRepository: CredentialsApiRepository,
+        offset: Int
+    ): Characters
+
+    suspend fun getComics(
+        credentialsApiRepository: CredentialsApiRepository,
+        characterId: Int
+    ): Comics
 }
 
 interface CredentialsApiRepository {
