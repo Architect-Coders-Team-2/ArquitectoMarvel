@@ -7,6 +7,8 @@ import kotlinx.parcelize.Parcelize
 
 import com.architectcoders.module.domain.remote_models.Characters.Thumbnail as CharactersThumbailDomain
 
+import com.architectcoders.module.domain.remote_models.Comics.Thumbnail as ComicsThumbailDomain
+
 @Parcelize
 @JsonClass(generateAdapter = true)
 data class Thumbnail(
@@ -16,8 +18,11 @@ data class Thumbnail(
     val extension: String?
 ) : Parcelable
 
-fun Thumbnail.toThumbailDomain() : CharactersThumbailDomain =
+fun Thumbnail.toCharactersThumbailDomain() : CharactersThumbailDomain =
     CharactersThumbailDomain(
         path,
         extension
     )
+
+fun Thumbnail.toComicsThumbailDomain(): ComicsThumbailDomain =
+    ComicsThumbailDomain(path, extension)

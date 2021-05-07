@@ -23,5 +23,5 @@ interface ApiService {
         @Query("ts") ts: Long,
         @Query("apikey") apikey: String,
         @Query("hash") hash: String
-    ): Comic?
+    ): Comic
 }

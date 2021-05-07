@@ -40,7 +40,7 @@ fun Result.toCharacterResultDomain(): CharactersResultDomain =
         name,
         description,
         modified,
-        thumbnail?.toThumbailDomain(),
+        thumbnail?.toCharactersThumbailDomain(),
         resourceURI,
         comics.toCharactersComicsDomain()
     )

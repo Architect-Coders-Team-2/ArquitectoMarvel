@@ -1,6 +1,7 @@
 package com.architectcoders.arquitectomarvel.model
 
 import com.architectcoders.arquitectomarvel.model.characters.toCharactersModel
+import com.architectcoders.arquitectomarvel.model.comics.toComicsDomain
 import com.architectcoders.module.data.CredentialsApiRepository
 import com.architectcoders.module.data.RemoteDataSource
 import com.architectcoders.module.domain.remote_models.Characters.Characters
@@ -28,8 +29,12 @@ class RetrofitDataSource(private val credentials: CredentialsApiRepository) : Re
         credentialsApiRepository: CredentialsApiRepository,
         characterId: Int
     ): Comics {
-        TODO("Not yet implemented")
+        return api.getComics(
+            characterId,
+            credentialsApiRepository.currentTime,
+            credentialsApiRepository.publicKey,
+            credentialsApiRepository.hash
+        ).toComicsDomain()
     }
-
 
 }

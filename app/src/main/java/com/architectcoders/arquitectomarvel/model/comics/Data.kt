@@ -5,6 +5,8 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.Parcelize
 
+import com.architectcoders.module.domain.remote_models.Comics.Data as ComicsDataDomain
+
 @Parcelize
 @JsonClass(generateAdapter = true)
 data class Data(
@@ -18,4 +20,16 @@ data class Data(
     val results: List<Result>?,
     @Json(name = "total")
     val total: Int?
-) : Parcelable
+) : Parcelable {
+
+    fun toComicsDataDomain(): ComicsDataDomain =
+        ComicsDataDomain(
+            offset = offset,
+            limit = limit,
+            results = results?.toListComicsResultDomain(),
+            total = total,
+            count = count
+        )
+}
+
+

@@ -1,12 +1,12 @@
 package com.architectcoders.arquitectomarvel.model.comics
 
 import android.os.Parcelable
-import com.architectcoders.arquitectomarvel.model.characters.Item
-import com.architectcoders.arquitectomarvel.model.characters.Thumbnail
-import com.architectcoders.arquitectomarvel.model.characters.Url
+import com.architectcoders.arquitectomarvel.model.characters.*
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.Parcelize
+
+import com.architectcoders.module.domain.remote_models.Comics.Result as ComicsResultDomain
 
 @Parcelize
 @JsonClass(generateAdapter = true)
@@ -69,4 +69,17 @@ data class Result(
     val variantDescription: String?,
     @Json(name = "variants")
     val variants: List<Variant>?
-) : Parcelable
+) : Parcelable {
+
+    fun toComicsResultDomain():ComicsResultDomain =
+        ComicsResultDomain(
+            id = id,
+            title = title,
+            resourceURI = resourceURI,
+            thumbnail = thumbnail?.toComicsThumbailDomain()
+        )
+
+}
+
+fun List<Result>.toListComicsResultDomain(): List<ComicsResultDomain> =
+    map { it.toComicsResultDomain() }
