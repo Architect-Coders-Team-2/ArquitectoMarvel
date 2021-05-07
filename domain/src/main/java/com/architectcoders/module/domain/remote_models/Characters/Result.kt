@@ -5,7 +5,7 @@ data class Result(
     val name: String?,
     val description: String?,
     val modified: String?,
-    val thumbnail: Thumbnail?,
+    val thumbnail: Thumbnail,
     val resourceURI: String?,
     val comics: Comics?,
     val series: Series?,

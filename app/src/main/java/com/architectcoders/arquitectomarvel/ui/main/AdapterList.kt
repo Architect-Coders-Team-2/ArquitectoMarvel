@@ -9,18 +9,19 @@ import androidx.paging.PagingState
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.architectcoders.arquitectomarvel.databinding.HeroItemBinding
-import com.architectcoders.arquitectomarvel.model.Repository
-import com.architectcoders.arquitectomarvel.model.characters.Result
 import com.architectcoders.arquitectomarvel.model.loadUrl
+import com.architectcoders.arquitectomarvel.model.mappers.ResultUI
+import com.architectcoders.arquitectomarvel.model.mappers.toResultUIList
+import com.architectcoders.module.usescases.UseCaseGetCharactersRemote
 import retrofit2.HttpException
 import java.io.IOException
 
-class AdapterList(private val listener: (Result, View) -> Unit) :
-    PagingDataAdapter<Result, AdapterList.HeroViewHolder>(DiffCallback) {
+class AdapterList(private val listener: (ResultUI, View) -> Unit) :
+    PagingDataAdapter<ResultUI, AdapterList.HeroViewHolder>(DiffCallback) {
 
-    companion object DiffCallback : DiffUtil.ItemCallback<Result>() {
-        override fun areItemsTheSame(oldItem: Result, newItem: Result) = oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: Result, newItem: Result) = oldItem == newItem
+    companion object DiffCallback : DiffUtil.ItemCallback<ResultUI>() {
+        override fun areItemsTheSame(oldItem: ResultUI, newItem: ResultUI) = oldItem.id == newItem.id
+        override fun areContentsTheSame(oldItem: ResultUI, newItem: ResultUI) = oldItem == newItem
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeroViewHolder {
@@ -43,27 +44,27 @@ class AdapterList(private val listener: (Result, View) -> Unit) :
     inner class HeroViewHolder(private val binding: HeroItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(mediaService: Result) {
-            binding.heroText.text = mediaService.name
+        fun bind(resultUI: ResultUI) {
+            binding.heroText.text = resultUI.name
             binding.heroImage.loadUrl(
-                mediaService.thumbnail?.path,
-                mediaService.thumbnail?.extension
+                resultUI.thumbnail.path,
+                resultUI.thumbnail.extension
             )
         }
     }
 }
 
 const val INITIAL = 36
-class ResultPagingSource(
-    val repository: Repository
-) : PagingSource<Int, Result>() {
+class ResultUIPagingSource(
+    private val useCaseGetCharactersRemote: UseCaseGetCharactersRemote
+) : PagingSource<Int, ResultUI>() {
     override suspend fun load(
         params: LoadParams<Int>
-    ): LoadResult<Int, Result> {
+    ): LoadResult<Int, ResultUI> {
         return try {
             val offset = params.key ?: INITIAL
-            val response = repository.getCharactersRemote(offset)
-            val results = response.characterData?.results!!
+            val response = useCaseGetCharactersRemote.invoke(offset)
+            val results = response.data?.results!!.toResultUIList()
             LoadResult.Page(
                 data = results,
                 prevKey = null, // Only paging forward.
@@ -76,7 +77,7 @@ class ResultPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, Result>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, ResultUI>): Int? {
         // Try to find the page key of the closest page to anchorPosition, from
         // either the prevKey or the nextKey, but you need to handle nullability
         // here:

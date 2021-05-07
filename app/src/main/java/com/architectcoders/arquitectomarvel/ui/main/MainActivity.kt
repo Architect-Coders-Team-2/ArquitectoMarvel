@@ -14,15 +14,20 @@ import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
 import com.architectcoders.arquitectomarvel.model.*
 import com.architectcoders.arquitectomarvel.ui.detail.HeroDetailActivity
+import com.architectcoders.module.data.MarvelRepository
+import com.architectcoders.module.usescases.UseCaseGetCharactersRemote
 import kotlinx.coroutines.flow.collectLatest
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val viewModel by viewModels<MainViewModel> {
-        Factory(Repository(application))
-    }
+    private lateinit var viewModel: MainViewModel // FIXME: 7/5/21 only for one commit
+//    private val viewModel by viewModels<MainViewModel> {
+//        Factory(UseCaseGetCharactersRemote(MarvelRepository(
+//            TODO()
+//        )))
+//    }
     private val adapter: AdapterList by lazy {
         AdapterList(viewModel::onResultClick)
     }

@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import com.architectcoders.arquitectomarvel.R
+import com.architectcoders.module.usescases.UseCaseGetCharactersRemote
 import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.math.BigInteger
@@ -74,8 +75,8 @@ inline fun <reified T : Activity> Context.startActivity(
     startActivity(intentFor<T>(body), options)
 }
 
-class Factory(val repository: Repository) : ViewModelProvider.Factory {
+class Factory(val useCaseGetCharactersRemote: UseCaseGetCharactersRemote) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T =
         modelClass.getConstructor(Repository::class.java)
-            .newInstance(repository)
+            .newInstance(useCaseGetCharactersRemote)
 }
