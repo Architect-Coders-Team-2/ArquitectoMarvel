@@ -1,5 +1,6 @@
-package com.architectcoders.arquitectomarvel.model
+package com.architectcoders.arquitectomarvel.data.server
 
+import com.architectcoders.arquitectomarvel.ui.common.BASE_URL
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
