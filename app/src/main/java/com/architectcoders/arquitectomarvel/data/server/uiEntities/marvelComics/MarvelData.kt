@@ -1,13 +1,11 @@
-package com.architectcoders.arquitectomarvel.model.characters
+package com.architectcoders.arquitectomarvel.data.server.uiEntities.marvelComics
 
-import android.os.Parcelable
+import com.architectcoders.domain.comics.Data
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
 @JsonClass(generateAdapter = true)
-data class Data(
+data class MarvelData(
     @Json(name = "offset")
     val offset: Int?,
     @Json(name = "limit")
@@ -17,5 +15,10 @@ data class Data(
     @Json(name = "count")
     val count: Int?,
     @Json(name = "results")
-    val results: List<Result>?
-) : Parcelable
+    val results: List<MarvelResult>?
+)
+
+val MarvelData.toLocalData: Data
+    get() = Data(
+        count, limit, offset, results?.toLocalListResult, total
+    )
