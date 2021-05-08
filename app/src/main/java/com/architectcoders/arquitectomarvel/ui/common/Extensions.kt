@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.model
+package com.architectcoders.arquitectomarvel.ui.common
 
 import android.app.Activity
 import android.content.Context
@@ -45,7 +45,7 @@ fun FloatingActionButton.loadImage(
         .into(this)
 }
 
-fun Context.calculateColumsForGridLayout(columnWidthInDP: Float): Int {
+fun Context.calculateColumnsForGridLayout(columnWidthInDP: Float): Int {
     return ((resources.displayMetrics.widthPixels / resources.displayMetrics.density) / columnWidthInDP).toInt()
 }
 
@@ -72,10 +72,4 @@ inline fun <reified T : Activity> Context.startActivity(
     body: Intent.() -> Unit
 ) {
     startActivity(intentFor<T>(body), options)
-}
-
-class Factory(val repository: Repository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-        modelClass.getConstructor(Repository::class.java)
-            .newInstance(repository)
 }

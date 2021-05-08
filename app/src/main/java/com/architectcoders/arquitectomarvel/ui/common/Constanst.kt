@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.model
+package com.architectcoders.arquitectomarvel.ui.common
 
 // API
 const val BASE_URL = "https://gateway.marvel.com"
@@ -8,3 +8,6 @@ const val EMPTY_TEXT = "--"
 
 // EXTRA
 const val EXTRA_SELECTED_HERO = "extraSelectedHero"
+
+// VALUES TO PAGINATE
+const val INITIAL = 36
