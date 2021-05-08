@@ -6,21 +6,22 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityHeroDetailBinding
 import com.architectcoders.arquitectomarvel.model.*
-import com.architectcoders.arquitectomarvel.model.characters.Result
 import com.architectcoders.arquitectomarvel.model.database.DetailedComicEntity
-import com.architectcoders.arquitectomarvel.model.database.toDetailedComicEntityList
+import com.architectcoders.arquitectomarvel.model.mappers.ResultUI
 import com.architectcoders.arquitectomarvel.ui.detail.HeroDetailViewModel.UiModel
-import com.architectcoders.arquitectomarvel.model.comics.Result as ComicResult
+import com.architectcoders.module.usescases.UseCaseGetCharactersRemote
 
 class HeroDetailActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityHeroDetailBinding
     private lateinit var heroDetailViewModel: HeroDetailViewModel
     private val adapter by lazy { ComicAdapter() }
-    var selectedCharacter: Result? = null
+    var selectedCharacter: ResultUI? = null
     var isCharacterFavorite = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +31,10 @@ class HeroDetailActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.contentHeroDetail.comicList.adapter = adapter
-        heroDetailViewModel = getViewModel { HeroDetailViewModel(Repository(application)) }
+
+        val vmf = VMFHero(Repository(application))
+        heroDetailViewModel = ViewModelProvider(this, vmf).get(HeroDetailViewModel::class.java)
+
         heroDetailViewModel.model.observe(this, Observer(::updateUi))
     }
 
@@ -45,11 +49,11 @@ class HeroDetailActivity : AppCompatActivity() {
     }
 
     private fun setHeroDetails(onHeroShown: (Int) -> Unit) {
-        intent.extras?.getParcelable<Result>(EXTRA_SELECTED_HERO)?.let { selectedHero ->
+        intent.extras?.getParcelable<ResultUI>(EXTRA_SELECTED_HERO)?.let { selectedHero ->
             this.selectedCharacter = selectedHero
             binding.headerHeroImage.loadUrl(
-                selectedHero.thumbnail?.path,
-                selectedHero.thumbnail?.extension
+                selectedHero.thumbnail.path,
+                selectedHero.thumbnail.extension
             )
             binding.toolbar.title = selectedHero.name ?: EMPTY_TEXT
             binding.toolbarLayout.title = selectedHero.name ?: EMPTY_TEXT
@@ -70,7 +74,7 @@ class HeroDetailActivity : AppCompatActivity() {
     private fun updateFAB(
         isCharacterFavorite: Boolean,
         listener: (
-            selectedHero: Result,
+            selectedHero: ResultUI,
             comicList: MutableList<DetailedComicEntity>,
             isCharacterFavorite: Boolean,
         ) -> Unit,
@@ -94,11 +98,11 @@ class HeroDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateComics(comicList: List<ComicResult>) {
+    private fun updateComics(comicList: List<ResultUI>) {
         if (comicList.isEmpty()) {
             binding.contentHeroDetail.noComics.isVisible = true
         }
-        adapter.submitList(comicList.toDetailedComicEntityList)
+        adapter.submitList(comicList)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

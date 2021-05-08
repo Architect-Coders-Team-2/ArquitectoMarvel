@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import com.architectcoders.arquitectomarvel.R
+import com.architectcoders.arquitectomarvel.ui.detail.HeroDetailViewModel
+import com.architectcoders.arquitectomarvel.ui.main.MainViewModel
 import com.architectcoders.module.usescases.UseCaseGetCharactersRemote
 import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -57,13 +59,23 @@ fun <T> Context.toast(msgResource: T, length: Int = Toast.LENGTH_SHORT) {
     }
 }
 
-@Suppress("UNCHECKED_CAST")
-inline fun <reified T : ViewModel> FragmentActivity.getViewModel(crossinline factory: () -> T): T {
-    val vmFactory = object : ViewModelProvider.Factory {
-        override fun <U : ViewModel> create(modelClass: Class<U>): U = factory() as U
-    }
-    return ViewModelProvider(this, vmFactory).get()
-}
+//@Suppress("UNCHECKED_CAST")
+//inline fun <reified T : ViewModel> FragmentActivity.getViewModel(crossinline factory: () -> UseCaseGetCharactersRemote): T {
+//    val vmFactory = object : ViewModelProvider.Factory {
+//        override fun <U : ViewModel> create(modelClass: Class<U>): U = factory() as U
+//    }
+//    return ViewModelProvider(this, vmFactory).get()
+//}
+//
+//@Suppress("UNCHECKED_CAST")
+//inline fun <reified T : ViewModel> FragmentActivity.getViewModelDetail(crossinline factory: () -> HeroDetailViewModel): T {
+//    val vmFactory = object : ViewModelProvider.Factory {
+//        override fun <U : ViewModel> create(modelClass: Class<U>): U = factory() as U
+//    }
+//    return ViewModelProvider(this, vmFactory).get()
+//}
+
+
 
 inline fun <reified T : Activity> Context.intentFor(body: Intent.() -> Unit): Intent =
     Intent(this, T::class.java).apply(body)
@@ -75,8 +87,20 @@ inline fun <reified T : Activity> Context.startActivity(
     startActivity(intentFor<T>(body), options)
 }
 
-class Factory(val useCaseGetCharactersRemote: UseCaseGetCharactersRemote) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-        modelClass.getConstructor(Repository::class.java)
-            .newInstance(useCaseGetCharactersRemote)
+//class Factory(val useCaseGetCharactersRemote: UseCaseGetCharactersRemote) : ViewModelProvider.Factory {
+//    override fun <T : ViewModel?> create(modelClass: Class<T>): T =
+//        modelClass.getConstructor(Repository::class.java)
+//            .newInstance(useCaseGetCharactersRemote)
+//}
+
+inline fun <VM : ViewModel> viewModelFactory(crossinline f: () -> VM) =
+    object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(aClass: Class<T>):T = f() as T
+    }
+
+class VMFuseCaseGetCharactersRemote (val arg: UseCaseGetCharactersRemote): ViewModelProvider.Factory {
+
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        return   modelClass.getConstructor(UseCaseGetCharactersRemote::class.java).newInstance(arg)
+    }
 }

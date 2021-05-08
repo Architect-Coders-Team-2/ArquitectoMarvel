@@ -1,11 +1,14 @@
 package com.architectcoders.arquitectomarvel.ui.main
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
@@ -27,18 +30,22 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val roomDataSource: LocalDataSource = RoomDataSource(ResultDatabase.getInstance(application))
-    private val credentialsApiRepository: CredentialsApiRepository = CredentialApiRepositoryImpl()
-    private val retrofitDataSource: RemoteDataSource = RetrofitDataSource(credentialsApiRepository)
-    private val marvelRepository = MarvelRepository(
-        roomDataSource,
-        retrofitDataSource
-    )
-    private val useCaseGetCharactersRemote = UseCaseGetCharactersRemote(marvelRepository)
-
-    private val viewModel by viewModels<MainViewModel> {
-        Factory(useCaseGetCharactersRemote)
+    private fun getRepository(context: Context): MarvelRepository {
+        val roomDataSource: LocalDataSource = RoomDataSource(ResultDatabase.getInstance(context))
+        val credentialsApiRepository: CredentialsApiRepository = CredentialApiRepositoryImpl()
+        val retrofitDataSource: RemoteDataSource = RetrofitDataSource(credentialsApiRepository)
+        return MarvelRepository(
+            roomDataSource,
+            retrofitDataSource,
+            credentialsApiRepository
+        )
     }
+
+    lateinit var useCaseGetCharactersRemote: UseCaseGetCharactersRemote
+
+    private lateinit var viewModel: MainViewModel
+
+
     private val adapter: AdapterList by lazy {
         AdapterList(viewModel::onResultClick)
     }
@@ -48,6 +55,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val repo = getRepository(applicationContext)
+        useCaseGetCharactersRemote = UseCaseGetCharactersRemote(repo)
+        val vmf = VMFuseCaseGetCharactersRemote(useCaseGetCharactersRemote)
+        viewModel = ViewModelProvider(this, vmf).get(MainViewModel::class.java)
 
         setUpViews()
         observersViewModel()

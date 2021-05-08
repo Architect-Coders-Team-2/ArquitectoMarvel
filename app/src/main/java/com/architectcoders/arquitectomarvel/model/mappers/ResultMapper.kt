@@ -25,7 +25,9 @@ data class ResultUI(
     val description: String,
     val name: String,
     val thumbnail: ThumbnailUI
-) : Parcelable
+) : Parcelable {
+    fun thumbnailFormatted() = "${thumbnail.path}.${thumbnail.extension}"
+}
 
 @Parcelize
 data class ThumbnailUI(

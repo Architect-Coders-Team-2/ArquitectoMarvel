@@ -7,18 +7,17 @@ import com.architectcoders.module.domain.remote_models.Characters.Result as Char
 
 class MarvelRepository(
     private val localDataSource: LocalDataSource,
-    private val remoteDataSource: RemoteDataSource
+    private val remoteDataSource: RemoteDataSource,
+    private val credentialsApiRepository: CredentialsApiRepository
 ) {
 
     suspend fun getCharactersRemote(
-        credentialsApiRepository: CredentialsApiRepository,
         offset: Int
     ): Characters {
         return remoteDataSource.getCharacters(credentialsApiRepository, offset)
     }
 
     suspend fun getComicsFromCharacterRemote(
-        credentialsApiRepository: CredentialsApiRepository,
         characterId: Int
     ): Comics {
         return remoteDataSource.getComics(credentialsApiRepository, characterId)
@@ -40,8 +39,10 @@ class MarvelRepository(
         localDataSource.deleteFavoriteDetailedComic(comic)
     }
 
-    suspend fun isCharacterFavorite(characterId: Int): Boolean =
-        localDataSource.isCharacterFavorite(characterId) != null
+    suspend fun isCharacterFavorite(characterId: Int): Boolean  {
+        return localDataSource.isCharacterFavorite(characterId)
+    }
+
 }
 
 interface LocalDataSource {
@@ -49,7 +50,7 @@ interface LocalDataSource {
     suspend fun insertFavoriteDetailedComic(comic: DetailedComic)
     suspend fun deleteFavoriteCharacter(favouriteCharacter: CharacterResult)
     suspend fun deleteFavoriteDetailedComic(comic: DetailedComic)
-    suspend fun isCharacterFavorite(characterId: Int): Int?
+    suspend fun isCharacterFavorite(characterId: Int): Boolean
 }
 
 interface RemoteDataSource {

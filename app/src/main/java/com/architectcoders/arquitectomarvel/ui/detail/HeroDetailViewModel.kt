@@ -1,13 +1,11 @@
 package com.architectcoders.arquitectomarvel.ui.detail
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.model.Repository
 import com.architectcoders.arquitectomarvel.model.comics.Result
 import com.architectcoders.arquitectomarvel.model.database.DetailedComicEntity
+import com.architectcoders.module.usescases.UseCaseGetCharactersRemote
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.net.UnknownHostException
@@ -79,5 +77,14 @@ class HeroDetailViewModel(private val repository: Repository) : ViewModel() {
                 }
             }
         }
+    }
+}
+
+
+
+class VMFHero (val repository: Repository): ViewModelProvider.Factory {
+
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        return   modelClass.getConstructor(UseCaseGetCharactersRemote::class.java).newInstance(repository)
     }
 }

@@ -36,6 +36,6 @@ interface ResultDao {
     @Query("SELECT * FROM characterentity WHERE comicCollectionUri = :comicCollectionUri")
     suspend fun getCharacterWithComics(comicCollectionUri: String): List<CharacterWithComics>
 
-    @Query("SELECT id FROM characterentity WHERE id = :id")
-    suspend fun isCharacterFavorite(id: Int): Int?
+    @Query("SELECT * FROM characterentity WHERE id = :id")
+    suspend fun isCharacterFavorite(id: Int): List<CharacterEntity>
 }

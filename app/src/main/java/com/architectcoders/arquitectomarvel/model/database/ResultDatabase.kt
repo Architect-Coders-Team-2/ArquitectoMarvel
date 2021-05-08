@@ -25,7 +25,7 @@ abstract class ResultDatabase : RoomDatabase() {
         fun getInstance(context: Context): ResultDatabase {
             return INSTANCE ?: synchronized(this) {
                 Room.databaseBuilder(
-                    context.applicationContext,
+                    context,
                     ResultDatabase::class.java,
                     "result_db"
                 ).build().also {

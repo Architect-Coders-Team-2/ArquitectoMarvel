@@ -27,7 +27,7 @@ class Repository(private val application: Application) {
         return response
     }
 
-    suspend fun getComicsFromCharacterRemote(characterId: Int): Comic? {
+    suspend fun getComicsFromCharacterRemote(characterId: Int): Comic {
         val ts = System.currentTimeMillis()
         val publicKey = BuildConfig.MARVEL_API_KEY
         val privateKey = BuildConfig.MARVEL_PRIVATE_KEY
@@ -52,5 +52,5 @@ class Repository(private val application: Application) {
     }
 
     suspend fun isCharacterFavorite(characterId: Int): Boolean =
-        dao.isCharacterFavorite(characterId) != null
+        dao.isCharacterFavorite(characterId).isNotEmpty()
 }

@@ -27,3 +27,10 @@ class MainViewModel(private val useCaseGetCharactersRemote: UseCaseGetCharacters
         _navigation.value = Event(result)
     }
 }
+
+class VMFuseCaseGetCharactersRemote (val arg: UseCaseGetCharactersRemote): ViewModelProvider.Factory {
+
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        return   modelClass.getConstructor(UseCaseGetCharactersRemote::class.java).newInstance(arg)
+    }
+}

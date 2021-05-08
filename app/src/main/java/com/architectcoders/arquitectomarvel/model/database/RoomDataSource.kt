@@ -26,7 +26,7 @@ class RoomDataSource(resultDatabase: ResultDatabase) : LocalDataSource {
         dao.deleteFavoriteDetailedComic(comic.toDetailedComicEntity())
     }
 
-    override suspend fun isCharacterFavorite(characterId: Int): Int? {
-        return dao.isCharacterFavorite(characterId)
+    override suspend fun isCharacterFavorite(characterId: Int): Boolean {
+        return dao.isCharacterFavorite(characterId).isNotEmpty()
     }
 }
