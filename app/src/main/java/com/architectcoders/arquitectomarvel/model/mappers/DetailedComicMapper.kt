@@ -6,7 +6,7 @@ import com.architectcoders.module.domain.local_models.DetailedComic
 fun DetailedComic.toDetailedComicEntity() : DetailedComicEntity {
     return DetailedComicEntity(
         resourceUri = resourceUri,
-        thumbnail = thumbnail,
+        thumbnail = thumbnail?:"",
         title = title
     )
 }

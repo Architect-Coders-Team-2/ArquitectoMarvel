@@ -26,3 +26,6 @@ fun Thumbnail.toCharactersThumbailDomain() : CharactersThumbailDomain =
 
 fun Thumbnail.toComicsThumbailDomain(): ComicsThumbailDomain =
     ComicsThumbailDomain(path, extension)
+
+fun ComicsThumbailDomain.fromComicsThumbailDomain(): Thumbnail =
+    Thumbnail(path, extension)

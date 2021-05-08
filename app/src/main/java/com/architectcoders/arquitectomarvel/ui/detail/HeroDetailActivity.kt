@@ -6,15 +6,17 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityHeroDetailBinding
+import com.architectcoders.arquitectomarvel.getRepository
 import com.architectcoders.arquitectomarvel.model.*
 import com.architectcoders.arquitectomarvel.model.database.DetailedComicEntity
+import com.architectcoders.arquitectomarvel.model.database.toDetailedComicEntityList
 import com.architectcoders.arquitectomarvel.model.mappers.ResultUI
+import com.architectcoders.arquitectomarvel.model.mappers.fromResultUItoCharacterResult
 import com.architectcoders.arquitectomarvel.ui.detail.HeroDetailViewModel.UiModel
-import com.architectcoders.module.usescases.UseCaseGetCharactersRemote
+import com.architectcoders.module.usescases.*
+import com.architectcoders.arquitectomarvel.model.characters.Result as CharacterResult
 
 class HeroDetailActivity : AppCompatActivity() {
 
@@ -32,8 +34,17 @@ class HeroDetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.contentHeroDetail.comicList.adapter = adapter
 
-        val vmf = VMFHero(Repository(application))
-        heroDetailViewModel = ViewModelProvider(this, vmf).get(HeroDetailViewModel::class.java)
+        val marvelRepository = getRepository(applicationContext)
+        heroDetailViewModel = getViewModel {
+            HeroDetailViewModel(
+                UseCaseGetComicsRemote(marvelRepository),
+                UseCaseInsertFavoriteCharacter(marvelRepository),
+                UseCaseInsertFavoriteComic(marvelRepository),
+                UseCaseIsCharacterFavorite(marvelRepository),
+                UseCaseDeleteFavoriteCharacter(marvelRepository),
+                UseCaseDeleteFavoriteDetailComic(marvelRepository)
+            )
+        }
 
         heroDetailViewModel.model.observe(this, Observer(::updateUi))
     }
@@ -55,10 +66,10 @@ class HeroDetailActivity : AppCompatActivity() {
                 selectedHero.thumbnail.path,
                 selectedHero.thumbnail.extension
             )
-            binding.toolbar.title = selectedHero.name ?: EMPTY_TEXT
-            binding.toolbarLayout.title = selectedHero.name ?: EMPTY_TEXT
+            binding.toolbar.title = selectedHero.name
+            binding.toolbarLayout.title = selectedHero.name
             binding.contentHeroDetail.heroContent.text =
-                if (selectedHero.description.isNullOrBlank()) {
+                if (selectedHero.description.isBlank()) {
                     getString(R.string.content_not_available)
                 } else {
                     selectedHero.description
@@ -74,7 +85,7 @@ class HeroDetailActivity : AppCompatActivity() {
     private fun updateFAB(
         isCharacterFavorite: Boolean,
         listener: (
-            selectedHero: ResultUI,
+            selectedHero: CharacterResult,
             comicList: MutableList<DetailedComicEntity>,
             isCharacterFavorite: Boolean,
         ) -> Unit,
@@ -93,16 +104,20 @@ class HeroDetailActivity : AppCompatActivity() {
                     android.R.drawable.star_off,
                     this.isCharacterFavorite
                 )
-                listener(character, adapter.currentList, this.isCharacterFavorite)
+                listener(
+                    character.fromResultUItoCharacterResult(),
+                    adapter.currentList,
+                    this.isCharacterFavorite
+                )
             }
         }
     }
 
-    private fun updateComics(comicList: List<ResultUI>) {
+    private fun updateComics(comicList: List<com.architectcoders.arquitectomarvel.model.comics.Result>) {
         if (comicList.isEmpty()) {
             binding.contentHeroDetail.noComics.isVisible = true
         }
-        adapter.submitList(comicList)
+        adapter.submitList(comicList.toDetailedComicEntityList)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

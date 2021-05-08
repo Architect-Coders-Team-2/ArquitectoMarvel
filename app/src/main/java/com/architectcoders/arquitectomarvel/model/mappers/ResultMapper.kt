@@ -1,8 +1,10 @@
 package com.architectcoders.arquitectomarvel.model.mappers
 
 import android.os.Parcelable
+import com.architectcoders.arquitectomarvel.model.characters.Thumbnail
 import com.architectcoders.arquitectomarvel.model.database.CharacterEntity
 import kotlinx.parcelize.Parcelize
+import com.architectcoders.arquitectomarvel.model.characters.Result as CharacterResult
 import com.architectcoders.module.domain.remote_models.Characters.Result as ResultDomain
 
 fun ResultDomain.mapperToResultUI(): ResultUI {
@@ -25,9 +27,15 @@ data class ResultUI(
     val description: String,
     val name: String,
     val thumbnail: ThumbnailUI
-) : Parcelable {
-    fun thumbnailFormatted() = "${thumbnail.path}.${thumbnail.extension}"
-}
+) : Parcelable
+
+fun ResultUI.fromResultUItoCharacterResult(): CharacterResult =
+    CharacterResult(
+        id = id,
+        name,
+        description,
+        thumbnail = Thumbnail(thumbnail.path, thumbnail.extension)
+    )
 
 @Parcelize
 data class ThumbnailUI(

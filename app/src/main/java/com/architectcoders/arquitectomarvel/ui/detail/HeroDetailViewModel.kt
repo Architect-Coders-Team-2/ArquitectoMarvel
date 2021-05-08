@@ -2,9 +2,11 @@ package com.architectcoders.arquitectomarvel.ui.detail
 
 import androidx.lifecycle.*
 import com.architectcoders.arquitectomarvel.R
-import com.architectcoders.arquitectomarvel.model.Repository
+import com.architectcoders.arquitectomarvel.model.characters.toCharacterResultDomain
 import com.architectcoders.arquitectomarvel.model.comics.Result
+import com.architectcoders.arquitectomarvel.model.comics.fromListResult
 import com.architectcoders.arquitectomarvel.model.database.DetailedComicEntity
+import com.architectcoders.arquitectomarvel.model.database.fromDetailedComicEntityToDetailedComic
 import com.architectcoders.module.usescases.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -58,7 +60,7 @@ class HeroDetailViewModel(
                 _model.value = UiModel.UpdateFAB(isCharacterFavorite, ::onFabClick)
                 val comic = useCaseGetComicsRemote.invoke(heroId)
                 val comicList = comic.data?.results ?: emptyList()
-                _model.value = UiModel.UpdateComics(comicList)
+                _model.value = UiModel.UpdateComics(comicList.fromListResult())
             } catch (e: UnknownHostException) {
                 Timber.e("qq_MainPresenter.onCreate: $e")
                 _model.value = UiModel.ShowToast(R.string.no_internet)
@@ -73,14 +75,14 @@ class HeroDetailViewModel(
     ) {
         viewModelScope.launch {
             if (isCharacterFavorite) {
-                useCaseInsertFavoriteCharacter.invoke(selectedHero)
+                useCaseInsertFavoriteCharacter.invoke(selectedHero.toCharacterResultDomain())
                 comicList.forEach {
-                    useCaseInsertFavoriteComic.invoke(it)
+                    useCaseInsertFavoriteComic.invoke(it.fromDetailedComicEntityToDetailedComic())
                 }
             } else {
-                useCaseDeleteFavoriteCharacter.invoke(selectedHero)
+                useCaseDeleteFavoriteCharacter.invoke(selectedHero.toCharacterResultDomain())
                 comicList.forEach {
-                    useCaseDeleteFavoriteDetailComic.invoke(it)
+                    useCaseDeleteFavoriteDetailComic.invoke(it.fromDetailedComicEntityToDetailedComic())
                 }
             }
         }
@@ -88,10 +90,24 @@ class HeroDetailViewModel(
 }
 
 
-
-class VMFHero (val repository: Repository): ViewModelProvider.Factory {
+class VMFHero(
+    private val useCaseGetComicsRemote: UseCaseGetComicsRemote,
+    private val useCaseInsertFavoriteCharacter: UseCaseInsertFavoriteCharacter,
+    private val useCaseInsertFavoriteComic: UseCaseInsertFavoriteComic,
+    private val useCaseIsCharacterFavorite: UseCaseIsCharacterFavorite,
+    private val useCaseDeleteFavoriteCharacter: UseCaseDeleteFavoriteCharacter,
+    private val useCaseDeleteFavoriteDetailComic: UseCaseDeleteFavoriteDetailComic,
+) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return   modelClass.getConstructor(UseCaseGetCharactersRemote::class.java).newInstance(repository)
+        return modelClass.getConstructor(HeroDetailViewModel::class.java)
+            .newInstance(
+                useCaseGetComicsRemote,
+                useCaseInsertFavoriteCharacter,
+                useCaseInsertFavoriteComic,
+                useCaseIsCharacterFavorite,
+                useCaseDeleteFavoriteCharacter,
+                useCaseDeleteFavoriteDetailComic
+            )
     }
 }

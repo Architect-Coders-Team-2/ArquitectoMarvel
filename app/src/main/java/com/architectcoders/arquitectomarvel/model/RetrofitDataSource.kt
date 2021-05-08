@@ -7,8 +7,6 @@ import com.architectcoders.module.data.RemoteDataSource
 import com.architectcoders.module.domain.remote_models.Characters.Characters
 import com.architectcoders.module.domain.remote_models.Comics.Comics
 
-import com.architectcoders.arquitectomarvel.model.characters.Characters as CharactersFramework
-
 class RetrofitDataSource(private val credentials: CredentialsApiRepository) : RemoteDataSource {
 
     val api = MarvelApiRest.service

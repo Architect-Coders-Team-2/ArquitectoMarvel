@@ -1,7 +1,7 @@
 package com.architectcoders.module.domain.remote_models.Comics
 
 data class Result(
-    val id: Int?,
+//    val id: Int,
 //    val digitalId: Int?,
     val title: String?,
 //    val issueNumber: Int?,
