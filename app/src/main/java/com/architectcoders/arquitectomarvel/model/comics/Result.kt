@@ -78,8 +78,10 @@ data class Result(
             resourceURI = resourceURI,
             thumbnail = thumbnail?.toComicsThumbailDomain()
         )
-
 }
 
 fun List<Result>.toListComicsResultDomain(): List<ComicsResultDomain> =
     map { it.toComicsResultDomain() }
+
+fun List<ComicsResultDomain>.fromListResult(): List<Result> = TODO()
+
