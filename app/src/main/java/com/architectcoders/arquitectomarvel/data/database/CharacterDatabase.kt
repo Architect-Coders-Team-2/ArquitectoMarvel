@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.model.database
+package com.architectcoders.arquitectomarvel.data.database
 
 import android.content.Context
 import androidx.room.Database
@@ -7,26 +7,24 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [
-        ResultRoom::class,
-        ItemComics::class,
         CharacterEntity::class,
-        DetailedComicEntity::class
+        ComicEntity::class
     ],
     version = 1
 )
-abstract class ResultDatabase : RoomDatabase() {
+abstract class CharacterDatabase : RoomDatabase() {
 
-    abstract val resultDao: ResultDao
+    abstract val characterDao: CharacterDao
 
     companion object {
         @Volatile
-        private var INSTANCE: ResultDatabase? = null
+        private var INSTANCE: CharacterDatabase? = null
 
-        fun getInstance(context: Context): ResultDatabase {
+        fun getInstance(context: Context): CharacterDatabase {
             return INSTANCE ?: synchronized(this) {
                 Room.databaseBuilder(
                     context.applicationContext,
-                    ResultDatabase::class.java,
+                    CharacterDatabase::class.java,
                     "result_db"
                 ).build().also {
                     INSTANCE = it
