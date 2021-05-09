@@ -8,8 +8,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.architectcoders.arquitectomarvel.model.mappers.ResultUI
+import com.architectcoders.arquitectomarvel.data.mappers.ResultUI
 import com.architectcoders.arquitectomarvel.ui.common.Event
+import com.architectcoders.arquitectomarvel.ui.main.pagination.PAGE_SIZE
+import com.architectcoders.arquitectomarvel.ui.main.pagination.HerosPagingSource
 import com.architectcoders.module.usescases.UseCaseGetCharactersRemote
 
 class MainViewModel(private val useCaseGetCharactersRemote: UseCaseGetCharactersRemote) : ViewModel() {
@@ -22,9 +24,9 @@ class MainViewModel(private val useCaseGetCharactersRemote: UseCaseGetCharacters
 
     val pager = Pager(
         config = PagingConfig(
-            pageSize = 18
+            pageSize = PAGE_SIZE
         ),
-        pagingSourceFactory = { ResultUIPagingSource(useCaseGetCharactersRemote) }
+        pagingSourceFactory = { HerosPagingSource(useCaseGetCharactersRemote) }
     ).flow.cachedIn(viewModelScope)
 
     fun onResultClick(result: ResultUI, view: View) {

@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.architectcoders.arquitectomarvel.R
+import com.architectcoders.arquitectomarvel.data.local.entities.DetailedComicEntity
 import com.architectcoders.arquitectomarvel.databinding.ComicItemBinding
-import com.architectcoders.arquitectomarvel.model.database.DetailedComicEntity
 import com.architectcoders.arquitectomarvel.model.loadUrl
 
 class ComicAdapter : ListAdapter<DetailedComicEntity, ComicAdapter.ViewHolder>(DiffUtilCallback) {

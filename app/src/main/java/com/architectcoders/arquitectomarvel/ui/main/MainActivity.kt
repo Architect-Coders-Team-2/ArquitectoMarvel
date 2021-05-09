@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView.*
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
-import com.architectcoders.arquitectomarvel.getRepository
 import com.architectcoders.arquitectomarvel.model.*
+import com.architectcoders.arquitectomarvel.ui.common.ServiceLocator
 import com.architectcoders.arquitectomarvel.ui.detail.HeroDetailActivity
 import com.architectcoders.module.usescases.UseCaseGetCharactersRemote
 import kotlinx.coroutines.flow.collectLatest
@@ -32,14 +32,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val repo = getRepository(applicationContext)
-
         viewModel = getViewModel {
                 MainViewModel(
-                    UseCaseGetCharactersRemote(repo)
+                    UseCaseGetCharactersRemote(ServiceLocator.provideMarvelRepository(applicationContext))
                 )
         }
-
         setUpViews()
         observersViewModel()
     }

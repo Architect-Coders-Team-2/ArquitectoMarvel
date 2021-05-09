@@ -1,16 +1,7 @@
 package com.architectcoders.arquitectomarvel
 
 import android.app.Application
-import android.content.Context
 import android.util.Log
-import com.architectcoders.arquitectomarvel.model.CredentialApiRepositoryImpl
-import com.architectcoders.arquitectomarvel.model.RetrofitDataSource
-import com.architectcoders.arquitectomarvel.model.database.ResultDatabase
-import com.architectcoders.arquitectomarvel.model.database.RoomDataSource
-import com.architectcoders.module.data.CredentialsApiRepository
-import com.architectcoders.module.data.LocalDataSource
-import com.architectcoders.module.data.MarvelRepository
-import com.architectcoders.module.data.RemoteDataSource
 import org.jetbrains.annotations.NotNull
 import timber.log.Timber
 
@@ -43,15 +34,4 @@ class ReleaseTree : @NotNull Timber.Tree() {
 //            )
         }
     }
-}
-
-fun getRepository(context: Context): MarvelRepository {
-    val roomDataSource: LocalDataSource = RoomDataSource(ResultDatabase.getInstance(context))
-    val credentialsApiRepository: CredentialsApiRepository = CredentialApiRepositoryImpl()
-    val retrofitDataSource: RemoteDataSource = RetrofitDataSource(credentialsApiRepository)
-    return MarvelRepository(
-        roomDataSource,
-        retrofitDataSource,
-        credentialsApiRepository
-    )
 }

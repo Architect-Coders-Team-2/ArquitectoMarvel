@@ -7,16 +7,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.architectcoders.arquitectomarvel.R
+import com.architectcoders.arquitectomarvel.data.local.entities.DetailedComicEntity
+import com.architectcoders.arquitectomarvel.data.local.entities.toDetailedComicEntityList
+import com.architectcoders.arquitectomarvel.data.mappers.ResultUI
+import com.architectcoders.arquitectomarvel.data.mappers.fromResultUItoCharacterResult
 import com.architectcoders.arquitectomarvel.databinding.ActivityHeroDetailBinding
-import com.architectcoders.arquitectomarvel.getRepository
 import com.architectcoders.arquitectomarvel.model.*
-import com.architectcoders.arquitectomarvel.model.database.DetailedComicEntity
-import com.architectcoders.arquitectomarvel.model.database.toDetailedComicEntityList
-import com.architectcoders.arquitectomarvel.model.mappers.ResultUI
-import com.architectcoders.arquitectomarvel.model.mappers.fromResultUItoCharacterResult
+import com.architectcoders.arquitectomarvel.ui.common.ServiceLocator
 import com.architectcoders.arquitectomarvel.ui.detail.HeroDetailViewModel.UiModel
 import com.architectcoders.module.usescases.*
-import com.architectcoders.arquitectomarvel.model.characters.Result as CharacterResult
+import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.Result as CharacterResult
 
 class HeroDetailActivity : AppCompatActivity() {
 
@@ -34,7 +34,7 @@ class HeroDetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.contentHeroDetail.comicList.adapter = adapter
 
-        val marvelRepository = getRepository(applicationContext)
+        val marvelRepository = ServiceLocator.provideMarvelRepository(applicationContext)
         heroDetailViewModel = getViewModel {
             HeroDetailViewModel(
                 UseCaseGetComicsRemote(marvelRepository),
@@ -113,7 +113,7 @@ class HeroDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateComics(comicList: List<com.architectcoders.arquitectomarvel.model.comics.Result>) {
+    private fun updateComics(comicList: List<com.architectcoders.arquitectomarvel.data.remote.models_moshi.comics.Result>) {
         if (comicList.isEmpty()) {
             binding.contentHeroDetail.noComics.isVisible = true
         }

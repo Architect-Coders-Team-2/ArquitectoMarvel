@@ -2,16 +2,16 @@ package com.architectcoders.arquitectomarvel.ui.detail
 
 import androidx.lifecycle.*
 import com.architectcoders.arquitectomarvel.R
-import com.architectcoders.arquitectomarvel.model.characters.toCharacterResultDomain
-import com.architectcoders.arquitectomarvel.model.comics.Result
-import com.architectcoders.arquitectomarvel.model.comics.fromListResult
-import com.architectcoders.arquitectomarvel.model.database.DetailedComicEntity
-import com.architectcoders.arquitectomarvel.model.database.fromDetailedComicEntityToDetailedComic
+import com.architectcoders.arquitectomarvel.data.local.entities.DetailedComicEntity
+import com.architectcoders.arquitectomarvel.data.local.entities.fromDetailedComicEntityToDetailedComic
+import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.toCharacterResultDomain
+import com.architectcoders.arquitectomarvel.data.remote.models_moshi.comics.Result
+import com.architectcoders.arquitectomarvel.data.remote.models_moshi.comics.fromListResult
 import com.architectcoders.module.usescases.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.net.UnknownHostException
-import com.architectcoders.arquitectomarvel.model.characters.Result as CharacterResult
+import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.Result as CharacterResult
 
 class HeroDetailViewModel(
     private val useCaseGetComicsRemote: UseCaseGetComicsRemote,
@@ -86,28 +86,5 @@ class HeroDetailViewModel(
                 }
             }
         }
-    }
-}
-
-
-class VMFHero(
-    private val useCaseGetComicsRemote: UseCaseGetComicsRemote,
-    private val useCaseInsertFavoriteCharacter: UseCaseInsertFavoriteCharacter,
-    private val useCaseInsertFavoriteComic: UseCaseInsertFavoriteComic,
-    private val useCaseIsCharacterFavorite: UseCaseIsCharacterFavorite,
-    private val useCaseDeleteFavoriteCharacter: UseCaseDeleteFavoriteCharacter,
-    private val useCaseDeleteFavoriteDetailComic: UseCaseDeleteFavoriteDetailComic,
-) : ViewModelProvider.Factory {
-
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return modelClass.getConstructor(HeroDetailViewModel::class.java)
-            .newInstance(
-                useCaseGetComicsRemote,
-                useCaseInsertFavoriteCharacter,
-                useCaseInsertFavoriteComic,
-                useCaseIsCharacterFavorite,
-                useCaseDeleteFavoriteCharacter,
-                useCaseDeleteFavoriteDetailComic
-            )
     }
 }
