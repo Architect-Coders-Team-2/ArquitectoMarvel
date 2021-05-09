@@ -9,20 +9,19 @@ import com.architectcoders.module.domain.remote_models.Characters.Result as Char
 
 class MarvelRepository(
     private val localDataSource: LocalDataSource,
-    private val remoteDataSource: RemoteDataSource,
-    private val credentialsSource: CredentialsSource
+    private val remoteDataSource: RemoteDataSource
 ) {
 
     suspend fun getCharactersRemote(
         offset: Int
     ): Characters {
-        return remoteDataSource.getCharacters(credentialsSource, offset)
+        return remoteDataSource.getCharacters(offset)
     }
 
     suspend fun getComicsFromCharacterRemote(
         characterId: Int
     ): Comics {
-        return remoteDataSource.getComics(credentialsSource, characterId)
+        return remoteDataSource.getComics(characterId)
     }
 
     suspend fun insertFavoriteCharacter(favouriteCharacter: CharacterResult) {

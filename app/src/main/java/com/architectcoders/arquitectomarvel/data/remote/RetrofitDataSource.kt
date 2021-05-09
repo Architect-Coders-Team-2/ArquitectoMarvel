@@ -11,8 +11,10 @@ class RetrofitDataSource(private val credentials: CredentialsSource) : RemoteDat
 
     val api = MarvelApiRest.service
 
+    override val credentialsSource: CredentialsSource
+        get() = credentials
+
     override suspend fun getCharacters(
-        credentialsSource: CredentialsSource,
         offset: Int
     ): Characters {
         return api.getCharacters(
@@ -24,7 +26,6 @@ class RetrofitDataSource(private val credentials: CredentialsSource) : RemoteDat
     }
 
     override suspend fun getComics(
-        credentialsSource: CredentialsSource,
         characterId: Int
     ): Comics {
         return api.getComics(

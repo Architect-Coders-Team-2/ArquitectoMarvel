@@ -18,8 +18,7 @@ object ServiceLocator {
         val retrofitDataSource: RemoteDataSource = RetrofitDataSource(credentialsSource)
         return MarvelRepository(
             roomDataSource,
-            retrofitDataSource,
-            credentialsSource
+            retrofitDataSource
         )
     }
 }

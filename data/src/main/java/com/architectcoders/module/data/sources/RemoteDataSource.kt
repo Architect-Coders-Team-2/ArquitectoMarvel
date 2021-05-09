@@ -5,13 +5,14 @@ import com.architectcoders.module.domain.remote_models.Characters.Characters
 import com.architectcoders.module.domain.remote_models.Comics.Comics
 
 interface RemoteDataSource {
+
+    val credentialsSource: CredentialsSource
+
     suspend fun getCharacters(
-        credentialsSource: CredentialsSource,
         offset: Int
     ): Characters
 
     suspend fun getComics(
-        credentialsSource: CredentialsSource,
         characterId: Int
     ): Comics
 }
