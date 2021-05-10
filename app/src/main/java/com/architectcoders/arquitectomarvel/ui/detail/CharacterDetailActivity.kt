@@ -3,7 +3,6 @@ package com.architectcoders.arquitectomarvel.ui.detail
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -15,11 +14,10 @@ import com.architectcoders.arquitectomarvel.data.database.RoomDataSource
 import com.architectcoders.arquitectomarvel.data.database.toComicEntityList
 import com.architectcoders.arquitectomarvel.data.server.MarvelDataSource
 import com.architectcoders.arquitectomarvel.databinding.ActivityCharacterDetailBinding
-import com.architectcoders.arquitectomarvel.ui.ViewModelFactory
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel.UiModel
 import com.architectcoders.data.repository.CharacterRepository
-import timber.log.Timber
+import com.architectcoders.usecases.*
 import com.architectcoders.domain.characters.Result as CharacterResult
 
 class CharacterDetailActivity : AppCompatActivity() {
@@ -28,17 +26,23 @@ class CharacterDetailActivity : AppCompatActivity() {
     private val adapter by lazy { ComicAdapter() }
     private var selectedCharacter: CharacterResult? = null
     private var isCharacterFavorite = false
-    private val heroDetailViewModel by viewModels<CharacterDetailViewModel> {
-        ViewModelFactory(
-            CharacterRepository(
+    private val characterDetailViewModel by lazy {
+        getViewModel {
+            val characterRepository = CharacterRepository(
                 MarvelDataSource(),
                 RoomDataSource(CharacterDatabase.getInstance(this)),
-                System.currentTimeMillis(),
-                BuildConfig.MARVEL_API_KEY,
-                "${System.currentTimeMillis()}${BuildConfig.MARVEL_PRIVATE_KEY}${BuildConfig.MARVEL_API_KEY}".md5,
-                ::log
+                BuildConfig.MARVEL_API_KEY
             )
-        )
+            CharacterDetailViewModel(
+                GetCharacterById(characterRepository),
+                IsCharacterFavorite(characterRepository),
+                GetComicsFromCharacterId(characterRepository),
+                InsertFavoriteCharacter(characterRepository),
+                InsertFavoriteComic(characterRepository),
+                DeleteFavoriteCharacter(characterRepository),
+                DeleteFavoriteComic(characterRepository)
+            )
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +52,7 @@ class CharacterDetailActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.contentHeroDetail.comicList.adapter = adapter
-        heroDetailViewModel.model.observe(this, Observer(::updateUi))
+        characterDetailViewModel.model.observe(this, Observer(::updateUi))
     }
 
     private fun updateUi(model: UiModel) {
@@ -128,9 +132,5 @@ class CharacterDetailActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun log(message: String) {
-        Timber.d(message)
     }
 }
