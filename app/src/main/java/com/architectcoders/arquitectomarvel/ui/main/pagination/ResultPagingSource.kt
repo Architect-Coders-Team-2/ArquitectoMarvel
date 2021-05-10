@@ -2,10 +2,13 @@ package com.architectcoders.arquitectomarvel.ui.main.pagination
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.architectcoders.arquitectomarvel.BuildConfig
 import com.architectcoders.arquitectomarvel.ui.common.INITIAL
+import com.architectcoders.arquitectomarvel.ui.common.md5
 import com.architectcoders.domain.characters.Result
 import com.architectcoders.usecases.GetCharacters
 import retrofit2.HttpException
+import timber.log.Timber
 import java.io.IOException
 
 class ResultPagingSource(
@@ -16,9 +19,18 @@ class ResultPagingSource(
         params: LoadParams<Int>
     ): LoadResult<Int, Result> {
         return try {
+            val ts = System.currentTimeMillis()
             val offset = params.key ?: 0
-            val response = getCharacters.invoke(offset)
+            val response = getCharacters.invoke(
+                offset, ts,
+                "$ts${BuildConfig.MARVEL_PRIVATE_KEY}${BuildConfig.MARVEL_API_KEY}".md5
+            )
             val results = response.characterData?.results!!
+            Timber.d("qq_Repository.getCharactersRemote: ----- ()")
+            Timber.d("qq_Repository.getCharactersRemote: $offset (offset)")
+            Timber.d(
+                "qq_Repository.getCharactersRemote: ${response.characterData?.results?.size} (response.characterData?.results?.size)"
+            )
             LoadResult.Page(
                 data = results,
                 prevKey = null, // Only paging forward.

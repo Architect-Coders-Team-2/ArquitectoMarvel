@@ -2,7 +2,6 @@ package com.architectcoders.arquitectomarvel.ui.main
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.isVisible
@@ -17,30 +16,30 @@ import com.architectcoders.arquitectomarvel.data.database.CharacterDatabase
 import com.architectcoders.arquitectomarvel.data.database.RoomDataSource
 import com.architectcoders.arquitectomarvel.data.server.MarvelDataSource
 import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
-import com.architectcoders.arquitectomarvel.ui.ViewModelFactory
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailActivity
 import com.architectcoders.arquitectomarvel.ui.main.pagination.ResultLoadStateAdapter
 import com.architectcoders.data.repository.CharacterRepository
 import com.architectcoders.domain.characters.Result
+import com.architectcoders.usecases.GetCharacters
 import kotlinx.coroutines.flow.collectLatest
-import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val viewModel by viewModels<MainViewModel> {
-        ViewModelFactory(
-            CharacterRepository(
-                MarvelDataSource(),
-                RoomDataSource(CharacterDatabase.getInstance(this)),
-                System.currentTimeMillis(),
-                BuildConfig.MARVEL_API_KEY,
-                "${System.currentTimeMillis()}${BuildConfig.MARVEL_PRIVATE_KEY}${BuildConfig.MARVEL_API_KEY}".md5,
-                ::log
+    private val viewModel by lazy {
+        getViewModel {
+            MainViewModel(
+                GetCharacters(
+                    CharacterRepository(
+                        MarvelDataSource(),
+                        RoomDataSource(CharacterDatabase.getInstance(this)),
+                        BuildConfig.MARVEL_API_KEY
+                    )
+                )
             )
-        )
+        }
     }
 
     private val characterAdapter: CharacterAdapter by lazy {
@@ -99,9 +98,5 @@ class MainActivity : AppCompatActivity() {
                 putExtra(EXTRA_SELECTED_HERO, resultValue.id)
             }
         }
-    }
-
-    private fun log(message: String) {
-        Timber.d(message)
     }
 }

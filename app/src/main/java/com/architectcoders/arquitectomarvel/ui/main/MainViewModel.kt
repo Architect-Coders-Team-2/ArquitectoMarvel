@@ -9,9 +9,9 @@ import com.architectcoders.arquitectomarvel.ui.main.pagination.ResultPagingSourc
 import com.architectcoders.data.repository.CharacterRepository
 import com.architectcoders.usecases.GetCharacters
 
-class MainViewModel(private val characterRepository: CharacterRepository) : ViewModel() {
+class MainViewModel(private val getCharacters: GetCharacters) : ViewModel() {
     val pager = Pager(
         config = PagingConfig(pageSize = 18),
-        pagingSourceFactory = { ResultPagingSource(GetCharacters(characterRepository)) }
+        pagingSourceFactory = { ResultPagingSource(getCharacters) }
     ).flow.cachedIn(viewModelScope)
 }
