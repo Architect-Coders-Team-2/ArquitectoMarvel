@@ -10,30 +10,20 @@ import com.architectcoders.domain.comics.Result as ComicResult
 class CharacterRepository(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
-    private val ts: Long,
     private val publicKey: String,
-    private val hash: String,
-    private val logListener: (String) -> Unit
 ) {
 
-    suspend fun getCharactersRemote(offset: Int): Characters {
-        val response = remoteDataSource.getCharacters(ts, publicKey, hash, offset)
-        logListener("qq_Repository.getCharactersRemote: ----- ()")
-        logListener("qq_Repository.getCharactersRemote: $offset (offset)")
-        logListener(
-            "qq_Repository.getCharactersRemote: ${response.characterData?.results?.size} " +
-                    "(response.characterData?.results?.size)"
-        )
-        return response
+    suspend fun getCharactersRemote(offset: Int, ts: Long, hash: String): Characters {
+        return remoteDataSource.getCharacters(ts, publicKey, hash, offset)
     }
 
-    suspend fun getCharacterById(characterId: Int): Characters =
+    suspend fun getCharacterById(characterId: Int, ts: Long, hash: String): Characters =
         remoteDataSource.getCharacterById(characterId, ts, publicKey, hash)
 
     suspend fun isCharacterFavorite(characterId: Int): Boolean =
         localDataSource.isCharacterFavorite(characterId)
 
-    suspend fun getComicsFromCharacterId(characterId: Int): Comic? =
+    suspend fun getComicsFromCharacterId(characterId: Int, ts: Long, hash: String): Comic? =
         remoteDataSource.getComics(characterId, ts, publicKey, hash)
 
     suspend fun insertFavoriteCharacter(favouriteCharacter: CharacterResult) =
