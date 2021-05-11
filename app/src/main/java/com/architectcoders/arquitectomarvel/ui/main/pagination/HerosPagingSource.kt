@@ -15,13 +15,13 @@ class HerosPagingSource(
         params: LoadParams<Int>
     ): LoadResult<Int, ResultUI> {
         return try {
-            val offset = params.key ?: INITIAL
+            val offset = params.key ?: 0
             val response = useCaseGetCharactersRemote.invoke(offset)
             val results = response.data?.results!!.toResultUIList()
             LoadResult.Page(
                 data = results,
                 prevKey = null, // Only paging forward.
-                nextKey = if (results.isEmpty()) null else offset + INITIAL
+                nextKey = if (results.isEmpty()) null else offset + INCREMENT
             )
         } catch (e: IOException) {
             LoadResult.Error(e)
@@ -40,7 +40,7 @@ class HerosPagingSource(
         //    just return null.
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
-            anchorPage?.prevKey?.plus(INITIAL) ?: anchorPage?.nextKey?.minus(INITIAL)
+            anchorPage?.prevKey?.plus(INCREMENT) ?: anchorPage?.nextKey?.minus(INCREMENT)
         }
     }
 }
