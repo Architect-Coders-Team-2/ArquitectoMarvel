@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
+import com.architectcoders.arquitectomarvel.App
 import com.architectcoders.arquitectomarvel.R
 import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -23,6 +24,9 @@ val String.md5: String
         val md = MessageDigest.getInstance("MD5")
         return BigInteger(1, md.digest(this.toByteArray())).toString(16).padStart(32, '0')
     }
+
+val Context.app: App
+    get() = applicationContext as App
 
 fun ImageView.loadUrl(url: String?, extension: String? = "") {
     Glide.with(this)
