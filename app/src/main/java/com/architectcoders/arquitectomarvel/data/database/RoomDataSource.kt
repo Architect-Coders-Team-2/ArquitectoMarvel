@@ -8,7 +8,7 @@ import com.architectcoders.domain.comics.Result as ComicResult
 
 class RoomDataSource(db: CharacterDatabase) : LocalDataSource {
 
-    private val characterDao = db.characterDao
+    private val characterDao = db.characterDao()
 
     override suspend fun insertFavoriteCharacter(favouriteCharacter: CharacterResult) =
         withContext(Dispatchers.IO) {
