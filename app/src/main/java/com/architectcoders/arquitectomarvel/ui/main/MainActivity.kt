@@ -9,39 +9,22 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView.*
-import com.architectcoders.arquitectomarvel.BuildConfig
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.data.*
-import com.architectcoders.arquitectomarvel.data.database.CharacterDatabase
-import com.architectcoders.arquitectomarvel.data.database.RoomDataSource
-import com.architectcoders.arquitectomarvel.data.server.MarvelDataSource
 import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailActivity
+import com.architectcoders.arquitectomarvel.ui.main.mainActivityDi.MainActivityComponent
+import com.architectcoders.arquitectomarvel.ui.main.mainActivityDi.MainActivityModule
 import com.architectcoders.arquitectomarvel.ui.main.pagination.ResultLoadStateAdapter
-import com.architectcoders.data.repository.CharacterRepository
 import com.architectcoders.domain.characters.Result
-import com.architectcoders.usecases.GetCharacters
 import kotlinx.coroutines.flow.collectLatest
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
-    private val viewModel by lazy {
-        getViewModel {
-            MainViewModel(
-                GetCharacters(
-                    CharacterRepository(
-                        MarvelDataSource(),
-                        RoomDataSource(CharacterDatabase.getInstance(this)),
-                        BuildConfig.MARVEL_API_KEY
-                    )
-                )
-            )
-        }
-    }
-
+    private lateinit var mainActivityComponent: MainActivityComponent
+    private val viewModel by lazy { getViewModel { mainActivityComponent.mainViewModel } }
     private val characterAdapter: CharacterAdapter by lazy {
         CharacterAdapter(::navigateTo)
     }
@@ -50,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        mainActivityComponent = app.component.plus(MainActivityModule())
         setUpViews()
         observersViewModel()
     }
