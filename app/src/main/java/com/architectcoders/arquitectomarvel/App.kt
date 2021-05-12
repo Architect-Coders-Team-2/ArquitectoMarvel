@@ -2,13 +2,19 @@ package com.architectcoders.arquitectomarvel
 
 import android.app.Application
 import android.util.Log
+import com.architectcoders.arquitectomarvel.di.ArquitectoMarvelComponent
+import com.architectcoders.arquitectomarvel.di.DaggerArquitectoMarvelComponent
 import org.jetbrains.annotations.NotNull
 import timber.log.Timber
 
-class App: Application() {
+class App : Application() {
+
+    lateinit var component: ArquitectoMarvelComponent
+        private set
 
     override fun onCreate() {
         super.onCreate()
+        component = DaggerArquitectoMarvelComponent.factory().create(this)
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         } else {
@@ -17,21 +23,13 @@ class App: Application() {
     }
 }
 
-/** todo: Consultar con el equipo. Eliminar si no se considera
- * Personalizamos los eventos de Timber para la release build de la app
- * De forma que podemos reutilizar estas llamadas para monitorear desde crashlitics u otro sistema
- */
 class ReleaseTree : @NotNull Timber.Tree() {
 
     override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
         if (priority == Log.ERROR) {
-//            crashlytics().setCustomKey(
-//                "Log.ERROR", message
-//            )
+            // TODO
         } else if (priority == Log.WARN) {
-//            crashlytics().setCustomKey(
-//                "Log.WARN", message
-//            )
+            // TODO
         }
     }
 }
