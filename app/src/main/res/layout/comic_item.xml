@@ -12,7 +12,7 @@
         android:layout_height="200dp"
         android:adjustViewBounds="true"
         android:contentDescription="@string/hero_image"
-        android:src="@mipmap/ic_launcher"
+        tools:src="@mipmap/ic_launcher"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
