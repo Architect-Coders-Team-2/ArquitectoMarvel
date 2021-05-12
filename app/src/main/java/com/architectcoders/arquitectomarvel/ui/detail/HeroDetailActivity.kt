@@ -17,6 +17,7 @@ import com.architectcoders.arquitectomarvel.ui.common.ServiceLocator
 import com.architectcoders.arquitectomarvel.ui.detail.HeroDetailViewModel.UiModel
 import com.architectcoders.module.usescases.*
 import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.Result as CharacterResult
+import com.architectcoders.arquitectomarvel.data.remote.models_moshi.comics.Result as ComicsResult
 
 class HeroDetailActivity : AppCompatActivity() {
 
@@ -113,7 +114,7 @@ class HeroDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateComics(comicList: List<com.architectcoders.arquitectomarvel.data.remote.models_moshi.comics.Result>) {
+    private fun updateComics(comicList: List<ComicsResult>) {
         if (comicList.isEmpty()) {
             binding.contentHeroDetail.noComics.isVisible = true
         }

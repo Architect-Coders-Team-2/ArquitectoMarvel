@@ -7,5 +7,5 @@ data class Characters(
     val attributionText: String?,
     val attributionHTML: String?,
     val etag: String?,
-    val `data`: Data?
+    val charactersData: Data?
 )

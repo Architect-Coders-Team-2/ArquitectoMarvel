@@ -17,7 +17,7 @@ class HerosPagingSource(
         return try {
             val offset = params.key ?: 0
             val response = useCaseGetCharactersRemote.invoke(offset)
-            val results = response.data?.results!!.toResultUIList()
+            val results = response.charactersData?.results!!.toResultUIList()
             LoadResult.Page(
                 data = results,
                 prevKey = null, // Only paging forward.

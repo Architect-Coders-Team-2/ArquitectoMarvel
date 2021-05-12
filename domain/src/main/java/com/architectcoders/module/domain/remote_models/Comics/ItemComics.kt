@@ -1,6 +1,6 @@
 package com.architectcoders.module.domain.remote_models.Comics
 
-data class ItemX(
+data class ItemComics(
     val resourceURI: String?,
     val name: String?
 )

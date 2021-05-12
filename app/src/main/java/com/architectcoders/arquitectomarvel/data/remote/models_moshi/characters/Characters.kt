@@ -34,6 +34,6 @@ fun Characters.toCharactersModel(): CharactersDomain {
         attributionText,
         attributionHTML,
         etag,
-        data = characterData?.toCharacterDataDomain()
+        charactersData = characterData?.toCharacterDataDomain()
     )
 }
