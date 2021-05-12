@@ -1,9 +1,9 @@
-package com.architectcoders.arquitectomarvel.data.database.relations
+package com.architectcoders.arquitectomarvel.data.database.models.relations
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.architectcoders.arquitectomarvel.data.database.CharacterEntity
-import com.architectcoders.arquitectomarvel.data.database.ComicEntity
+import com.architectcoders.arquitectomarvel.data.database.models.CharacterEntity
+import com.architectcoders.arquitectomarvel.data.database.models.ComicEntity
 
 data class CharacterWithComics(
     @Embedded val characterEntity: CharacterEntity,

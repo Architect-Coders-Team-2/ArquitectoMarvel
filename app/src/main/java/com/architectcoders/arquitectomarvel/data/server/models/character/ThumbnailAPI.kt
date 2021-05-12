@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.data.server.uiEntities.marvelCharacters
+package com.architectcoders.arquitectomarvel.data.server.models.character
 
 import com.architectcoders.domain.characters.Thumbnail
 import com.squareup.moshi.Json
@@ -12,7 +12,7 @@ data class MarvelThumbnail(
     val extension: String?
 )
 
-val MarvelThumbnail.toLocalThumbnail: Thumbnail
+val MarvelThumbnail.toDomainThumbnail: Thumbnail
     get() = Thumbnail(
         path, extension
     )

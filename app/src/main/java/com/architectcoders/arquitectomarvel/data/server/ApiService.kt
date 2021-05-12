@@ -1,7 +1,7 @@
 package com.architectcoders.arquitectomarvel.data.server
 
-import com.architectcoders.arquitectomarvel.data.server.uiEntities.marvelCharacters.MarvelCharacters
-import com.architectcoders.arquitectomarvel.data.server.uiEntities.marvelComics.MarvelComic
+import com.architectcoders.arquitectomarvel.data.server.models.character.MarvelCharacters
+import com.architectcoders.arquitectomarvel.data.server.models.comic.MarvelComic
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

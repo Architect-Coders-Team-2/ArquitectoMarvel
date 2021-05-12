@@ -1,7 +1,9 @@
 package com.architectcoders.arquitectomarvel.data.database
 
 import androidx.room.*
-import com.architectcoders.arquitectomarvel.data.database.relations.CharacterWithComics
+import com.architectcoders.arquitectomarvel.data.database.models.CharacterEntity
+import com.architectcoders.arquitectomarvel.data.database.models.ComicEntity
+import com.architectcoders.arquitectomarvel.data.database.models.relations.CharacterWithComics
 
 @Dao
 interface CharacterDao {

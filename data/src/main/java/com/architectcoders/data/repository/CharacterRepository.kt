@@ -12,20 +12,11 @@ class CharacterRepository(
     private val localDataSource: LocalDataSource,
     private val ts: Long,
     private val publicKey: String,
-    private val hash: String,
-    private val logListener: (String) -> Unit
+    private val hash: String
 ) {
 
-    suspend fun getCharactersRemote(offset: Int): Characters {
-        val response = remoteDataSource.getCharacters(ts, publicKey, hash, offset)
-        logListener("qq_Repository.getCharactersRemote: ----- ()")
-        logListener("qq_Repository.getCharactersRemote: $offset (offset)")
-        logListener(
-            "qq_Repository.getCharactersRemote: ${response.characterData?.results?.size} " +
-                    "(response.characterData?.results?.size)"
-        )
-        return response
-    }
+    suspend fun getCharactersRemote(offset: Int): Characters =
+        remoteDataSource.getCharacters(ts, publicKey, hash, offset)
 
     suspend fun getCharacterById(characterId: Int): Characters =
         remoteDataSource.getCharacterById(characterId, ts, publicKey, hash)

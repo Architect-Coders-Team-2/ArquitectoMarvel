@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.data.server.uiEntities.marvelComics
+package com.architectcoders.arquitectomarvel.data.server.models.comic
 
 import com.architectcoders.domain.comics.Image
 import com.squareup.moshi.Json
@@ -12,8 +12,8 @@ data class MarvelImage(
     val path: String?
 )
 
-val List<MarvelImage>.toLocalListImage: List<Image>
-    get() = map { it.toLocalImage }
+val List<MarvelImage>.toDomainListImage: List<Image>
+    get() = map { it.toDomainImage }
 
-val MarvelImage.toLocalImage: Image
+val MarvelImage.toDomainImage: Image
     get() = Image(extension, path)

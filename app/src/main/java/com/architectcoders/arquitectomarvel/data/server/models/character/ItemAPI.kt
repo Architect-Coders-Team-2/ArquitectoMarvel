@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.data.server.uiEntities.marvelCharacters
+package com.architectcoders.arquitectomarvel.data.server.models.character
 
 import com.architectcoders.domain.characters.Item
 import com.squareup.moshi.Json
@@ -12,10 +12,10 @@ data class MarvelItem(
     val name: String?
 )
 
-val List<MarvelItem>.toLocalListItem: List<Item>
-    get() = map { it.toLocalItem }
+val List<MarvelItem>.toDomainListItem: List<Item>
+    get() = map { it.toDomainItem }
 
-val MarvelItem.toLocalItem: Item
+val MarvelItem.toDomainItem: Item
     get() = Item(
         resourceURI, name
     )

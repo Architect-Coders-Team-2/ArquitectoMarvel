@@ -2,7 +2,6 @@ package com.architectcoders.arquitectomarvel.ui.main
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.isVisible
@@ -10,39 +9,23 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView.*
-import com.architectcoders.arquitectomarvel.BuildConfig
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.data.*
-import com.architectcoders.arquitectomarvel.data.database.CharacterDatabase
-import com.architectcoders.arquitectomarvel.data.database.RoomDataSource
-import com.architectcoders.arquitectomarvel.data.server.MarvelDataSource
 import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
-import com.architectcoders.arquitectomarvel.ui.ViewModelFactory
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailActivity
 import com.architectcoders.arquitectomarvel.ui.main.pagination.ResultLoadStateAdapter
-import com.architectcoders.data.repository.CharacterRepository
+import com.architectcoders.domain.characters.Characters
+
 import com.architectcoders.domain.characters.Result
+import com.architectcoders.usecases.GetCharacters
+import com.architectcoders.usecases.IUseCase
 import kotlinx.coroutines.flow.collectLatest
-import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
-    private val viewModel by viewModels<MainViewModel> {
-        ViewModelFactory(
-            CharacterRepository(
-                MarvelDataSource(),
-                RoomDataSource(CharacterDatabase.getInstance(this)),
-                System.currentTimeMillis(),
-                BuildConfig.MARVEL_API_KEY,
-                "${System.currentTimeMillis()}${BuildConfig.MARVEL_PRIVATE_KEY}${BuildConfig.MARVEL_API_KEY}".md5,
-                ::log
-            )
-        )
-    }
-
+    private lateinit var viewModel: MainViewModel
     private val characterAdapter: CharacterAdapter by lazy {
         CharacterAdapter(::navigateTo)
     }
@@ -51,8 +34,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        initViewModel()
         setUpViews()
         observersViewModel()
+    }
+
+    private fun initViewModel() {
+        viewModel = getViewModel {
+            MainViewModel(
+                GetCharacters(
+                    RepositoryLocationService.providerRepository(this)
+                )
+            )
+        }
     }
 
     private fun setUpViews() {
@@ -101,7 +95,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun log(message: String) {
-        Timber.d(message)
-    }
 }
