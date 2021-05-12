@@ -27,6 +27,6 @@ class RoomDataSource(resultDatabase: ResultDatabase) : LocalDataSource {
     }
 
     override suspend fun isCharacterFavorite(characterId: Int): Boolean {
-        return dao.isCharacterFavorite(characterId).isNotEmpty()
+        return dao.isCharacterFavorite(characterId) != null
     }
 }

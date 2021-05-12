@@ -4,6 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.architectcoders.arquitectomarvel.data.mappers.ResultUI
 import com.architectcoders.arquitectomarvel.data.mappers.toResultUIList
+import com.architectcoders.arquitectomarvel.model.INCREMENT
 import com.architectcoders.module.usescases.UseCaseGetCharactersRemote
 import retrofit2.HttpException
 import java.io.IOException
