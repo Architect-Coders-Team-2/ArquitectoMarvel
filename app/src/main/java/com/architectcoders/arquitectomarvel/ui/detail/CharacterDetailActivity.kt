@@ -3,46 +3,27 @@ package com.architectcoders.arquitectomarvel.ui.detail
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
-import com.architectcoders.arquitectomarvel.BuildConfig
 import com.architectcoders.arquitectomarvel.R
-import com.architectcoders.arquitectomarvel.data.database.CharacterDatabase
 import com.architectcoders.arquitectomarvel.data.database.ComicEntity
-import com.architectcoders.arquitectomarvel.data.database.RoomDataSource
 import com.architectcoders.arquitectomarvel.data.database.toComicEntityList
-import com.architectcoders.arquitectomarvel.data.server.MarvelDataSource
 import com.architectcoders.arquitectomarvel.databinding.ActivityCharacterDetailBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel.UiModel
-import com.architectcoders.data.repository.CharacterRepository
-import com.architectcoders.usecases.*
+import org.koin.androidx.scope.ScopeActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import com.architectcoders.domain.characters.Result as CharacterResult
 
-class CharacterDetailActivity : AppCompatActivity() {
+class CharacterDetailActivity : ScopeActivity() {
 
     private lateinit var binding: ActivityCharacterDetailBinding
     private val adapter by lazy { ComicAdapter() }
     private var selectedCharacter: CharacterResult? = null
     private var isCharacterFavorite = false
-    private val characterDetailViewModel by lazy {
-        getViewModel {
-            val characterRepository = CharacterRepository(
-                MarvelDataSource(),
-                RoomDataSource(CharacterDatabase.getInstance(this)),
-                BuildConfig.MARVEL_API_KEY
-            )
-            CharacterDetailViewModel(
-                GetCharacterById(characterRepository),
-                IsCharacterFavorite(characterRepository),
-                GetComicsFromCharacterId(characterRepository),
-                InsertFavoriteCharacter(characterRepository),
-                InsertFavoriteComic(characterRepository),
-                DeleteFavoriteCharacter(characterRepository),
-                DeleteFavoriteComic(characterRepository)
-            )
-        }
+    private val characterDetailViewModel: CharacterDetailViewModel by viewModel {
+        parametersOf(intent.getIntExtra(EXTRA_SELECTED_HERO, 0))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,11 +39,6 @@ class CharacterDetailActivity : AppCompatActivity() {
     private fun updateUi(model: UiModel) {
         binding.contentHeroDetail.progress.isVisible = model is UiModel.Loading
         when (model) {
-            is UiModel.RequestCharacterById -> model.listener(
-                intent.extras?.getInt(
-                    EXTRA_SELECTED_HERO
-                ) ?: 0
-            )
             is UiModel.SetCharacterDetails -> setCharacterDetails(model.character)
             is UiModel.ShowToast -> toast(model.msgResource)
             is UiModel.UpdateFAB -> updateFAB(model.isCharacterFavorite, model.listener)
