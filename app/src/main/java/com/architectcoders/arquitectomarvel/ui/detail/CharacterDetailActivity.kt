@@ -33,7 +33,11 @@ class CharacterDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        characterDetailActivityComponent = app.component.plus(CharacterDetailActivityModule())
+        characterDetailActivityComponent = app.component.plus(
+            CharacterDetailActivityModule(
+                intent.extras?.getInt(EXTRA_SELECTED_HERO) ?: 0
+            )
+        )
         binding.contentHeroDetail.comicList.adapter = adapter
         characterDetailViewModel.model.observe(this, Observer(::updateUi))
     }
@@ -41,11 +45,6 @@ class CharacterDetailActivity : AppCompatActivity() {
     private fun updateUi(model: UiModel) {
         binding.contentHeroDetail.progress.isVisible = model is UiModel.Loading
         when (model) {
-            is UiModel.RequestCharacterById -> model.listener(
-                intent.extras?.getInt(
-                    EXTRA_SELECTED_HERO
-                ) ?: 0
-            )
             is UiModel.SetCharacterDetails -> setCharacterDetails(model.character)
             is UiModel.ShowToast -> toast(model.msgResource)
             is UiModel.UpdateFAB -> updateFAB(model.isCharacterFavorite, model.listener)

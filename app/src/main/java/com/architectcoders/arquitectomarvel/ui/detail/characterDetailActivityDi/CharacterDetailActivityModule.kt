@@ -7,7 +7,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class CharacterDetailActivityModule {
+class CharacterDetailActivityModule(private val characterId: Int) {
 
     @Provides
     fun getCharacterByIdProvider(characterRepository: CharacterRepository): GetCharacterById =
@@ -48,6 +48,7 @@ class CharacterDetailActivityModule {
         deleteFavoriteComic: DeleteFavoriteComic
     ): CharacterDetailViewModel =
         CharacterDetailViewModel(
+            characterId,
             getCharacterById,
             isCharacterFavorite,
             getComicsFromCharacterId,
