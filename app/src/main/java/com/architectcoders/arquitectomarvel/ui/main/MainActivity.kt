@@ -2,45 +2,28 @@ package com.architectcoders.arquitectomarvel.ui.main
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView.*
-import com.architectcoders.arquitectomarvel.BuildConfig
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.data.*
-import com.architectcoders.arquitectomarvel.data.database.CharacterDatabase
-import com.architectcoders.arquitectomarvel.data.database.RoomDataSource
-import com.architectcoders.arquitectomarvel.data.server.MarvelDataSource
 import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailActivity
 import com.architectcoders.arquitectomarvel.ui.main.pagination.ResultLoadStateAdapter
-import com.architectcoders.data.repository.CharacterRepository
 import com.architectcoders.domain.characters.Result
-import com.architectcoders.usecases.GetCharacters
 import kotlinx.coroutines.flow.collectLatest
+import org.koin.androidx.scope.ScopeActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ScopeActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val viewModel by lazy {
-        getViewModel {
-            MainViewModel(
-                GetCharacters(
-                    CharacterRepository(
-                        MarvelDataSource(),
-                        RoomDataSource(CharacterDatabase.getInstance(this)),
-                        BuildConfig.MARVEL_API_KEY
-                    )
-                )
-            )
-        }
-    }
+    private val viewModel: MainViewModel by viewModel()
 
     private val characterAdapter: CharacterAdapter by lazy {
         CharacterAdapter(::navigateTo)
