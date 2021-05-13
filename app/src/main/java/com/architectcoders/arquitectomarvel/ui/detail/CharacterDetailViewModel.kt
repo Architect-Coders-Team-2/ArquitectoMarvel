@@ -17,6 +17,7 @@ import com.architectcoders.domain.characters.Result as CharacterResult
 import com.architectcoders.domain.comics.Result as ComicResult
 
 class CharacterDetailViewModel(
+    private val characterId: Int,
     private val getCharacterById: GetCharacterById,
     private val isCharacterFavorite: IsCharacterFavorite,
     private val getComicsFromCharacterId: GetComicsFromCharacterId,
@@ -35,7 +36,6 @@ class CharacterDetailViewModel(
 
     sealed class UiModel {
         object Loading : UiModel()
-        class RequestCharacterById(val listener: (Int) -> Unit) : UiModel()
         class SetCharacterDetails(val character: CharacterResult?) : UiModel()
         class UpdateFAB(
             val isCharacterFavorite: Boolean,
@@ -51,10 +51,11 @@ class CharacterDetailViewModel(
     }
 
     private fun refresh() {
-        _model.value = UiModel.RequestCharacterById(::onIdCollected)
+        _model.value = UiModel.Loading
+        loadCharacterById(characterId)
     }
 
-    private fun onIdCollected(characterId: Int) {
+    private fun loadCharacterById(characterId: Int) {
         viewModelScope.launch {
             try {
                 val ts = System.currentTimeMillis()
