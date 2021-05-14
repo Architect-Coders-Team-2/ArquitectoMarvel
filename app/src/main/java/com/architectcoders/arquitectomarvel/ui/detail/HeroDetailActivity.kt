@@ -6,9 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
-import com.architectcoders.arquitectomarvel.App
 import com.architectcoders.arquitectomarvel.R
-import com.architectcoders.arquitectomarvel.data.local.entities.DetailedComicEntity
 import com.architectcoders.arquitectomarvel.data.local.entities.toDetailedComicEntityList
 import com.architectcoders.arquitectomarvel.data.ui_models.ResultUI
 import com.architectcoders.arquitectomarvel.data.ui_models.fromResultUItoCharacterResult
@@ -31,9 +29,7 @@ class HeroDetailActivity : AppCompatActivity() {
     }
 
     private val adapter by lazy { ComicAdapter() }
-    private var selectedCharacter: ResultUI? = null
     private var isCharacterFavorite = false
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,16 +45,21 @@ class HeroDetailActivity : AppCompatActivity() {
     private fun updateUi(model: UiModel) {
         binding.contentHeroDetail.progress.isVisible = model is UiModel.Loading
         when (model) {
-            is UiModel.SetHeroDetails -> setHeroDetails(model.onHeroShown)
+            is UiModel.SetHeroDetails -> setHeroDetails(model.listener, model.onHeroShown)
             is UiModel.ShowToast -> toast(model.msgResource)
-            is UiModel.UpdateFAB -> updateFAB(model.isCharacterFavorite, model.listener)
+            is UiModel.UpdateFAB -> updateFAB(model.isCharacterFavorite)
             is UiModel.UpdateComics -> updateComics(model.comicList)
         }
     }
 
-    private fun setHeroDetails(onHeroShown: (Int) -> Unit) {
+    private fun setHeroDetails(
+        listener: (
+            selectedHero: CharacterResult,
+            isCharacterFavorite: Boolean,
+        ) -> Unit,
+        onHeroShown: (Int) -> Unit
+    ) {
         intent.extras?.getParcelable<ResultUI>(EXTRA_SELECTED_HERO)?.let { selectedHero ->
-            this.selectedCharacter = selectedHero
             binding.headerHeroImage.loadUrl(
                 selectedHero.thumbnail.path,
                 selectedHero.thumbnail.extension
@@ -71,6 +72,19 @@ class HeroDetailActivity : AppCompatActivity() {
                 } else {
                     selectedHero.description
                 }
+            binding.fab.setOnClickListener {
+                this.isCharacterFavorite = this.isCharacterFavorite.not()
+                binding.fab.loadImage(
+                    android.R.drawable.star_on,
+                    android.R.drawable.star_off,
+                    this.isCharacterFavorite
+                )
+                listener(
+                    selectedHero.fromResultUItoCharacterResult(),
+                    this.isCharacterFavorite
+                )
+
+            }
             onHeroShown(selectedHero.id)
         }
     }
@@ -80,34 +94,14 @@ class HeroDetailActivity : AppCompatActivity() {
      * if the character is available
      */
     private fun updateFAB(
-        isCharacterFavorite: Boolean,
-        listener: (
-            selectedHero: CharacterResult,
-            comicList: MutableList<DetailedComicEntity>,
-            isCharacterFavorite: Boolean,
-        ) -> Unit,
+        isCharacterFavorite: Boolean
     ) {
         this.isCharacterFavorite = isCharacterFavorite
         binding.fab.loadImage(
             android.R.drawable.star_on,
             android.R.drawable.star_off,
-            isCharacterFavorite
+            this.isCharacterFavorite
         )
-        binding.fab.setOnClickListener {
-            selectedCharacter?.let { character ->
-                this.isCharacterFavorite = this.isCharacterFavorite.not()
-                binding.fab.loadImage(
-                    android.R.drawable.star_on,
-                    android.R.drawable.star_off,
-                    this.isCharacterFavorite
-                )
-                listener(
-                    character.fromResultUItoCharacterResult(),
-                    adapter.currentList,
-                    this.isCharacterFavorite
-                )
-            }
-        }
     }
 
     private fun updateComics(comicList: List<ComicsResult>) {

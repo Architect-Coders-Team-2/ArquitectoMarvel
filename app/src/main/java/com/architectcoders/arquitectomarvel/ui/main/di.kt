@@ -10,7 +10,7 @@ import dagger.Subcomponent
 class MainActivityModule {
 
     @Provides
-    fun UseCaseGetCharactersRemoteProvide(
+    fun useCaseGetCharactersRemoteProvide(
         marvelRepository: MarvelRepository
     ): UseCaseGetCharactersRemote = UseCaseGetCharactersRemote(marvelRepository)
 

@@ -1,7 +1,10 @@
 package com.architectcoders.arquitectomarvel.ui.detail
 
 import com.architectcoders.module.data.MarvelRepository
-import com.architectcoders.module.usescases.*
+import com.architectcoders.module.usescases.UseCaseDeleteFavoriteCharacter
+import com.architectcoders.module.usescases.UseCaseGetComicsRemote
+import com.architectcoders.module.usescases.UseCaseInsertFavoriteCharacter
+import com.architectcoders.module.usescases.UseCaseIsCharacterFavorite
 import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
@@ -10,51 +13,37 @@ import dagger.Subcomponent
 class HeroDatailActivityModule {
 
     @Provides
-    fun UseCaseGetComicsRemoteProvide(
+    fun useCaseGetComicsRemoteProvide(
         marvelRepository: MarvelRepository
     ): UseCaseGetComicsRemote = UseCaseGetComicsRemote(marvelRepository)
 
     @Provides
-    fun UseCaseInsertFavoriteCharacterProvide(
+    fun useCaseInsertFavoriteCharacterProvide(
         marvelRepository: MarvelRepository
     ): UseCaseInsertFavoriteCharacter = UseCaseInsertFavoriteCharacter(marvelRepository)
 
     @Provides
-    fun UseCaseInsertFavoriteComicProvide(
-        marvelRepository: MarvelRepository
-    ): UseCaseInsertFavoriteComic = UseCaseInsertFavoriteComic(marvelRepository)
-
-    @Provides
-    fun UseCaseIsCharacterFavoriteProvide(
+    fun useCaseIsCharacterFavoriteProvide(
         marvelRepository: MarvelRepository
     ): UseCaseIsCharacterFavorite = UseCaseIsCharacterFavorite(marvelRepository)
 
     @Provides
-    fun UseCaseDeleteFavoriteCharacterProvide(
+    fun useCaseDeleteFavoriteCharacterProvide(
         marvelRepository: MarvelRepository
     ): UseCaseDeleteFavoriteCharacter = UseCaseDeleteFavoriteCharacter(marvelRepository)
-
-    @Provides
-    fun UseCaseDeleteFavoriteDetailComicProvide(
-        marvelRepository: MarvelRepository
-    ): UseCaseDeleteFavoriteDetailComic = UseCaseDeleteFavoriteDetailComic(marvelRepository)
 
     @Provides
     fun heroDetailViewModelProvider(
         useCaseGetComicsRemote: UseCaseGetComicsRemote,
         useCaseInsertFavoriteCharacter: UseCaseInsertFavoriteCharacter,
-        useCaseInsertFavoriteComic: UseCaseInsertFavoriteComic,
         useCaseIsCharacterFavorite: UseCaseIsCharacterFavorite,
-        useCaseDeleteFavoriteCharacter: UseCaseDeleteFavoriteCharacter,
-        useCaseDeleteFavoriteDetailComic: UseCaseDeleteFavoriteDetailComic,
+        useCaseDeleteFavoriteCharacter: UseCaseDeleteFavoriteCharacter
     ): HeroDetailViewModel =
         HeroDetailViewModel(
             useCaseGetComicsRemote,
             useCaseInsertFavoriteCharacter,
-            useCaseInsertFavoriteComic,
             useCaseIsCharacterFavorite,
-            useCaseDeleteFavoriteCharacter,
-            useCaseDeleteFavoriteDetailComic
+            useCaseDeleteFavoriteCharacter
         )
 }
 

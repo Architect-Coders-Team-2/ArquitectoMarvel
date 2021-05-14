@@ -5,12 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.architectcoders.arquitectomarvel.R
-import com.architectcoders.arquitectomarvel.data.local.entities.DetailedComicEntity
-import com.architectcoders.arquitectomarvel.data.local.entities.fromDetailedComicEntityToDetailedComic
 import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.toCharacterResultDomain
 import com.architectcoders.arquitectomarvel.data.remote.models_moshi.comics.Result
 import com.architectcoders.arquitectomarvel.data.remote.models_moshi.comics.fromListResult
-import com.architectcoders.module.usescases.*
+import com.architectcoders.module.usescases.UseCaseDeleteFavoriteCharacter
+import com.architectcoders.module.usescases.UseCaseGetComicsRemote
+import com.architectcoders.module.usescases.UseCaseInsertFavoriteCharacter
+import com.architectcoders.module.usescases.UseCaseIsCharacterFavorite
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.net.UnknownHostException
@@ -19,10 +20,8 @@ import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.
 class HeroDetailViewModel(
     private val useCaseGetComicsRemote: UseCaseGetComicsRemote,
     private val useCaseInsertFavoriteCharacter: UseCaseInsertFavoriteCharacter,
-    private val useCaseInsertFavoriteComic: UseCaseInsertFavoriteComic,
     private val useCaseIsCharacterFavorite: UseCaseIsCharacterFavorite,
     private val useCaseDeleteFavoriteCharacter: UseCaseDeleteFavoriteCharacter,
-    private val useCaseDeleteFavoriteDetailComic: UseCaseDeleteFavoriteDetailComic
 ) : ViewModel() {
 
     private val _model = MutableLiveData<UiModel>()
@@ -34,22 +33,24 @@ class HeroDetailViewModel(
 
     sealed class UiModel {
         object Loading : UiModel()
-        class SetHeroDetails(val onHeroShown: (Int) -> Unit) : UiModel()
-        class UpdateFAB(
-            val isCharacterFavorite: Boolean,
+        class SetHeroDetails(
             val listener: (
                 selectedHero: CharacterResult,
-                comicList: MutableList<DetailedComicEntity>,
                 isCharacterFavorite: Boolean,
-            ) -> Unit,
+            ) -> Unit, val onHeroShown: (Int) -> Unit
         ) : UiModel()
+
+        class UpdateFAB(
+            val isCharacterFavorite: Boolean,
+
+            ) : UiModel()
 
         class ShowToast(val msgResource: Int) : UiModel()
         class UpdateComics(val comicList: List<Result>) : UiModel()
     }
 
     private fun refresh() {
-        _model.value = UiModel.SetHeroDetails(::onHeroShown)
+        _model.value = UiModel.SetHeroDetails(::onFabClick, ::onHeroShown)
     }
 
     /**
@@ -60,7 +61,7 @@ class HeroDetailViewModel(
             try {
                 _model.value = UiModel.Loading
                 val isCharacterFavorite = useCaseIsCharacterFavorite.invoke(heroId)
-                _model.value = UiModel.UpdateFAB(isCharacterFavorite, ::onFabClick)
+                _model.value = UiModel.UpdateFAB(isCharacterFavorite)
                 val comic = useCaseGetComicsRemote.invoke(heroId)
                 val comicList = comic.dataComics?.resultComics ?: emptyList()
                 _model.value = UiModel.UpdateComics(comicList.fromListResult())
@@ -73,20 +74,13 @@ class HeroDetailViewModel(
 
     private fun onFabClick(
         selectedHero: CharacterResult,
-        comicList: MutableList<DetailedComicEntity>,
         isCharacterFavorite: Boolean,
     ) {
         viewModelScope.launch {
             if (isCharacterFavorite) {
                 useCaseInsertFavoriteCharacter.invoke(selectedHero.toCharacterResultDomain())
-                comicList.forEach {
-                    useCaseInsertFavoriteComic.invoke(it.fromDetailedComicEntityToDetailedComic())
-                }
             } else {
                 useCaseDeleteFavoriteCharacter.invoke(selectedHero.toCharacterResultDomain())
-                comicList.forEach {
-                    useCaseDeleteFavoriteDetailComic.invoke(it.fromDetailedComicEntityToDetailedComic())
-                }
             }
         }
     }
