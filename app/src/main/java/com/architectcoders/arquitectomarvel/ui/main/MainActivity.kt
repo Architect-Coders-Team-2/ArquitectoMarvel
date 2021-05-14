@@ -9,34 +9,36 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView.*
+import com.architectcoders.arquitectomarvel.App
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.HeroDetailActivity
 import com.architectcoders.arquitectomarvel.ui.main.pagination.ResultsLoadStateAdapter
-import com.architectcoders.module.usescases.UseCaseGetCharactersRemote
 import kotlinx.coroutines.flow.collectLatest
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: MainViewModel
+
+    private val component: MainActivityComponent by lazy {
+        app.component.plus(MainActivityModule())
+    }
+
+    private val viewModel by lazy {
+        getViewModel { component.mainViewModel }
+    }
 
     private val adapter: AdapterList by lazy {
         AdapterList(viewModel::onResultClick)
     }
     private var viewItem: View? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        viewModel = getViewModel {
-                MainViewModel(
-                    UseCaseGetCharactersRemote(ServiceLocator.provideMarvelRepository(applicationContext))
-                )
-        }
         setUpViews()
         observersViewModel()
     }

@@ -3,8 +3,6 @@ package com.architectcoders.arquitectomarvel.data.local
 import androidx.room.*
 import com.architectcoders.arquitectomarvel.data.local.entities.CharacterEntity
 import com.architectcoders.arquitectomarvel.data.local.entities.DetailedComicEntity
-import com.architectcoders.arquitectomarvel.data.local.entities.ItemComics
-import com.architectcoders.arquitectomarvel.data.local.entities.ResultRoom
 
 @Dao
 interface ResultDao {

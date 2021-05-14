@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import com.architectcoders.arquitectomarvel.App
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.data.local.entities.DetailedComicEntity
 import com.architectcoders.arquitectomarvel.data.local.entities.toDetailedComicEntityList
@@ -14,38 +15,34 @@ import com.architectcoders.arquitectomarvel.data.ui_models.fromResultUItoCharact
 import com.architectcoders.arquitectomarvel.databinding.ActivityHeroDetailBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.HeroDetailViewModel.UiModel
-import com.architectcoders.module.usescases.*
 import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.Result as CharacterResult
 import com.architectcoders.arquitectomarvel.data.remote.models_moshi.comics.Result as ComicsResult
 
 class HeroDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHeroDetailBinding
-    private lateinit var heroDetailViewModel: HeroDetailViewModel
+
+    private val component: HeroDetailActivityComponent by lazy {
+        app.component.plus(HeroDatailActivityModule())
+    }
+
+    private val heroDetailViewModel: HeroDetailViewModel by lazy {
+        getViewModel { component.heroDetailViewModel }
+    }
+
     private val adapter by lazy { ComicAdapter() }
     private var selectedCharacter: ResultUI? = null
     private var isCharacterFavorite = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHeroDetailBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
+
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.contentHeroDetail.comicList.adapter = adapter
-
-        val marvelRepository = ServiceLocator.provideMarvelRepository(applicationContext)
-        heroDetailViewModel = getViewModel {
-            HeroDetailViewModel(
-                UseCaseGetComicsRemote(marvelRepository),
-                UseCaseInsertFavoriteCharacter(marvelRepository),
-                UseCaseInsertFavoriteComic(marvelRepository),
-                UseCaseIsCharacterFavorite(marvelRepository),
-                UseCaseDeleteFavoriteCharacter(marvelRepository),
-                UseCaseDeleteFavoriteDetailComic(marvelRepository)
-            )
-        }
-
         heroDetailViewModel.model.observe(this, Observer(::updateUi))
     }
 

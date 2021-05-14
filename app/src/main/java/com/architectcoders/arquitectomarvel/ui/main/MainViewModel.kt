@@ -9,8 +9,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.architectcoders.arquitectomarvel.data.ui_models.ResultUI
-import com.architectcoders.arquitectomarvel.ui.common.PAGE_SIZE
 import com.architectcoders.arquitectomarvel.ui.common.Event
+import com.architectcoders.arquitectomarvel.ui.common.PAGE_SIZE
 import com.architectcoders.arquitectomarvel.ui.main.pagination.HerosPagingSource
 import com.architectcoders.module.usescases.UseCaseGetCharactersRemote
 
