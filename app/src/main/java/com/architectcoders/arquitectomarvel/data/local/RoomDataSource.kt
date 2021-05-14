@@ -1,16 +1,16 @@
 package com.architectcoders.arquitectomarvel.data.local
 
-import com.architectcoders.arquitectomarvel.data.mappers.toCharacterEntity
-import com.architectcoders.arquitectomarvel.data.mappers.toDetailedComicEntity
+import com.architectcoders.arquitectomarvel.data.local.entities.toCharacterEntity
+import com.architectcoders.arquitectomarvel.data.local.entities.toDetailedComicEntity
 import com.architectcoders.module.data.sources.LocalDataSource
-import com.architectcoders.module.domain.local_models.DetailedComic
-import com.architectcoders.module.domain.remote_models.Characters.Result
+import com.architectcoders.module.domain.models.Characters.ResultCharacters
+import com.architectcoders.module.domain.models.Comics.DetailedComic
 
 class RoomDataSource(resultDatabase: ResultDatabase) : LocalDataSource {
 
     private val dao: ResultDao = resultDatabase.resultDao
 
-    override suspend fun insertFavoriteCharacter(toCharacterEntity: Result) {
+    override suspend fun insertFavoriteCharacter(toCharacterEntity: ResultCharacters) {
         dao.insertFavoriteCharacter(toCharacterEntity.toCharacterEntity())
     }
 
@@ -18,7 +18,7 @@ class RoomDataSource(resultDatabase: ResultDatabase) : LocalDataSource {
         dao.insertFavoriteDetailedComic(comic.toDetailedComicEntity())
     }
 
-    override suspend fun deleteFavoriteCharacter(favouriteCharacter: Result) {
+    override suspend fun deleteFavoriteCharacter(favouriteCharacter: ResultCharacters) {
         dao.deleteFavoriteCharacter(favouriteCharacter.toCharacterEntity())
     }
 

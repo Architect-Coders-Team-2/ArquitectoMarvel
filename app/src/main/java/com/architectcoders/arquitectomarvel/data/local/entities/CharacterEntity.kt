@@ -3,6 +3,7 @@ package com.architectcoders.arquitectomarvel.data.local.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.Result
+import com.architectcoders.module.domain.models.Characters.ResultCharacters
 
 @Entity
 data class CharacterEntity(
@@ -24,3 +25,14 @@ val Result.toCharacterEntity: CharacterEntity
         comicCollectionUri = comics.collectionURI,
         comicListAvailable = comics.available
     )
+
+fun ResultCharacters.toCharacterEntity(): CharacterEntity {
+    return CharacterEntity(
+        id = id,
+        name = name,
+        description = description,
+        thumbnail = "${thumbnailDomain?.path}.${thumbnailDomain?.extension}",
+        comicCollectionUri = charactersComics?.collectionURI?:"",
+        comicListAvailable = charactersComics?.available
+    )
+}

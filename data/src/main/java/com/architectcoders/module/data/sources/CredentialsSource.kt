@@ -1,4 +1,4 @@
-package com.architectcoders.module.data
+package com.architectcoders.module.data.sources
 
 interface CredentialsSource {
     val currentTime: Long

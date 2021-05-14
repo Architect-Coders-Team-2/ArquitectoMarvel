@@ -1,11 +1,11 @@
 package com.architectcoders.module.usescases
 
 import com.architectcoders.module.data.MarvelRepository
-import com.architectcoders.module.domain.remote_models.Characters.Result
+import com.architectcoders.module.domain.models.Characters.ResultCharacters
 
 class UseCaseDeleteFavoriteCharacter(private val marvelRepository: MarvelRepository) {
 
-    suspend fun invoke(character: Result) {
+    suspend fun invoke(character: ResultCharacters) {
         return marvelRepository.deleteFavoriteCharacters(character)
     }
 }

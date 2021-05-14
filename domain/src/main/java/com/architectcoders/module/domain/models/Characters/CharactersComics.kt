@@ -1,6 +1,6 @@
-package com.architectcoders.module.domain.remote_models.Characters
+package com.architectcoders.module.domain.models.Characters
 
-data class Series(
+data class CharactersComics(
     val available: Int?,
     val collectionURI: String?,
     val items: List<Any>?,

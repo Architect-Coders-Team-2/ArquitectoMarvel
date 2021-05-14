@@ -1,4 +1,4 @@
-package com.architectcoders.module.domain.local_models
+package com.architectcoders.module.domain.models.Comics
 
 data class DetailedComic(
     val resourceUri: String,

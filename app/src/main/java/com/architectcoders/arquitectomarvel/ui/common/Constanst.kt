@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.model
+package com.architectcoders.arquitectomarvel.ui.common
 
 // EXTRA
 const val EXTRA_SELECTED_HERO = "extraSelectedHero"

@@ -1,13 +1,9 @@
 package com.architectcoders.arquitectomarvel.data.remote.models_moshi.comics
 
-import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import kotlinx.parcelize.Parcelize
+import com.architectcoders.module.domain.models.Comics.Comics as ComicsDomain
 
-import com.architectcoders.module.domain.remote_models.Comics.Comics as ComicsDomain
-
-@Parcelize
 @JsonClass(generateAdapter = true)
 data class Comic(
     @Json(name = "attributionHTML")
@@ -24,7 +20,7 @@ data class Comic(
     val etag: String?,
     @Json(name = "status")
     val status: String?
-) : Parcelable
+)
 
 fun Comic.toComicsDomain(): ComicsDomain =
     ComicsDomain(
@@ -34,5 +30,5 @@ fun Comic.toComicsDomain(): ComicsDomain =
         attributionText = attributionText,
         attributionHTML = attributionHTML,
         etag = etag,
-        data = comicData?.toComicsDataDomain()
+        dataComics = comicData?.toComicsDataDomain()
     )

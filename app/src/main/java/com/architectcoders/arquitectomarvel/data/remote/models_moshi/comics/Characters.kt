@@ -1,12 +1,9 @@
 package com.architectcoders.arquitectomarvel.data.remote.models_moshi.comics
 
-import android.os.Parcelable
 import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.Item
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
 @JsonClass(generateAdapter = true)
 data class Characters(
     @Json(name = "available")
@@ -17,4 +14,4 @@ data class Characters(
     val items: List<Item>?,
     @Json(name = "returned")
     val returned: Int?
-) : Parcelable
+)

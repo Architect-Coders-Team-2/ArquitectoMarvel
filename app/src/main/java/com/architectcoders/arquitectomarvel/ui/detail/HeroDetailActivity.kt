@@ -9,11 +9,10 @@ import androidx.lifecycle.Observer
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.data.local.entities.DetailedComicEntity
 import com.architectcoders.arquitectomarvel.data.local.entities.toDetailedComicEntityList
-import com.architectcoders.arquitectomarvel.data.mappers.ResultUI
-import com.architectcoders.arquitectomarvel.data.mappers.fromResultUItoCharacterResult
+import com.architectcoders.arquitectomarvel.data.ui_models.ResultUI
+import com.architectcoders.arquitectomarvel.data.ui_models.fromResultUItoCharacterResult
 import com.architectcoders.arquitectomarvel.databinding.ActivityHeroDetailBinding
-import com.architectcoders.arquitectomarvel.model.*
-import com.architectcoders.arquitectomarvel.ui.common.ServiceLocator
+import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.HeroDetailViewModel.UiModel
 import com.architectcoders.module.usescases.*
 import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.Result as CharacterResult
@@ -21,11 +20,11 @@ import com.architectcoders.arquitectomarvel.data.remote.models_moshi.comics.Resu
 
 class HeroDetailActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityHeroDetailBinding
+    private lateinit var binding: ActivityHeroDetailBinding
     private lateinit var heroDetailViewModel: HeroDetailViewModel
     private val adapter by lazy { ComicAdapter() }
-    var selectedCharacter: ResultUI? = null
-    var isCharacterFavorite = false
+    private var selectedCharacter: ResultUI? = null
+    private var isCharacterFavorite = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

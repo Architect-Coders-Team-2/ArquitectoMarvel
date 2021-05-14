@@ -1,15 +1,15 @@
 package com.architectcoders.arquitectomarvel.data.remote
 
-import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.toCharactersModel
+import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.toCharactersDomain
 import com.architectcoders.arquitectomarvel.data.remote.models_moshi.comics.toComicsDomain
-import com.architectcoders.module.data.CredentialsSource
+import com.architectcoders.module.data.sources.CredentialsSource
 import com.architectcoders.module.data.sources.RemoteDataSource
-import com.architectcoders.module.domain.remote_models.Characters.Characters
-import com.architectcoders.module.domain.remote_models.Comics.Comics
+import com.architectcoders.module.domain.models.Characters.Characters
+import com.architectcoders.module.domain.models.Comics.Comics
 
 class RetrofitDataSource(private val credentials: CredentialsSource) : RemoteDataSource {
 
-    val api = MarvelApiRest.service
+    private val api = MarvelApiRest.service
 
     override val credentialsSource: CredentialsSource
         get() = credentials
@@ -22,7 +22,7 @@ class RetrofitDataSource(private val credentials: CredentialsSource) : RemoteDat
             apikey = credentials.publicKey,
             hash = credentials.hash,
             offset = offset
-        ).toCharactersModel()
+        ).toCharactersDomain()
     }
 
     override suspend fun getComics(

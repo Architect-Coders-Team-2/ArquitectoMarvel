@@ -1,7 +1,7 @@
 package com.architectcoders.module.usescases
 
 import com.architectcoders.module.data.MarvelRepository
-import com.architectcoders.module.domain.remote_models.Comics.Comics
+import com.architectcoders.module.domain.models.Comics.Comics
 
 class UseCaseGetComicsRemote(private val marvelRepository: MarvelRepository) {
 

@@ -1,8 +1,7 @@
 package com.architectcoders.module.data.sources
 
-import com.architectcoders.module.data.CredentialsSource
-import com.architectcoders.module.domain.remote_models.Characters.Characters
-import com.architectcoders.module.domain.remote_models.Comics.Comics
+import com.architectcoders.module.domain.models.Characters.Characters
+import com.architectcoders.module.domain.models.Comics.Comics
 
 interface RemoteDataSource {
 

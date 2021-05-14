@@ -4,17 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
-import androidx.paging.PagingSource
-import androidx.paging.PagingState
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.architectcoders.arquitectomarvel.data.mappers.ResultUI
-import com.architectcoders.arquitectomarvel.data.mappers.toResultUIList
+import com.architectcoders.arquitectomarvel.data.ui_models.ResultUI
 import com.architectcoders.arquitectomarvel.databinding.HeroItemBinding
-import com.architectcoders.arquitectomarvel.model.loadUrl
-import com.architectcoders.module.usescases.UseCaseGetCharactersRemote
-import retrofit2.HttpException
-import java.io.IOException
+import com.architectcoders.arquitectomarvel.ui.common.loadUrl
 
 class AdapterList(private val listener: (ResultUI, View) -> Unit) :
     PagingDataAdapter<ResultUI, AdapterList.HeroViewHolder>(DiffCallback) {

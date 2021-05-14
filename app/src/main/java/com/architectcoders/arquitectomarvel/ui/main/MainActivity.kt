@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView.*
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
-import com.architectcoders.arquitectomarvel.model.*
-import com.architectcoders.arquitectomarvel.ui.common.ServiceLocator
+import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.HeroDetailActivity
+import com.architectcoders.arquitectomarvel.ui.main.pagination.ResultsLoadStateAdapter
 import com.architectcoders.module.usescases.UseCaseGetCharactersRemote
 import kotlinx.coroutines.flow.collectLatest
 

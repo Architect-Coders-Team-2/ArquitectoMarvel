@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.ui.main
+package com.architectcoders.arquitectomarvel.ui.main.pagination
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

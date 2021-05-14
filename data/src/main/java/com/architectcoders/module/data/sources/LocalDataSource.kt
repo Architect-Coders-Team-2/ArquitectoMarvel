@@ -1,12 +1,12 @@
 package com.architectcoders.module.data.sources
 
-import com.architectcoders.module.domain.local_models.DetailedComic
-import com.architectcoders.module.domain.remote_models.Characters.Result
+import com.architectcoders.module.domain.models.Comics.DetailedComic
+import com.architectcoders.module.domain.models.Characters.ResultCharacters
 
 interface LocalDataSource {
-    suspend fun insertFavoriteCharacter(toCharacterEntity: Result)
+    suspend fun insertFavoriteCharacter(toCharacterEntity: ResultCharacters)
     suspend fun insertFavoriteDetailedComic(comic: DetailedComic)
-    suspend fun deleteFavoriteCharacter(favouriteCharacter: Result)
+    suspend fun deleteFavoriteCharacter(favouriteCharacter: ResultCharacters)
     suspend fun deleteFavoriteDetailedComic(comic: DetailedComic)
     suspend fun isCharacterFavorite(characterId: Int): Boolean
 }

@@ -1,13 +1,9 @@
 package com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters
 
-import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import kotlinx.parcelize.Parcelize
+import com.architectcoders.module.domain.models.Characters.Characters as CharactersDomain
 
-import com.architectcoders.module.domain.remote_models.Characters.Characters as CharactersDomain
-
-@Parcelize
 @JsonClass(generateAdapter = true)
 data class Characters(
     @Json(name = "code")
@@ -24,9 +20,9 @@ data class Characters(
     val etag: String?,
     @Json(name = "data")
     val characterData: Data?
-) : Parcelable
+)
 
-fun Characters.toCharactersModel(): CharactersDomain {
+fun Characters.toCharactersDomain(): CharactersDomain {
     return CharactersDomain(
         code,
         status,
@@ -34,6 +30,6 @@ fun Characters.toCharactersModel(): CharactersDomain {
         attributionText,
         attributionHTML,
         etag,
-        charactersData = characterData?.toCharacterDataDomain()
+        characterData?.toCharacterDataDomain()
     )
 }

@@ -1,6 +1,9 @@
 package com.architectcoders.arquitectomarvel.ui.detail
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.data.local.entities.DetailedComicEntity
 import com.architectcoders.arquitectomarvel.data.local.entities.fromDetailedComicEntityToDetailedComic
@@ -59,7 +62,7 @@ class HeroDetailViewModel(
                 val isCharacterFavorite = useCaseIsCharacterFavorite.invoke(heroId)
                 _model.value = UiModel.UpdateFAB(isCharacterFavorite, ::onFabClick)
                 val comic = useCaseGetComicsRemote.invoke(heroId)
-                val comicList = comic.data?.results ?: emptyList()
+                val comicList = comic.dataComics?.resultComics ?: emptyList()
                 _model.value = UiModel.UpdateComics(comicList.fromListResult())
             } catch (e: UnknownHostException) {
                 Timber.e("qq_MainPresenter.onCreate: $e")

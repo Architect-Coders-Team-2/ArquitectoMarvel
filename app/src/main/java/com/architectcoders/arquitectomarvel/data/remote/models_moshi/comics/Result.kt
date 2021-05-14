@@ -1,15 +1,12 @@
 package com.architectcoders.arquitectomarvel.data.remote.models_moshi.comics
 
-import android.os.Parcelable
 import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.Thumbnail
-import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.fromComicsThumbailDomain
-import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.toComicsThumbailDomain
+import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.toThumbnailDomain
+import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.toToThumbailData
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import kotlinx.parcelize.Parcelize
-import com.architectcoders.module.domain.remote_models.Comics.Result as ComicsResultDomain
+import com.architectcoders.module.domain.models.Comics.ResultComics as ComicsResultDomain
 
-@Parcelize
 @JsonClass(generateAdapter = true)
 data class Result(
     @Json(name = "resourceURI")
@@ -18,13 +15,13 @@ data class Result(
     val thumbnail: Thumbnail?,
     @Json(name = "title")
     val title: String?
-) : Parcelable {
+) {
 
     fun toComicsResultDomain():ComicsResultDomain =
         ComicsResultDomain(
             title = title,
             resourceURI = resourceURI,
-            thumbnail = thumbnail?.toComicsThumbailDomain()
+            thumbnailDomain = thumbnail?.toThumbnailDomain()
         )
 }
 
@@ -37,7 +34,7 @@ fun List<ComicsResultDomain>.fromListResult(): List<Result> =
 fun ComicsResultDomain.fromComicsResultDomain(): Result =
     Result(
         resourceURI = resourceURI?:"",
-        thumbnail = thumbnail?.fromComicsThumbailDomain(),
+        thumbnail = thumbnailDomain?.toToThumbailData(),
         title = title
     )
 

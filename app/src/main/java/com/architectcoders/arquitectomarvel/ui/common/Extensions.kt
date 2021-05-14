@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.model
+package com.architectcoders.arquitectomarvel.ui.common
 
 import android.app.Activity
 import android.content.Context
@@ -15,8 +15,6 @@ import androidx.lifecycle.get
 import com.architectcoders.arquitectomarvel.R
 import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.math.BigInteger
-import java.security.MessageDigest
 
 fun ImageView.loadUrl(url: String?, extension: String? = "") {
     Glide.with(this)

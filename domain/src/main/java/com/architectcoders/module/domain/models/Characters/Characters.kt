@@ -1,11 +1,11 @@
-package com.architectcoders.module.domain.remote_models.Comics
+package com.architectcoders.module.domain.models.Characters
 
-data class Comics(
+data class Characters(
     val code: Int?,
     val status: String?,
     val copyright: String?,
     val attributionText: String?,
     val attributionHTML: String?,
     val etag: String?,
-    val `data`: Data?
+    val charactersDataCharacters: DataCharacters?
 )

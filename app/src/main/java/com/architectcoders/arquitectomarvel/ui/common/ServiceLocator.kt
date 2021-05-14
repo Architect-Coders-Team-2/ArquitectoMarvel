@@ -1,13 +1,13 @@
 package com.architectcoders.arquitectomarvel.ui.common
 
 import android.content.Context
+import com.architectcoders.arquitectomarvel.data.CredentialsSourceImpl
 import com.architectcoders.arquitectomarvel.data.local.ResultDatabase
 import com.architectcoders.arquitectomarvel.data.local.RoomDataSource
 import com.architectcoders.arquitectomarvel.data.remote.RetrofitDataSource
-import com.architectcoders.arquitectomarvel.data.CredentialsSourceImpl
-import com.architectcoders.module.data.CredentialsSource
-import com.architectcoders.module.data.sources.LocalDataSource
+import com.architectcoders.module.data.sources.CredentialsSource
 import com.architectcoders.module.data.MarvelRepository
+import com.architectcoders.module.data.sources.LocalDataSource
 import com.architectcoders.module.data.sources.RemoteDataSource
 
 object ServiceLocator {

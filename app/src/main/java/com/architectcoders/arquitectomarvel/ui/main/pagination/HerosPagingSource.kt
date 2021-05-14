@@ -2,9 +2,9 @@ package com.architectcoders.arquitectomarvel.ui.main.pagination
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.architectcoders.arquitectomarvel.data.mappers.ResultUI
-import com.architectcoders.arquitectomarvel.data.mappers.toResultUIList
-import com.architectcoders.arquitectomarvel.model.INCREMENT
+import com.architectcoders.arquitectomarvel.data.ui_models.ResultUI
+import com.architectcoders.arquitectomarvel.data.ui_models.toResultUIList
+import com.architectcoders.arquitectomarvel.ui.common.INCREMENT
 import com.architectcoders.module.usescases.UseCaseGetCharactersRemote
 import retrofit2.HttpException
 import java.io.IOException
@@ -18,7 +18,7 @@ class HerosPagingSource(
         return try {
             val offset = params.key ?: 0
             val response = useCaseGetCharactersRemote.invoke(offset)
-            val results = response.charactersData?.results!!.toResultUIList()
+            val results = response.charactersDataCharacters?.resultCharacters!!.toResultUIList()
             LoadResult.Page(
                 data = results,
                 prevKey = null, // Only paging forward.

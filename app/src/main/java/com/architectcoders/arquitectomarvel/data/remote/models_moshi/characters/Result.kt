@@ -1,13 +1,9 @@
 package com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters
 
-import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import kotlinx.parcelize.Parcelize
+import com.architectcoders.module.domain.models.Characters.ResultCharacters as CharactersResultDomain
 
-import com.architectcoders.module.domain.remote_models.Characters.Result as CharactersResultDomain
-
-@Parcelize
 @JsonClass(generateAdapter = true)
 data class Result(
     @Json(name = "id")
@@ -24,15 +20,9 @@ data class Result(
     val resourceURI: String? = null,
     @Json(name = "comics")
     val comics: Comics = Comics(),
-    @Json(name = "series")
-    val series: Series? = null,
-    @Json(name = "stories")
-    val stories: Stories? = null,
-    @Json(name = "events")
-    val events: Events? = null,
     @Json(name = "urls")
     val urls: List<Url>? = null
-) : Parcelable
+)
 
 fun Result.toCharacterResultDomain(): CharactersResultDomain =
     CharactersResultDomain(
@@ -40,7 +30,7 @@ fun Result.toCharacterResultDomain(): CharactersResultDomain =
         name,
         description,
         modified,
-        thumbnail?.toCharactersThumbailDomain(),
+        thumbnail?.toThumbnailDomain(),
         resourceURI,
         comics.toCharactersComicsDomain()
     )
