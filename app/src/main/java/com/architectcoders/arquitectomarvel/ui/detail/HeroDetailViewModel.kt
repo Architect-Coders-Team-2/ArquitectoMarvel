@@ -5,8 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.architectcoders.arquitectomarvel.R
-import com.architectcoders.arquitectomarvel.model.Repository
-import com.architectcoders.arquitectomarvel.model.comics.Result
 import com.architectcoders.arquitectomarvel.model.database.DetailedComicEntity
 import kotlinx.coroutines.launch
 import timber.log.Timber

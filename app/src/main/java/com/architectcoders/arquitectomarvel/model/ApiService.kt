@@ -1,7 +1,7 @@
 package com.architectcoders.arquitectomarvel.model
 
-import com.architectcoders.arquitectomarvel.model.characters.Characters
-import com.architectcoders.arquitectomarvel.model.comics.Comic
+import com.architectcoders.domain.characters.Characters
+import com.architectcoders.domain.comics.Comic
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

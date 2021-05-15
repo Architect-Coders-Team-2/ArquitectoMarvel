@@ -3,10 +3,7 @@ package com.architectcoders.arquitectomarvel.ui.main
 import android.view.View
 import androidx.lifecycle.*
 import androidx.paging.*
-import com.architectcoders.arquitectomarvel.model.Repository
-import com.architectcoders.arquitectomarvel.model.characters.Result
 import com.architectcoders.arquitectomarvel.ui.common.Event
-import timber.log.Timber
 
 class MainViewModel(private val repository: Repository) : ViewModel() {
 
