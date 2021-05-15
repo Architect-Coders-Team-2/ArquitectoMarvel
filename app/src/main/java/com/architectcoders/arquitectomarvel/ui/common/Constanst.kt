@@ -7,7 +7,7 @@ const val BASE_URL = "https://gateway.marvel.com"
 const val EMPTY_TEXT = "--"
 
 // EXTRA
-const val EXTRA_SELECTED_HERO = "extraSelectedHero"
+const val EXTRA_SELECTED_CHARACTER = "extraSelectedHero"
 
 // VALUES TO PAGINATE
 const val INITIAL = 36
