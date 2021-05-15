@@ -4,8 +4,9 @@ import com.architectcoders.arquitectomarvel.BuildConfig
 import com.architectcoders.module.data.sources.CredentialsSource
 import java.math.BigInteger
 import java.security.MessageDigest
+import javax.inject.Inject
 
-class CredentialsSourceImpl : CredentialsSource {
+class CredentialsSourceImpl @Inject constructor(): CredentialsSource {
 
     override val currentTime: Long
         get() = System.currentTimeMillis()

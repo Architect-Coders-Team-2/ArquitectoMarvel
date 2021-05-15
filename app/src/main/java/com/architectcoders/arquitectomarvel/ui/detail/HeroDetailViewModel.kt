@@ -8,20 +8,23 @@ import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.toCharacterResultDomain
 import com.architectcoders.arquitectomarvel.data.remote.models_moshi.comics.Result
 import com.architectcoders.arquitectomarvel.data.remote.models_moshi.comics.fromListResult
-import com.architectcoders.module.usescases.UseCaseDeleteFavoriteCharacter
-import com.architectcoders.module.usescases.UseCaseGetComicsRemote
-import com.architectcoders.module.usescases.UseCaseInsertFavoriteCharacter
-import com.architectcoders.module.usescases.UseCaseIsCharacterFavorite
+import com.architectcoders.arquitectomarvel.data.usescases_impl.UseCaseDeleteFavoriteCharacterImpl
+import com.architectcoders.arquitectomarvel.data.usescases_impl.UseCaseGetComicsRemoteImpl
+import com.architectcoders.arquitectomarvel.data.usescases_impl.UseCaseInsertFavoriteCharacterImpl
+import com.architectcoders.arquitectomarvel.data.usescases_impl.UseCaseIsCharacterFavoriteImpl
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.net.UnknownHostException
+import javax.inject.Inject
 import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.Result as CharacterResult
 
-class HeroDetailViewModel(
-    private val useCaseGetComicsRemote: UseCaseGetComicsRemote,
-    private val useCaseInsertFavoriteCharacter: UseCaseInsertFavoriteCharacter,
-    private val useCaseIsCharacterFavorite: UseCaseIsCharacterFavorite,
-    private val useCaseDeleteFavoriteCharacter: UseCaseDeleteFavoriteCharacter,
+@HiltViewModel
+class HeroDetailViewModel @Inject constructor(
+    private val useCaseGetComicsRemoteImpl: UseCaseGetComicsRemoteImpl,
+    private val useCaseInsertFavoriteCharacterImpl: UseCaseInsertFavoriteCharacterImpl,
+    private val useCaseIsCharacterFavoriteImpl: UseCaseIsCharacterFavoriteImpl,
+    private val useCaseDeleteFavoriteCharacterImpl: UseCaseDeleteFavoriteCharacterImpl,
 ) : ViewModel() {
 
     private val _model = MutableLiveData<UiModel>()
@@ -60,9 +63,9 @@ class HeroDetailViewModel(
         viewModelScope.launch {
             try {
                 _model.value = UiModel.Loading
-                val isCharacterFavorite = useCaseIsCharacterFavorite.invoke(heroId)
+                val isCharacterFavorite = useCaseIsCharacterFavoriteImpl.invoke(heroId)
                 _model.value = UiModel.UpdateFAB(isCharacterFavorite)
-                val comic = useCaseGetComicsRemote.invoke(heroId)
+                val comic = useCaseGetComicsRemoteImpl.invoke(heroId)
                 val comicList = comic.dataComics?.resultComics ?: emptyList()
                 _model.value = UiModel.UpdateComics(comicList.fromListResult())
             } catch (e: UnknownHostException) {
@@ -78,9 +81,9 @@ class HeroDetailViewModel(
     ) {
         viewModelScope.launch {
             if (isCharacterFavorite) {
-                useCaseInsertFavoriteCharacter.invoke(selectedHero.toCharacterResultDomain())
+                useCaseInsertFavoriteCharacterImpl.invoke(selectedHero.toCharacterResultDomain())
             } else {
-                useCaseDeleteFavoriteCharacter.invoke(selectedHero.toCharacterResultDomain())
+                useCaseDeleteFavoriteCharacterImpl.invoke(selectedHero.toCharacterResultDomain())
             }
         }
     }

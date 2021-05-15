@@ -3,6 +3,7 @@ package com.architectcoders.arquitectomarvel.ui.detail
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -11,22 +12,21 @@ import com.architectcoders.arquitectomarvel.data.local.entities.toDetailedComicE
 import com.architectcoders.arquitectomarvel.data.ui_models.ResultUI
 import com.architectcoders.arquitectomarvel.data.ui_models.fromResultUItoCharacterResult
 import com.architectcoders.arquitectomarvel.databinding.ActivityHeroDetailBinding
-import com.architectcoders.arquitectomarvel.ui.common.*
+import com.architectcoders.arquitectomarvel.ui.common.EXTRA_SELECTED_HERO
+import com.architectcoders.arquitectomarvel.ui.common.loadImage
+import com.architectcoders.arquitectomarvel.ui.common.loadUrl
+import com.architectcoders.arquitectomarvel.ui.common.toast
 import com.architectcoders.arquitectomarvel.ui.detail.HeroDetailViewModel.UiModel
+import dagger.hilt.android.AndroidEntryPoint
 import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.Result as CharacterResult
 import com.architectcoders.arquitectomarvel.data.remote.models_moshi.comics.Result as ComicsResult
 
+@AndroidEntryPoint
 class HeroDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHeroDetailBinding
 
-    private val component: HeroDetailActivityComponent by lazy {
-        app.component.plus(HeroDatailActivityModule())
-    }
-
-    private val heroDetailViewModel: HeroDetailViewModel by lazy {
-        getViewModel { component.heroDetailViewModel }
-    }
+    private val heroDetailViewModel: HeroDetailViewModel by viewModels()
 
     private val adapter by lazy { ComicAdapter() }
     private var isCharacterFavorite = false

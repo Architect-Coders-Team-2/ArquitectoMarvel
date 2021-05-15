@@ -4,20 +4,20 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.architectcoders.arquitectomarvel.data.ui_models.ResultUI
 import com.architectcoders.arquitectomarvel.data.ui_models.toResultUIList
+import com.architectcoders.arquitectomarvel.data.usescases_impl.UseCaseGetCharactersRemoteImpl
 import com.architectcoders.arquitectomarvel.ui.common.INCREMENT
-import com.architectcoders.module.usescases.UseCaseGetCharactersRemote
 import retrofit2.HttpException
 import java.io.IOException
 
 class HerosPagingSource(
-    private val useCaseGetCharactersRemote: UseCaseGetCharactersRemote
+    private val useCaseGetCharactersRemoteImpl: UseCaseGetCharactersRemoteImpl
 ) : PagingSource<Int, ResultUI>() {
     override suspend fun load(
         params: LoadParams<Int>
     ): LoadResult<Int, ResultUI> {
         return try {
             val offset = params.key ?: 0
-            val response = useCaseGetCharactersRemote.invoke(offset)
+            val response = useCaseGetCharactersRemoteImpl.invoke(offset)
             val results = response.charactersDataCharacters?.resultCharacters!!.toResultUIList()
             LoadResult.Page(
                 data = results,

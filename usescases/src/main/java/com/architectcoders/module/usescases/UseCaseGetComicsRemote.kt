@@ -1,11 +1,8 @@
 package com.architectcoders.module.usescases
 
-import com.architectcoders.module.data.MarvelRepository
 import com.architectcoders.module.domain.models.Comics.Comics
 
-class UseCaseGetComicsRemote(private val marvelRepository: MarvelRepository) {
+interface UseCaseGetComicsRemote {
 
-    suspend fun invoke(characterId: Int): Comics {
-        return marvelRepository.getComicsFromCharacterRemote(characterId)
-    }
+    suspend fun invoke(characterId: Int): Comics
 }

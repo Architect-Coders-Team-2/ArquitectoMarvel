@@ -1,10 +1,6 @@
 package com.architectcoders.module.usescases
 
-import com.architectcoders.module.data.MarvelRepository
+interface UseCaseIsCharacterFavorite{
 
-class UseCaseIsCharacterFavorite(private val marvelRepository: MarvelRepository) {
-
-    suspend fun invoke(characterId: Int): Boolean {
-        return marvelRepository.isCharacterFavorite(characterId)
-    }
+    suspend fun invoke(characterId: Int): Boolean
 }

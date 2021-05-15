@@ -1,38 +1,23 @@
 package com.architectcoders.module.data
 
-import com.architectcoders.module.data.sources.LocalDataSource
-import com.architectcoders.module.data.sources.RemoteDataSource
 import com.architectcoders.module.domain.models.Characters.Characters
 import com.architectcoders.module.domain.models.Comics.Comics
 import com.architectcoders.module.domain.models.Characters.ResultCharacters as CharacterResult
 
-class MarvelRepository(
-    private val localDataSource: LocalDataSource,
-    private val remoteDataSource: RemoteDataSource
-) {
+interface MarvelRepository {
 
     suspend fun getCharactersRemote(
         offset: Int
-    ): Characters {
-        return remoteDataSource.getCharacters(offset)
-    }
+    ): Characters
 
     suspend fun getComicsFromCharacterRemote(
         characterId: Int
-    ): Comics {
-        return remoteDataSource.getComics(characterId)
-    }
+    ): Comics
 
-    suspend fun insertFavoriteCharacter(favouriteCharacter: CharacterResult) {
-        localDataSource.insertFavoriteCharacter(favouriteCharacter)
-    }
+    suspend fun insertFavoriteCharacter(favouriteCharacter: CharacterResult)
 
-    suspend fun deleteFavoriteCharacters(favouriteCharacter: CharacterResult) {
-        localDataSource.deleteFavoriteCharacter(favouriteCharacter)
-    }
+    suspend fun deleteFavoriteCharacters(favouriteCharacter: CharacterResult)
 
-    suspend fun isCharacterFavorite(characterId: Int): Boolean  {
-        return localDataSource.isCharacterFavorite(characterId)
-    }
+    suspend fun isCharacterFavorite(characterId: Int): Boolean
 
 }

@@ -2,23 +2,15 @@ package com.architectcoders.arquitectomarvel
 
 import android.app.Application
 import android.util.Log
-import com.architectcoders.arquitectomarvel.di.DaggerMarvelComponent
-import com.architectcoders.arquitectomarvel.di.MarvelComponent
+import dagger.hilt.android.HiltAndroidApp
 import org.jetbrains.annotations.NotNull
 import timber.log.Timber
 
+@HiltAndroidApp
 class App: Application() {
-
-    lateinit var component: MarvelComponent
-        private set
 
     override fun onCreate() {
         super.onCreate()
-
-        component = DaggerMarvelComponent
-            .factory()
-            .create(this)
-
         timberConfig()
     }
 

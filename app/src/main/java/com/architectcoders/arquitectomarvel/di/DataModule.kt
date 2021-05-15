@@ -1,19 +1,41 @@
 package com.architectcoders.arquitectomarvel.di
 
+import com.architectcoders.arquitectomarvel.data.CredentialsSourceImpl
+import com.architectcoders.arquitectomarvel.data.MarvelRepositoryImpl
+import com.architectcoders.arquitectomarvel.data.local.RoomDataSource
+import com.architectcoders.arquitectomarvel.data.remote.RetrofitDataSource
 import com.architectcoders.module.data.MarvelRepository
+import com.architectcoders.module.data.sources.CredentialsSource
 import com.architectcoders.module.data.sources.LocalDataSource
 import com.architectcoders.module.data.sources.RemoteDataSource
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
-import javax.inject.Singleton
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Module
-class DataModule {
+@InstallIn(SingletonComponent::class)
+abstract class DataModule {
 
-    @Provides
-    @Singleton
-    fun marvelRepositoryProvider(
-        localDataSource: LocalDataSource,
-        remoteDataSource: RemoteDataSource
-    ): MarvelRepository = MarvelRepository(localDataSource, remoteDataSource)
+    @Binds
+    abstract fun bindLocalDataSource(
+        roomDataSource: RoomDataSource
+    ): LocalDataSource
+
+    @Binds
+    abstract fun bindCredentialSource(
+        credentialsSourceImpl: CredentialsSourceImpl
+    ): CredentialsSource
+
+    @Binds
+    abstract fun bindRemoteDataSource(
+        retrofitDataSource: RetrofitDataSource
+    ): RemoteDataSource
+
+    @Binds
+    abstract fun bindMarvelRepository(
+        marvelRepositoryImpl: MarvelRepositoryImpl
+    ): MarvelRepository
+
 }
+

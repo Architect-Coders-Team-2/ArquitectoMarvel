@@ -6,8 +6,9 @@ import com.architectcoders.module.data.sources.CredentialsSource
 import com.architectcoders.module.data.sources.RemoteDataSource
 import com.architectcoders.module.domain.models.Characters.Characters
 import com.architectcoders.module.domain.models.Comics.Comics
+import javax.inject.Inject
 
-class RetrofitDataSource(private val credentials: CredentialsSource) : RemoteDataSource {
+class RetrofitDataSource @Inject constructor(private val credentials: CredentialsSource) : RemoteDataSource {
 
     private val api = MarvelApiRest.service
 

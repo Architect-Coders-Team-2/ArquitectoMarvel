@@ -2,6 +2,7 @@ package com.architectcoders.arquitectomarvel.ui.main
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.isVisible
@@ -14,19 +15,15 @@ import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.HeroDetailActivity
 import com.architectcoders.arquitectomarvel.ui.main.pagination.ResultsLoadStateAdapter
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val component: MainActivityComponent by lazy {
-        app.component.plus(MainActivityModule())
-    }
-
-    private val viewModel by lazy {
-        getViewModel { component.mainViewModel }
-    }
+    private val viewModel : MainViewModel by viewModels()
 
     private val adapter: AdapterList by lazy {
         AdapterList(viewModel::onResultClick)
