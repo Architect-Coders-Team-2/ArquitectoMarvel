@@ -1,27 +1,13 @@
 package com.architectcoders.arquitectomarvel.ui.main
 
-import android.view.View
 import androidx.lifecycle.*
 import androidx.paging.*
-import com.architectcoders.arquitectomarvel.ui.common.Event
+import com.architectcoders.arquitectomarvel.ui.main.pagging.ResultPagingSource
+import com.architectcoders.usecase.GetCharacters
 
-class MainViewModel(private val repository: Repository) : ViewModel() {
-
-    private val _navigation = MutableLiveData<Event<Result>>()
-    val navigation: LiveData<Event<Result>> = _navigation
-
-    private val _viewItem = MutableLiveData<View>()
-    val viewItem: LiveData<View> = _viewItem
-
+class MainViewModel(private val getCharacters: GetCharacters) : ViewModel() {
     val pager = Pager(
-        config = PagingConfig(
-            pageSize = 18
-        ),
-        pagingSourceFactory = { ResultPagingSource(repository) }
+        config = PagingConfig(pageSize = 18),
+        pagingSourceFactory = { ResultPagingSource(getCharacters) }
     ).flow.cachedIn(viewModelScope)
-
-    fun onResultClick(result: Result, view: View) {
-        _viewItem.value = view
-        _navigation.value = Event(result)
-    }
 }

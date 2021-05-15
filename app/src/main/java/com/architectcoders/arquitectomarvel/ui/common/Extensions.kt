@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.model
+package com.architectcoders.arquitectomarvel.ui.common
 
 import android.app.Activity
 import android.content.Context
@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import com.architectcoders.arquitectomarvel.R
+import com.architectcoders.data.repository.MarvelRepository
 import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.math.BigInteger
@@ -64,6 +65,7 @@ inline fun <reified T : ViewModel> FragmentActivity.getViewModel(crossinline fac
     return ViewModelProvider(this, vmFactory).get()
 }
 
+
 inline fun <reified T : Activity> Context.intentFor(body: Intent.() -> Unit): Intent =
     Intent(this, T::class.java).apply(body)
 
@@ -74,8 +76,10 @@ inline fun <reified T : Activity> Context.startActivity(
     startActivity(intentFor<T>(body), options)
 }
 
-class Factory(val repository: Repository) : ViewModelProvider.Factory {
+
+
+class Factory(val repository: MarvelRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-        modelClass.getConstructor(Repository::class.java)
+        modelClass.getConstructor(MarvelRepository::class.java)
             .newInstance(repository)
 }

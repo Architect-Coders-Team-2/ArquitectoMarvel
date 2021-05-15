@@ -2,11 +2,11 @@ package com.architectcoders.arquitectomarvel.model.database.relations
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.architectcoders.arquitectomarvel.model.characters.Comics
-import com.architectcoders.arquitectomarvel.model.characters.Result
+import com.architectcoders.domain.characters.Result
 import com.architectcoders.arquitectomarvel.model.database.ItemComics
 import com.architectcoders.arquitectomarvel.model.database.ResultRoom
 import com.architectcoders.arquitectomarvel.model.database.toItems
+import com.architectcoders.domain.characters.Comics
 
 data class ResultWithItemsComics(
     @Embedded val resultRoom: ResultRoom,

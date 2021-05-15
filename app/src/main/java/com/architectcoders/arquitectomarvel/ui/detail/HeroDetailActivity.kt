@@ -7,21 +7,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.architectcoders.arquitectomarvel.R
+import com.architectcoders.arquitectomarvel.model.database.ComicEntity
 import com.architectcoders.arquitectomarvel.databinding.ActivityHeroDetailBinding
-import com.architectcoders.arquitectomarvel.model.*
-import com.architectcoders.arquitectomarvel.model.characters.Result
-import com.architectcoders.arquitectomarvel.model.database.DetailedComicEntity
-import com.architectcoders.arquitectomarvel.model.database.toDetailedComicEntityList
+import com.architectcoders.arquitectomarvel.model.EMPTY_TEXT
+import com.architectcoders.arquitectomarvel.model.EXTRA_SELECTED_HERO
+import com.architectcoders.arquitectomarvel.model.database.toComicEntityList
+import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.HeroDetailViewModel.UiModel
-import com.architectcoders.arquitectomarvel.model.comics.Result as ComicResult
+import com.architectcoders.data.repository.MarvelRepository
+import com.architectcoders.domain.characters.Result as HeroResult
 
 class HeroDetailActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityHeroDetailBinding
     private lateinit var heroDetailViewModel: HeroDetailViewModel
     private val adapter by lazy { ComicAdapter() }
-    var selectedCharacter: Result? = null
-    var isCharacterFavorite = false
+    private var selectedCharacter: HeroResult? = null
+    private var isCharacterFavorite = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,22 +32,26 @@ class HeroDetailActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.contentHeroDetail.comicList.adapter = adapter
-        heroDetailViewModel = getViewModel { HeroDetailViewModel(Repository(application)) }
         heroDetailViewModel.model.observe(this, Observer(::updateUi))
     }
 
     private fun updateUi(model: UiModel) {
         binding.contentHeroDetail.progress.isVisible = model is UiModel.Loading
         when (model) {
-            is UiModel.SetHeroDetails -> setHeroDetails(model.onHeroShown)
+            is UiModel.RequestCharacterById -> model.listener(
+                intent.extras?.getInt(
+                    EXTRA_SELECTED_HERO
+                ) ?: 0
+            )
+            is UiModel.SetHeroDetails -> setHeroDetails(model.character)
             is UiModel.ShowToast -> toast(model.msgResource)
             is UiModel.UpdateFAB -> updateFAB(model.isCharacterFavorite, model.listener)
-            is UiModel.UpdateComics -> updateComics(model.comicList)
+            is UiModel.UpdateComics -> updateComics(model.comicList.toComicEntityList)
         }
     }
 
-    private fun setHeroDetails(onHeroShown: (Int) -> Unit) {
-        intent.extras?.getParcelable<Result>(EXTRA_SELECTED_HERO)?.let { selectedHero ->
+    private fun setHeroDetails(character: HeroResult?) {
+        character?.let { selectedHero ->
             this.selectedCharacter = selectedHero
             binding.headerHeroImage.loadUrl(
                 selectedHero.thumbnail?.path,
@@ -59,7 +65,6 @@ class HeroDetailActivity : AppCompatActivity() {
                 } else {
                     selectedHero.description
                 }
-            onHeroShown(selectedHero.id)
         }
     }
 
@@ -70,8 +75,8 @@ class HeroDetailActivity : AppCompatActivity() {
     private fun updateFAB(
         isCharacterFavorite: Boolean,
         listener: (
-            selectedHero: Result,
-            comicList: MutableList<DetailedComicEntity>,
+            selectedHero: HeroResult,
+            comicList: MutableList<ComicEntity>,
             isCharacterFavorite: Boolean,
         ) -> Unit,
     ) {
@@ -94,11 +99,11 @@ class HeroDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateComics(comicList: List<ComicResult>) {
+    private fun updateComics(comicList: List<ComicEntity>) {
         if (comicList.isEmpty()) {
             binding.contentHeroDetail.noComics.isVisible = true
         }
-        adapter.submitList(comicList.toDetailedComicEntityList)
+        adapter.submitList(comicList)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

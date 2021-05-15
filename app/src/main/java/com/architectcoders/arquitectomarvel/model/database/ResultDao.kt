@@ -7,34 +7,24 @@ import com.architectcoders.arquitectomarvel.model.database.relations.ResultWithI
 @Dao
 interface ResultDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertResult(resultRoom: ResultRoom)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertComics(itemComics: ItemComics)
-
-    @Query("SELECT * FROM resultroom ORDER BY name")
-    suspend fun getResults(): List<ResultRoom>
+    @Query("SELECT * FROM characterentity ORDER BY name")
+    suspend fun getCharacters(): List<CharacterEntity>
 
     @Transaction
-    @Query("SELECT * FROM resultRoom WHERE comicsCollectionURI = :comicsCollectionURI")
-    suspend fun getResultWithItemsComics(comicsCollectionURI: String): List<ResultWithItemsComics>
+    @Query("SELECT * FROM characterentity WHERE comicCollectionUri = :comicCollectionUri")
+    suspend fun getCharacterWithComics(comicCollectionUri: String): List<CharacterWithComics>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFavoriteCharacter(characterEntity: CharacterEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFavoriteDetailedComic(detailedComicEntity: DetailedComicEntity)
+    suspend fun insertFavoriteComic(comicEntity: ComicEntity)
 
     @Delete
     suspend fun deleteFavoriteCharacter(characterEntity: CharacterEntity)
 
     @Delete
-    suspend fun deleteFavoriteDetailedComic(detailedComicEntity: DetailedComicEntity)
-
-    @Transaction
-    @Query("SELECT * FROM characterentity WHERE comicCollectionUri = :comicCollectionUri")
-    suspend fun getCharacterWithComics(comicCollectionUri: String): List<CharacterWithComics>
+    suspend fun deleteFavoriteComic(comicEntity: ComicEntity)
 
     @Query("SELECT id FROM characterentity WHERE id = :id")
     suspend fun isCharacterFavorite(id: Int): Int?
