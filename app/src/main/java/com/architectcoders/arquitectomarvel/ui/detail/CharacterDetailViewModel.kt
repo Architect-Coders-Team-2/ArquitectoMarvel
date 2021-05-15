@@ -1,22 +1,24 @@
 package com.architectcoders.arquitectomarvel.ui.detail
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.architectcoders.arquitectomarvel.BuildConfig
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.data.database.ComicEntity
 import com.architectcoders.arquitectomarvel.data.database.toComicResult
+import com.architectcoders.arquitectomarvel.ui.common.EXTRA_SELECTED_CHARACTER
 import com.architectcoders.arquitectomarvel.ui.common.md5
 import com.architectcoders.usecases.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.net.UnknownHostException
+import javax.inject.Inject
 import com.architectcoders.domain.characters.Result as CharacterResult
 import com.architectcoders.domain.comics.Result as ComicResult
 
-class CharacterDetailViewModel(
+@HiltViewModel
+class CharacterDetailViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val getCharacterById: GetCharacterById,
     private val isCharacterFavorite: IsCharacterFavorite,
     private val getComicsFromCharacterId: GetComicsFromCharacterId,
@@ -35,7 +37,6 @@ class CharacterDetailViewModel(
 
     sealed class UiModel {
         object Loading : UiModel()
-        class RequestCharacterById(val listener: (Int) -> Unit) : UiModel()
         class SetCharacterDetails(val character: CharacterResult?) : UiModel()
         class UpdateFAB(
             val isCharacterFavorite: Boolean,
@@ -51,14 +52,14 @@ class CharacterDetailViewModel(
     }
 
     private fun refresh() {
-        _model.value = UiModel.RequestCharacterById(::onIdCollected)
+        _model.value = UiModel.Loading
+        loadCharacterById(savedStateHandle[EXTRA_SELECTED_CHARACTER] ?: 0)
     }
 
-    private fun onIdCollected(characterId: Int) {
+    private fun loadCharacterById(characterId: Int) {
         viewModelScope.launch {
             try {
                 val ts = System.currentTimeMillis()
-                _model.value = UiModel.Loading
                 getCharacterId(characterId, ts)
                 isCharacterFavorite(characterId)
                 _model.value = UiModel.Loading
