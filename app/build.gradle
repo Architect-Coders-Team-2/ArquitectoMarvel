@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
+    id 'dagger.hilt.android.plugin'
 }
 
 def secretProperties() {
@@ -115,4 +116,8 @@ dependencies {
 
     // Paging 3
     implementation "androidx.paging:paging-runtime-ktx:3.0.0"
+
+    // Hilt
+    implementation "com.google.dagger:hilt-android:2.35"
+    kapt "com.google.dagger:hilt-compiler:2.35"
 }
