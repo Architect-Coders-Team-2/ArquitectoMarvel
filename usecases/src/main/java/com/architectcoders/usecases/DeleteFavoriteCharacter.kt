@@ -4,6 +4,6 @@ import com.architectcoders.data.repository.CharacterRepository
 import com.architectcoders.domain.characters.Characters
 import com.architectcoders.domain.characters.Result
 
-class DeleteFavoriteCharacter(private val characterRepository: CharacterRepository): IUseCase<Any,Result> {
+class DeleteFavoriteCharacter(private val characterRepository: CharacterRepository): IUseCase<Result,Any> {
     override suspend fun invoke(param: Result) = characterRepository.deleteFavoriteCharacter(param)
 }

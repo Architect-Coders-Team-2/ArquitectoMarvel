@@ -4,5 +4,5 @@ import com.architectcoders.data.repository.CharacterRepository
 import com.architectcoders.domain.characters.Characters
 
 interface IUseCase <T,K>{
- suspend fun invoke(param: K): T?
+ suspend fun invoke(param: T): K?
 }
