@@ -7,8 +7,6 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [
-        ResultRoom::class,
-        ItemComics::class,
         CharacterEntity::class,
         ComicEntity::class
     ],
