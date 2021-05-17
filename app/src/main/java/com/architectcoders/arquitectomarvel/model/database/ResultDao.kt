@@ -6,13 +6,6 @@ import com.architectcoders.arquitectomarvel.model.database.relations.CharacterWi
 @Dao
 interface ResultDao {
 
- //   @Query("SELECT * FROM characterentity ORDER BY name")
-//    suspend fun getCharacters(): List<CharacterEntity>
-
-  //  @Transaction
- //   @Query("SELECT * FROM characterentity WHERE comicCollectionUri = :comicCollectionUri")
- //   suspend fun getCharacterWithComics(comicCollectionUri: String): List<CharacterWithComics>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFavoriteCharacter(characterEntity: CharacterEntity)
 
