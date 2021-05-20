@@ -6,19 +6,13 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
-import com.architectcoders.arquitectomarvel.BuildConfig
 import com.architectcoders.arquitectomarvel.R
-import com.architectcoders.arquitectomarvel.data.database.CharacterDatabase
-import com.architectcoders.arquitectomarvel.data.database.ComicEntity
-import com.architectcoders.arquitectomarvel.data.database.RoomDataSource
-import com.architectcoders.arquitectomarvel.data.database.toComicEntityList
-import com.architectcoders.arquitectomarvel.data.server.MarvelDataSource
 import com.architectcoders.arquitectomarvel.databinding.ActivityCharacterDetailBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel.UiModel
-import com.architectcoders.data.repository.CharacterRepository
 import com.architectcoders.usecases.*
 import com.architectcoders.domain.characters.Result as CharacterResult
+import com.architectcoders.domain.comics.Result as ComicResult
 
 class CharacterDetailActivity : AppCompatActivity() {
 
@@ -28,12 +22,9 @@ class CharacterDetailActivity : AppCompatActivity() {
     private var isCharacterFavorite = false
     private val characterDetailViewModel by lazy {
         getViewModel {
-            val characterRepository = CharacterRepository(
-                MarvelDataSource(),
-                RoomDataSource(CharacterDatabase.getInstance(this)),
-                BuildConfig.MARVEL_API_KEY
-            )
+            val characterRepository = ServiceLocator.provideMarvelRepository(this)
             CharacterDetailViewModel(
+                intent.getIntExtra(EXTRA_SELECTED_HERO, 0),
                 GetCharacterById(characterRepository),
                 IsCharacterFavorite(characterRepository),
                 GetComicsFromCharacterId(characterRepository),
@@ -58,15 +49,10 @@ class CharacterDetailActivity : AppCompatActivity() {
     private fun updateUi(model: UiModel) {
         binding.contentHeroDetail.progress.isVisible = model is UiModel.Loading
         when (model) {
-            is UiModel.RequestCharacterById -> model.listener(
-                intent.extras?.getInt(
-                    EXTRA_SELECTED_HERO
-                ) ?: 0
-            )
             is UiModel.SetCharacterDetails -> setCharacterDetails(model.character)
             is UiModel.ShowToast -> toast(model.msgResource)
             is UiModel.UpdateFAB -> updateFAB(model.isCharacterFavorite, model.listener)
-            is UiModel.UpdateComics -> updateComics(model.comicList.toComicEntityList)
+            is UiModel.UpdateComics -> updateComics(model.comicList)
         }
     }
 
@@ -88,38 +74,43 @@ class CharacterDetailActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Initially saves if the character is favorite, updates the FAB image and sets the click listener
-     * if the character is available
-     */
     private fun updateFAB(
         isCharacterFavorite: Boolean,
         listener: (
             selectedHero: CharacterResult,
-            comicList: MutableList<ComicEntity>,
+            comicList: MutableList<ComicResult>,
             isCharacterFavorite: Boolean,
-        ) -> Unit,
+        ) -> Unit
     ) {
-        this.isCharacterFavorite = isCharacterFavorite
-        binding.fab.loadImage(
-            android.R.drawable.star_on,
-            android.R.drawable.star_off,
-            isCharacterFavorite
-        )
+        setCharacterFavorite(isCharacterFavorite)
+        listenToFab(listener)
+    }
+
+    private fun listenToFab(
+        listener: (
+            selectedHero: CharacterResult,
+            comicList: MutableList<ComicResult>,
+            isCharacterFavorite: Boolean,
+        ) -> Unit
+    ) {
         binding.fab.setOnClickListener {
             selectedCharacter?.let { character ->
-                this.isCharacterFavorite = this.isCharacterFavorite.not()
-                binding.fab.loadImage(
-                    android.R.drawable.star_on,
-                    android.R.drawable.star_off,
-                    this.isCharacterFavorite
-                )
+                setCharacterFavorite(this.isCharacterFavorite.not())
                 listener(character, adapter.currentList, this.isCharacterFavorite)
             }
         }
     }
 
-    private fun updateComics(comicList: List<ComicEntity>) {
+    private fun setCharacterFavorite(isCharacterFavorite: Boolean) {
+        this.isCharacterFavorite = isCharacterFavorite
+        binding.fab.loadImage(
+            android.R.drawable.star_on,
+            android.R.drawable.star_off,
+            this.isCharacterFavorite
+        )
+    }
+
+    private fun updateComics(comicList: List<ComicResult>) {
         if (comicList.isEmpty()) {
             binding.contentHeroDetail.noComics.isVisible = true
         }
