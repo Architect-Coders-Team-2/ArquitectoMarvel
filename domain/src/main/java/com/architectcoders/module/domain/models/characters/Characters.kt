@@ -1,4 +1,4 @@
-package com.architectcoders.module.domain.models.Characters
+package com.architectcoders.module.domain.models.characters
 
 data class Characters(
     val code: Int?,

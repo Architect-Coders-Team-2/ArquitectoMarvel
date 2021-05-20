@@ -4,7 +4,7 @@ import android.os.Parcelable
 import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.Thumbnail
 import kotlinx.parcelize.Parcelize
 import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.Result as CharacterResult
-import com.architectcoders.module.domain.models.Characters.ResultCharacters as ResultDomain
+import com.architectcoders.module.domain.models.characters.ResultCharacters as ResultDomain
 
 @Parcelize
 data class ResultUI(

@@ -3,8 +3,8 @@ package com.architectcoders.arquitectomarvel.data.local
 import com.architectcoders.arquitectomarvel.data.local.entities.toCharacterEntity
 import com.architectcoders.arquitectomarvel.data.local.entities.toDetailedComicEntity
 import com.architectcoders.module.data.sources.LocalDataSource
-import com.architectcoders.module.domain.models.Characters.ResultCharacters
-import com.architectcoders.module.domain.models.Comics.DetailedComic
+import com.architectcoders.module.domain.models.characters.ResultCharacters
+import com.architectcoders.module.domain.models.comics.DetailedComic
 
 class RoomDataSource(resultDatabase: ResultDatabase) : LocalDataSource {
 

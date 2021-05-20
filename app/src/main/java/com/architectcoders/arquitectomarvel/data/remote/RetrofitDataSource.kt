@@ -4,8 +4,8 @@ import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.
 import com.architectcoders.arquitectomarvel.data.remote.models_moshi.comics.toComicsDomain
 import com.architectcoders.module.data.sources.CredentialsSource
 import com.architectcoders.module.data.sources.RemoteDataSource
-import com.architectcoders.module.domain.models.Characters.Characters
-import com.architectcoders.module.domain.models.Comics.Comics
+import com.architectcoders.module.domain.models.characters.Characters
+import com.architectcoders.module.domain.models.comics.Comics
 
 class RetrofitDataSource(private val credentials: CredentialsSource) : RemoteDataSource {
 

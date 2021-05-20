@@ -2,10 +2,10 @@ package com.architectcoders.module.data
 
 import com.architectcoders.module.data.sources.LocalDataSource
 import com.architectcoders.module.data.sources.RemoteDataSource
-import com.architectcoders.module.domain.models.Comics.DetailedComic
-import com.architectcoders.module.domain.models.Characters.Characters
-import com.architectcoders.module.domain.models.Comics.Comics
-import com.architectcoders.module.domain.models.Characters.ResultCharacters as CharacterResult
+import com.architectcoders.module.domain.models.comics.DetailedComic
+import com.architectcoders.module.domain.models.characters.Characters
+import com.architectcoders.module.domain.models.comics.Comics
+import com.architectcoders.module.domain.models.characters.ResultCharacters as CharacterResult
 
 class MarvelRepository(
     private val localDataSource: LocalDataSource,

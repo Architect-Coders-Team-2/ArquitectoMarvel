@@ -1,4 +1,4 @@
-package com.architectcoders.module.domain.models.Comics
+package com.architectcoders.module.domain.models.comics
 
 data class Comics(
     val code: Int?,

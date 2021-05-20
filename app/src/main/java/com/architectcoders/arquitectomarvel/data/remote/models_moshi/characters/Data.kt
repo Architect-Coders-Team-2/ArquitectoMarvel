@@ -2,7 +2,7 @@ package com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import com.architectcoders.module.domain.models.Characters.DataCharacters as CharacterDataDomain
+import com.architectcoders.module.domain.models.characters.DataCharacters as CharacterDataDomain
 
 @JsonClass(generateAdapter = true)
 data class Data(

@@ -2,7 +2,7 @@ package com.architectcoders.arquitectomarvel.data.remote.models_moshi.comics
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import com.architectcoders.module.domain.models.Comics.Comics as ComicsDomain
+import com.architectcoders.module.domain.models.comics.Comics as ComicsDomain
 
 @JsonClass(generateAdapter = true)
 data class Comic(

@@ -1,7 +1,7 @@
 package com.architectcoders.module.data.sources
 
-import com.architectcoders.module.domain.models.Comics.DetailedComic
-import com.architectcoders.module.domain.models.Characters.ResultCharacters
+import com.architectcoders.module.domain.models.comics.DetailedComic
+import com.architectcoders.module.domain.models.characters.ResultCharacters
 
 interface LocalDataSource {
     suspend fun insertFavoriteCharacter(toCharacterEntity: ResultCharacters)

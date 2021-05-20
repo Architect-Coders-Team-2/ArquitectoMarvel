@@ -1,4 +1,4 @@
-package com.architectcoders.module.domain.models.Comics
+package com.architectcoders.module.domain.models.comics
 
 import com.architectcoders.module.domain.models.ThumbnailDomain
 

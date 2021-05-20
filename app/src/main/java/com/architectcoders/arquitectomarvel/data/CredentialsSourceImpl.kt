@@ -7,17 +7,13 @@ import java.security.MessageDigest
 
 class CredentialsSourceImpl : CredentialsSource {
 
-    override val currentTime: Long
-        get() = System.currentTimeMillis()
+    override val currentTime = System.currentTimeMillis()
 
-    override val publicKey: String
-        get() = BuildConfig.MARVEL_API_KEY
+    override val publicKey = BuildConfig.MARVEL_API_KEY
 
-    override val privateKey: String
-        get() = BuildConfig.MARVEL_PRIVATE_KEY
+    override val privateKey = BuildConfig.MARVEL_PRIVATE_KEY
 
-    override val hash: String
-        get() = "$currentTime$privateKey$publicKey".md5
+    override val hash = "$currentTime$privateKey$publicKey".md5
 
     private val String.md5: String
         get() {

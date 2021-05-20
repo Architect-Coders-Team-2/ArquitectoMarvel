@@ -5,7 +5,7 @@ import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.
 import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.toToThumbailData
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import com.architectcoders.module.domain.models.Comics.ResultComics as ComicsResultDomain
+import com.architectcoders.module.domain.models.comics.ResultComics as ComicsResultDomain
 
 @JsonClass(generateAdapter = true)
 data class Result(

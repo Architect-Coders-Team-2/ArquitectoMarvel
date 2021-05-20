@@ -1,7 +1,7 @@
 package com.architectcoders.module.usescases
 
 import com.architectcoders.module.data.MarvelRepository
-import com.architectcoders.module.domain.models.Characters.ResultCharacters
+import com.architectcoders.module.domain.models.characters.ResultCharacters
 
 class UseCaseDeleteFavoriteCharacter(private val marvelRepository: MarvelRepository) {
 

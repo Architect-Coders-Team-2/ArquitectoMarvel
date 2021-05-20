@@ -3,7 +3,7 @@ package com.architectcoders.arquitectomarvel.data.local.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.architectcoders.arquitectomarvel.data.remote.models_moshi.comics.Result
-import com.architectcoders.module.domain.models.Comics.DetailedComic
+import com.architectcoders.module.domain.models.comics.DetailedComic
 
 @Entity
 data class DetailedComicEntity(
