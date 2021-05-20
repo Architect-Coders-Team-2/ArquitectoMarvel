@@ -10,7 +10,8 @@ data class ComicEntity(
     @PrimaryKey
     val resourceUri: String,
     val thumbnail: String?,
-    val title: String?
+    val title: String?,
+    val insertDate: Long?
 )
 
 val List<Result>.toComicEntityList: List<ComicEntity>
@@ -20,7 +21,8 @@ val Result.toComicEntity: ComicEntity
     get() = ComicEntity(
         resourceUri = resourceURI ?: "",
         thumbnail = "${thumbnail?.path}.${thumbnail?.extension}",
-        title = title
+        title = title,
+        insertDate = System.currentTimeMillis()
     )
 
 val List<ComicEntity>.toComicResultList: List<Result>
@@ -34,5 +36,6 @@ val ComicEntity.toComicResult: Result
         null,
         resourceUri,
         thumbnail?.split(".")?.let { Thumbnail(it[0], it[1]) },
-        title
+        title,
+        insertDate = insertDate
     )
