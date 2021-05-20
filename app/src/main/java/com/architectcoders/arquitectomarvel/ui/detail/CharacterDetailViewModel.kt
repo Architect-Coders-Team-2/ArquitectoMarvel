@@ -4,11 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.architectcoders.arquitectomarvel.BuildConfig
 import com.architectcoders.arquitectomarvel.R
-import com.architectcoders.arquitectomarvel.data.database.ComicEntity
-import com.architectcoders.arquitectomarvel.data.database.toComicResult
-import com.architectcoders.arquitectomarvel.ui.common.md5
+import com.architectcoders.domain.characters.Characters
+import com.architectcoders.domain.comics.Comic
 import com.architectcoders.usecases.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -17,6 +15,7 @@ import com.architectcoders.domain.characters.Result as CharacterResult
 import com.architectcoders.domain.comics.Result as ComicResult
 
 class CharacterDetailViewModel(
+    private val characterId: Int,
     private val getCharacterById: GetCharacterById,
     private val isCharacterFavorite: IsCharacterFavorite,
     private val getComicsFromCharacterId: GetComicsFromCharacterId,
@@ -35,13 +34,12 @@ class CharacterDetailViewModel(
 
     sealed class UiModel {
         object Loading : UiModel()
-        class RequestCharacterById(val listener: (Int) -> Unit) : UiModel()
         class SetCharacterDetails(val character: CharacterResult?) : UiModel()
         class UpdateFAB(
             val isCharacterFavorite: Boolean,
             val listener: (
                 selectedHero: CharacterResult,
-                comicList: MutableList<ComicEntity>,
+                comicList: MutableList<ComicResult>,
                 isCharacterFavorite: Boolean,
             ) -> Unit,
         ) : UiModel()
@@ -51,18 +49,17 @@ class CharacterDetailViewModel(
     }
 
     private fun refresh() {
-        _model.value = UiModel.RequestCharacterById(::onIdCollected)
+        _model.value = UiModel.Loading
+        loadCharacterId(characterId)
     }
 
-    private fun onIdCollected(characterId: Int) {
+    private fun loadCharacterId(characterId: Int) {
         viewModelScope.launch {
             try {
-                val ts = System.currentTimeMillis()
-                _model.value = UiModel.Loading
-                getCharacterId(characterId, ts)
+                getCharacterId(characterId)
                 isCharacterFavorite(characterId)
                 _model.value = UiModel.Loading
-                getComicsFromCharacterId(characterId, ts)
+                getComicsFromCharacterId(characterId)
             } catch (e: UnknownHostException) {
                 Timber.e("qq_MainPresenter.onCreate: $e")
                 _model.value = UiModel.ShowToast(R.string.no_internet)
@@ -70,44 +67,37 @@ class CharacterDetailViewModel(
         }
     }
 
-    private suspend fun getCharacterId(characterId: Int, ts: Long) {
-        val characters = getCharacterById.invoke(
-            characterId,
-            ts,
-            "$ts${BuildConfig.MARVEL_PRIVATE_KEY}${BuildConfig.MARVEL_API_KEY}".md5
-        )
+    private suspend fun getCharacterId(characterId: Int) {
+        val characters = getCharacterById.invoke(characterId) as Characters
         _model.value = UiModel.SetCharacterDetails(characters.characterData?.results?.first())
     }
 
     private suspend fun isCharacterFavorite(characterId: Int) {
-        val isCharacterFavorite = isCharacterFavorite.invoke(characterId)
+        val isCharacterFavorite = isCharacterFavorite.invoke(characterId) as Boolean
         _model.value = UiModel.UpdateFAB(isCharacterFavorite, ::onFabClick)
     }
 
-    private suspend fun getComicsFromCharacterId(characterId: Int, ts: Long) {
-        val comic = getComicsFromCharacterId.invoke(
-            characterId, ts,
-            "$ts${BuildConfig.MARVEL_PRIVATE_KEY}${BuildConfig.MARVEL_API_KEY}".md5
-        )
+    private suspend fun getComicsFromCharacterId(characterId: Int) {
+        val comic = getComicsFromCharacterId.invoke(characterId) as Comic?
         val comicList = comic?.comicData?.results ?: emptyList()
         _model.value = UiModel.UpdateComics(comicList)
     }
 
     private fun onFabClick(
         selectedHero: CharacterResult,
-        comicList: MutableList<ComicEntity>,
+        comicList: MutableList<ComicResult>,
         isCharacterFavorite: Boolean,
     ) {
         viewModelScope.launch {
             if (isCharacterFavorite) {
                 insertFavoriteCharacter.invoke(selectedHero)
                 comicList.forEach {
-                    insertFavoriteComic.invoke(it.toComicResult)
+                    insertFavoriteComic.invoke(it)
                 }
             } else {
                 deleteFavoriteCharacter.invoke(selectedHero)
                 comicList.forEach {
-                    deleteFavoriteComic.invoke(it.toComicResult)
+                    deleteFavoriteComic.invoke(it)
                 }
             }
         }
