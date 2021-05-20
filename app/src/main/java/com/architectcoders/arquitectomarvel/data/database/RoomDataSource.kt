@@ -6,32 +6,37 @@ import kotlinx.coroutines.withContext
 import com.architectcoders.domain.characters.Result as CharacterResult
 import com.architectcoders.domain.comics.Result as ComicResult
 
-class RoomDataSource(db: CharacterDatabase) : LocalDataSource {
+class RoomDataSource(db: MarvelDatabase) : LocalDataSource {
 
-    private val characterDao = db.characterDao
+    private val characterDao = db.marvelDao
 
-    override suspend fun insertFavoriteCharacter(favouriteCharacter: CharacterResult) =
+    override suspend fun getLocalCharacters(): List<CharacterResult> =
         withContext(Dispatchers.IO) {
-            characterDao.insertFavoriteCharacter(favouriteCharacter.toCharacterEntity)
+            characterDao.getLocalCharacters().toDomainCharacterList
         }
 
-    override suspend fun deleteFavoriteCharacter(favouriteCharacter: CharacterResult) =
+    override suspend fun insertFavoriteCharacter(vararg param: Any) =
         withContext(Dispatchers.IO) {
-            characterDao.deleteFavoriteCharacter(favouriteCharacter.toCharacterEntity)
+            characterDao.insertFavoriteCharacter((param.first() as CharacterResult).toCharacterEntity)
         }
 
-    override suspend fun isCharacterFavorite(characterId: Int): Boolean =
+    override suspend fun deleteFavoriteCharacter(vararg param: Any) =
         withContext(Dispatchers.IO) {
-            characterDao.isCharacterFavorite(characterId) != null
+            characterDao.deleteFavoriteCharacter((param.first() as CharacterResult).toCharacterEntity)
         }
 
-    override suspend fun insertFavoriteDetailedComic(comic: ComicResult) =
+    override suspend fun isCharacterFavorite(vararg param: Any): Boolean =
         withContext(Dispatchers.IO) {
-            characterDao.insertFavoriteComic(comic.toComicEntity)
+            characterDao.isCharacterFavorite(param.first() as Int) != null
         }
 
-    override suspend fun deleteFavoriteDetailedComic(comic: ComicResult) =
+    override suspend fun insertFavoriteDetailedComic(vararg param: Any) =
         withContext(Dispatchers.IO) {
-            characterDao.deleteFavoriteComic(comic.toComicEntity)
+            characterDao.insertFavoriteComic((param.first() as ComicResult).toComicEntity)
+        }
+
+    override suspend fun deleteFavoriteDetailedComic(vararg param: Any) =
+        withContext(Dispatchers.IO) {
+            characterDao.deleteFavoriteComic((param.first() as ComicResult).toComicEntity)
         }
 }
