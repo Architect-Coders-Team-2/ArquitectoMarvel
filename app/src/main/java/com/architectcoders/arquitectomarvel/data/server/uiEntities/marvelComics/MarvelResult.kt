@@ -35,5 +35,6 @@ val MarvelResult.toLocalMarvelResult: Result
         pageCount,
         resourceURI,
         thumbnail?.toLocalThumbnail,
-        title
+        title,
+        null
     )
