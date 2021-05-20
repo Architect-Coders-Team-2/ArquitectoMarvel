@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.ui.main
+package com.architectcoders.arquitectomarvel.ui.main.pagination
 
 import androidx.recyclerview.widget.RecyclerView
 import com.architectcoders.arquitectomarvel.databinding.CharacterItemBinding
