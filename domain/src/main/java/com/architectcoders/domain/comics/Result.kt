@@ -9,5 +9,6 @@ data class Result(
     val pageCount: Int?,
     val resourceURI: String?,
     val thumbnail: Thumbnail?,
-    val title: String?
+    val title: String?,
+    val insertDate: Long?
 )
