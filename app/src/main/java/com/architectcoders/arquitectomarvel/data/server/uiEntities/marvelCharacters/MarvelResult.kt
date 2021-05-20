@@ -25,5 +25,12 @@ val List<MarvelResult>.toLocalListResult: List<Result>
 
 val MarvelResult.toLocalMarvelResult: Result
     get() = Result(
-        id, name, description, thumbnail?.toLocalThumbnail, resourceURI, comics.toLocalComics
+        id,
+        name,
+        description,
+        thumbnail?.toLocalThumbnail,
+        resourceURI,
+        comics.collectionURI,
+        comics.available != null,
+        null
     )
