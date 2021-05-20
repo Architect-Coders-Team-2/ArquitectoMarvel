@@ -1,8 +1,9 @@
 package com.architectcoders.usecases
 
-import com.architectcoders.data.repository.CharacterRepository
-import com.architectcoders.domain.characters.Result
+import com.architectcoders.data.repository.MarvelRepository
 
-class InsertFavoriteCharacter(private val characterRepository: CharacterRepository) {
-    suspend fun invoke(character: Result) = characterRepository.insertFavoriteCharacter(character)
+class InsertFavoriteCharacter(private val marvelRepository: MarvelRepository) :
+    InvokeUseCase<Any, Unit> {
+    override suspend fun invoke(vararg param: Any) =
+        marvelRepository.insertFavoriteCharacter(*param)
 }

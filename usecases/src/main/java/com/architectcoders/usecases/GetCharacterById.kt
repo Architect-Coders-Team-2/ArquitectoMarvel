@@ -1,9 +1,9 @@
 package com.architectcoders.usecases
 
-import com.architectcoders.data.repository.CharacterRepository
-import com.architectcoders.domain.characters.Characters
+import com.architectcoders.data.repository.MarvelRepository
 
-class GetCharacterById(private val characterRepository: CharacterRepository) {
-    suspend fun invoke(id: Int, ts: Long, hash: String): Characters =
-        characterRepository.getCharacterById(id, ts, hash)
+class GetCharacterById(private val marvelRepository: MarvelRepository) :
+    InvokeUseCase<Any, Any> {
+    override suspend fun invoke(vararg param: Any): Any =
+        marvelRepository.getCharacterById(*param)
 }
