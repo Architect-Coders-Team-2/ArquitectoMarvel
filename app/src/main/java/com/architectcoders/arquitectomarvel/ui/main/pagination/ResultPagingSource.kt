@@ -2,29 +2,24 @@ package com.architectcoders.arquitectomarvel.ui.main.pagination
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.architectcoders.arquitectomarvel.BuildConfig
-import com.architectcoders.arquitectomarvel.ui.common.INITIAL
-import com.architectcoders.arquitectomarvel.ui.common.md5
+import com.architectcoders.arquitectomarvel.ui.common.REQUEST_LIMIT
+import com.architectcoders.domain.characters.Characters
 import com.architectcoders.domain.characters.Result
-import com.architectcoders.usecases.GetCharacters
+import com.architectcoders.usecases.GetRemoteCharacters
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
 
 class ResultPagingSource(
-    private val getCharacters: GetCharacters
+    private val getRemoteCharacters: GetRemoteCharacters
 ) : PagingSource<Int, Result>() {
 
     override suspend fun load(
         params: LoadParams<Int>
     ): LoadResult<Int, Result> {
         return try {
-            val ts = System.currentTimeMillis()
             val offset = params.key ?: 0
-            val response = getCharacters.invoke(
-                offset, ts,
-                "$ts${BuildConfig.MARVEL_PRIVATE_KEY}${BuildConfig.MARVEL_API_KEY}".md5
-            )
+            val response = getRemoteCharacters.invoke(offset) as Characters
             val results = response.characterData?.results!!
             Timber.d("qq_Repository.getCharactersRemote: ----- ()")
             Timber.d("qq_Repository.getCharactersRemote: $offset (offset)")
@@ -34,7 +29,7 @@ class ResultPagingSource(
             LoadResult.Page(
                 data = results,
                 prevKey = null, // Only paging forward.
-                nextKey = if (results.isEmpty()) null else offset + INITIAL
+                nextKey = if (results.isEmpty()) null else offset + REQUEST_LIMIT
             )
         } catch (e: IOException) {
             LoadResult.Error(e)
@@ -53,7 +48,7 @@ class ResultPagingSource(
         //    just return null.
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
-            anchorPage?.prevKey?.plus(INITIAL) ?: anchorPage?.nextKey?.minus(INITIAL)
+            anchorPage?.prevKey?.plus(REQUEST_LIMIT) ?: anchorPage?.nextKey?.minus(REQUEST_LIMIT)
         }
     }
 }
