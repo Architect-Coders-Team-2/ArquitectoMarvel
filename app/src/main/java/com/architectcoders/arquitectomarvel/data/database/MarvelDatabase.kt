@@ -12,19 +12,19 @@ import androidx.room.RoomDatabase
     ],
     version = 1
 )
-abstract class CharacterDatabase : RoomDatabase() {
+abstract class MarvelDatabase : RoomDatabase() {
 
-    abstract val characterDao: CharacterDao
+    abstract val marvelDao: MarvelDao
 
     companion object {
         @Volatile
-        private var INSTANCE: CharacterDatabase? = null
+        private var INSTANCE: MarvelDatabase? = null
 
-        fun getInstance(context: Context): CharacterDatabase {
+        fun getInstance(context: Context): MarvelDatabase {
             return INSTANCE ?: synchronized(this) {
                 Room.databaseBuilder(
                     context.applicationContext,
-                    CharacterDatabase::class.java,
+                    MarvelDatabase::class.java,
                     "result_db"
                 ).build().also {
                     INSTANCE = it
