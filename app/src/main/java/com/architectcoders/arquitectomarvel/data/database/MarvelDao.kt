@@ -4,10 +4,10 @@ import androidx.room.*
 import com.architectcoders.arquitectomarvel.data.database.relations.CharacterWithComics
 
 @Dao
-interface CharacterDao {
+interface MarvelDao {
 
     @Query("SELECT * FROM characterentity ORDER BY name")
-    suspend fun getCharacters(): List<CharacterEntity>
+    suspend fun getLocalCharacters(): List<CharacterEntity>
 
     @Transaction
     @Query("SELECT * FROM characterentity WHERE comicCollectionUri = :comicCollectionUri")
