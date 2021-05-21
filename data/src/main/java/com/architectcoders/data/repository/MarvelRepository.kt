@@ -2,37 +2,41 @@ package com.architectcoders.data.repository
 
 import com.architectcoders.data.source.LocalDataSource
 import com.architectcoders.data.source.RemoteDataSource
+import com.architectcoders.domain.characters.Characters
+import com.architectcoders.domain.comics.Comic
+import com.architectcoders.domain.characters.Result as CharacterResult
+import com.architectcoders.domain.comics.Result as ComicResult
 
 class MarvelRepository(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
 ) {
-    suspend fun getLocalCharacters(): Any? {
+    suspend fun getLocalCharacters(): List<CharacterResult>? {
         return localDataSource.getLocalCharacters()
     }
 
-    suspend fun getRemoteCharacters(vararg param: Any): Any {
-        return remoteDataSource.getRemoteCharacters(*param)
+    suspend fun getRemoteCharacters(offset: Int): Characters {
+        return remoteDataSource.getRemoteCharacters(offset)
     }
 
-    suspend fun getCharacterById(vararg param: Any): Any =
-        remoteDataSource.getRemoteCharacterById(*param)
+    suspend fun getRemoteCharacterById(characterId: Int): Characters =
+        remoteDataSource.getRemoteCharacterById(characterId)
 
-    suspend fun isCharacterFavorite(vararg param: Any): Any =
-        localDataSource.isCharacterFavorite(*param)
+    suspend fun isLocalCharacterFavorite(characterId: Int): Boolean =
+        localDataSource.isCharacterFavorite(characterId)
 
-    suspend fun getComicsFromCharacterId(vararg param: Any): Any? =
-        remoteDataSource.getRemoteComics(*param)
+    suspend fun getRemoteComicsFromCharacterId(characterId: Int): Comic? =
+        remoteDataSource.getRemoteComics(characterId)
 
-    suspend fun insertFavoriteCharacter(vararg param: Any) =
-        localDataSource.insertFavoriteCharacter(*param)
+    suspend fun insertLocalFavoriteCharacter(favouriteCharacter: CharacterResult) =
+        localDataSource.insertFavoriteCharacter(favouriteCharacter)
 
-    suspend fun insertFavoriteComic(vararg param: Any) =
-        localDataSource.insertFavoriteDetailedComic(*param)
+    suspend fun insertLocalFavoriteComic(favouriteComic: ComicResult) =
+        localDataSource.insertFavoriteDetailedComic(favouriteComic)
 
-    suspend fun deleteFavoriteCharacter(vararg param: Any) =
-        localDataSource.deleteFavoriteCharacter(*param)
+    suspend fun deleteLocalFavoriteCharacter(favouriteCharacter: CharacterResult) =
+        localDataSource.deleteFavoriteCharacter(favouriteCharacter)
 
-    suspend fun deleteFavoriteComic(vararg param: Any) =
-        localDataSource.deleteFavoriteDetailedComic(*param)
+    suspend fun deleteLocalFavoriteComic(favouriteComic: ComicResult) =
+        localDataSource.deleteFavoriteDetailedComic(favouriteComic)
 }
