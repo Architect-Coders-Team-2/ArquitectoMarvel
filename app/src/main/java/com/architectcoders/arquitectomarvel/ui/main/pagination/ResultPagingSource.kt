@@ -3,7 +3,6 @@ package com.architectcoders.arquitectomarvel.ui.main.pagination
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.architectcoders.arquitectomarvel.ui.common.REQUEST_LIMIT
-import com.architectcoders.domain.characters.Characters
 import com.architectcoders.domain.characters.Result
 import com.architectcoders.usecases.GetRemoteCharacters
 import retrofit2.HttpException
@@ -19,7 +18,7 @@ class ResultPagingSource(
     ): LoadResult<Int, Result> {
         return try {
             val offset = params.key ?: 0
-            val response = getRemoteCharacters.invoke(offset) as Characters
+            val response = getRemoteCharacters.invoke(offset)
             val results = response.characterData?.results!!
             Timber.d("qq_Repository.getCharactersRemote: ----- ()")
             Timber.d("qq_Repository.getCharactersRemote: $offset (offset)")
