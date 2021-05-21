@@ -1,9 +1,10 @@
 package com.architectcoders.usecases
 
 import com.architectcoders.data.repository.MarvelRepository
+import com.architectcoders.domain.characters.Characters
 
 class GetCharacterById(private val marvelRepository: MarvelRepository) :
-    InvokeUseCase<Any, Any> {
-    override suspend fun invoke(vararg param: Any): Any =
-        marvelRepository.getCharacterById(*param)
+    InvokeUseCase<Int, Any> {
+    override suspend fun invoke(param: Int): Characters =
+        marvelRepository.getRemoteCharacterById(param)
 }
