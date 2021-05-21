@@ -5,8 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.architectcoders.arquitectomarvel.R
-import com.architectcoders.domain.characters.Characters
-import com.architectcoders.domain.comics.Comic
 import com.architectcoders.usecases.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -68,17 +66,17 @@ class CharacterDetailViewModel(
     }
 
     private suspend fun getCharacterId(characterId: Int) {
-        val characters = getCharacterById.invoke(characterId) as Characters
+        val characters = getCharacterById.invoke(characterId)
         _model.value = UiModel.SetCharacterDetails(characters.characterData?.results?.first())
     }
 
     private suspend fun isCharacterFavorite(characterId: Int) {
-        val isCharacterFavorite = isCharacterFavorite.invoke(characterId) as Boolean
+        val isCharacterFavorite = isCharacterFavorite.invoke(characterId)
         _model.value = UiModel.UpdateFAB(isCharacterFavorite, ::onFabClick)
     }
 
     private suspend fun getComicsFromCharacterId(characterId: Int) {
-        val comic = getComicsFromCharacterId.invoke(characterId) as Comic?
+        val comic = getComicsFromCharacterId.invoke(characterId)
         val comicList = comic?.comicData?.results ?: emptyList()
         _model.value = UiModel.UpdateComics(comicList)
     }
