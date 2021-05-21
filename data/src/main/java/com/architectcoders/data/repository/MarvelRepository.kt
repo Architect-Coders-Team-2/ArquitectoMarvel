@@ -28,15 +28,15 @@ class MarvelRepository(
     suspend fun getRemoteComicsFromCharacterId(characterId: Int): Comic? =
         remoteDataSource.getRemoteComics(characterId)
 
-    suspend fun insertLocalFavoriteCharacter(favouriteCharacter: CharacterResult) =
-        localDataSource.insertFavoriteCharacter(favouriteCharacter)
+    suspend fun insertLocalFavoriteCharacter(favoriteCharacter: CharacterResult) =
+        localDataSource.insertFavoriteCharacter(favoriteCharacter)
 
-    suspend fun insertLocalFavoriteComic(favouriteComic: ComicResult) =
-        localDataSource.insertFavoriteDetailedComic(favouriteComic)
+    suspend fun insertLocalFavoriteComic(favoriteComic: ComicResult) =
+        localDataSource.insertFavoriteDetailedComic(favoriteComic)
 
-    suspend fun deleteLocalFavoriteCharacter(favouriteCharacter: CharacterResult) =
-        localDataSource.deleteFavoriteCharacter(favouriteCharacter)
+    suspend fun deleteLocalFavoriteCharacter(favoriteCharacter: CharacterResult) =
+        localDataSource.deleteFavoriteCharacter(favoriteCharacter)
 
-    suspend fun deleteLocalFavoriteComic(favouriteComic: ComicResult) =
-        localDataSource.deleteFavoriteDetailedComic(favouriteComic)
+    suspend fun deleteLocalFavoriteComic(favoriteComic: ComicResult) =
+        localDataSource.deleteFavoriteDetailedComic(favoriteComic)
 }

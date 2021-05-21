@@ -15,14 +15,14 @@ class RoomDataSource(db: MarvelDatabase) : LocalDataSource {
             characterDao.getLocalCharacters().toDomainCharacterList
         }
 
-    override suspend fun insertFavoriteCharacter(favouriteCharacter: CharacterResult) =
+    override suspend fun insertFavoriteCharacter(favoriteCharacter: CharacterResult) =
         withContext(Dispatchers.IO) {
-            characterDao.insertFavoriteCharacter(favouriteCharacter.toCharacterEntity)
+            characterDao.insertFavoriteCharacter(favoriteCharacter.toCharacterEntity)
         }
 
-    override suspend fun deleteFavoriteCharacter(favouriteCharacter: CharacterResult) =
+    override suspend fun deleteFavoriteCharacter(favoriteCharacter: CharacterResult) =
         withContext(Dispatchers.IO) {
-            characterDao.deleteFavoriteCharacter(favouriteCharacter.toCharacterEntity)
+            characterDao.deleteFavoriteCharacter(favoriteCharacter.toCharacterEntity)
         }
 
     override suspend fun isCharacterFavorite(characterId: Int): Boolean =
@@ -30,13 +30,13 @@ class RoomDataSource(db: MarvelDatabase) : LocalDataSource {
             characterDao.isCharacterFavorite(characterId) != null
         }
 
-    override suspend fun insertFavoriteDetailedComic(favouriteComic: ComicResult) =
+    override suspend fun insertFavoriteDetailedComic(favoriteComic: ComicResult) =
         withContext(Dispatchers.IO) {
-            characterDao.insertFavoriteComic(favouriteComic.toComicEntity)
+            characterDao.insertFavoriteComic(favoriteComic.toComicEntity)
         }
 
-    override suspend fun deleteFavoriteDetailedComic(favouriteComic: ComicResult) =
+    override suspend fun deleteFavoriteDetailedComic(favoriteComic: ComicResult) =
         withContext(Dispatchers.IO) {
-            characterDao.deleteFavoriteComic(favouriteComic.toComicEntity)
+            characterDao.deleteFavoriteComic(favoriteComic.toComicEntity)
         }
 }
