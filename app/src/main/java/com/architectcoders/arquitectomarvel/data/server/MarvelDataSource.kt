@@ -4,34 +4,37 @@ import com.architectcoders.arquitectomarvel.data.server.uiEntities.marvelCharact
 import com.architectcoders.arquitectomarvel.data.server.uiEntities.marvelComics.toLocalComic
 import com.architectcoders.data.source.CredentialsDataSource
 import com.architectcoders.data.source.RemoteDataSource
+import com.architectcoders.domain.characters.Characters
+import com.architectcoders.domain.comics.Comic
 
-class MarvelDataSource(override val credentialsDataSource: CredentialsDataSource) :
-    RemoteDataSource {
+class MarvelDataSource(
+    override val credentialsDataSource: CredentialsDataSource,
+) : RemoteDataSource {
 
     private val marvelApi = MarvelApiRest.service
 
     private val marvelCredentialDataSource: MarvelCredentialDataSource =
         credentialsDataSource as MarvelCredentialDataSource
 
-    override suspend fun getRemoteCharacters(vararg param: Any): Any =
+    override suspend fun getRemoteCharacters(offset: Int): Characters =
         marvelApi.getCharacters(
             marvelCredentialDataSource.timeStamp,
             marvelCredentialDataSource.publicKey,
             marvelCredentialDataSource.hash,
-            param.first() as Int
+            offset
         ).toLocalCharacters
 
-    override suspend fun getRemoteCharacterById(vararg param: Any): Any =
+    override suspend fun getRemoteCharacterById(characterId: Int): Characters =
         marvelApi.getCharacterById(
-            param.first() as Int,
+            characterId,
             marvelCredentialDataSource.timeStamp,
             marvelCredentialDataSource.publicKey,
             marvelCredentialDataSource.hash
         ).toLocalCharacters
 
-    override suspend fun getRemoteComics(vararg param: Any): Any? =
+    override suspend fun getRemoteComics(characterId: Int): Comic? =
         marvelApi.getComics(
-            param.first() as Int,
+            characterId,
             marvelCredentialDataSource.timeStamp,
             marvelCredentialDataSource.publicKey,
             marvelCredentialDataSource.hash
