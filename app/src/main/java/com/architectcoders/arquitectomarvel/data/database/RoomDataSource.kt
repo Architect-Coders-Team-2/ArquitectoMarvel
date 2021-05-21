@@ -15,28 +15,28 @@ class RoomDataSource(db: MarvelDatabase) : LocalDataSource {
             characterDao.getLocalCharacters().toDomainCharacterList
         }
 
-    override suspend fun insertFavoriteCharacter(vararg param: Any) =
+    override suspend fun insertFavoriteCharacter(favouriteCharacter: CharacterResult) =
         withContext(Dispatchers.IO) {
-            characterDao.insertFavoriteCharacter((param.first() as CharacterResult).toCharacterEntity)
+            characterDao.insertFavoriteCharacter(favouriteCharacter.toCharacterEntity)
         }
 
-    override suspend fun deleteFavoriteCharacter(vararg param: Any) =
+    override suspend fun deleteFavoriteCharacter(favouriteCharacter: CharacterResult) =
         withContext(Dispatchers.IO) {
-            characterDao.deleteFavoriteCharacter((param.first() as CharacterResult).toCharacterEntity)
+            characterDao.deleteFavoriteCharacter(favouriteCharacter.toCharacterEntity)
         }
 
-    override suspend fun isCharacterFavorite(vararg param: Any): Boolean =
+    override suspend fun isCharacterFavorite(characterId: Int): Boolean =
         withContext(Dispatchers.IO) {
-            characterDao.isCharacterFavorite(param.first() as Int) != null
+            characterDao.isCharacterFavorite(characterId) != null
         }
 
-    override suspend fun insertFavoriteDetailedComic(vararg param: Any) =
+    override suspend fun insertFavoriteDetailedComic(favouriteComic: ComicResult) =
         withContext(Dispatchers.IO) {
-            characterDao.insertFavoriteComic((param.first() as ComicResult).toComicEntity)
+            characterDao.insertFavoriteComic(favouriteComic.toComicEntity)
         }
 
-    override suspend fun deleteFavoriteDetailedComic(vararg param: Any) =
+    override suspend fun deleteFavoriteDetailedComic(favouriteComic: ComicResult) =
         withContext(Dispatchers.IO) {
-            characterDao.deleteFavoriteComic((param.first() as ComicResult).toComicEntity)
+            characterDao.deleteFavoriteComic(favouriteComic.toComicEntity)
         }
 }
