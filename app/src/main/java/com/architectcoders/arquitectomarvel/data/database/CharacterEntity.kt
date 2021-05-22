@@ -15,6 +15,7 @@ data class CharacterEntity(
     val resourceURI: String?,
     val comicCollectionUri: String?,
     val comicListAvailable: Int?,
+    val pageNumber: Int?,
     val insertDate: Long?
 )
 
@@ -30,6 +31,7 @@ val Result.toCharacterEntity: CharacterEntity
         resourceURI = resourceURI,
         comicCollectionUri = comicCollectionUri,
         comicListAvailable = if (comicListAvailable) 1 else 0,
+        pageNumber = pageNumber,
         insertDate = System.currentTimeMillis()
     )
 
@@ -41,9 +43,15 @@ val CharacterEntity.toDomainCharacter: Result
         id = id,
         name = name,
         description = description,
-        thumbnail = thumbnail?.split(".")?.let { Thumbnail(it[0], it[1]) },
+        thumbnail = thumbnail?.let {
+            Thumbnail(
+                it.substringBeforeLast("."),
+                it.substringAfterLast(".")
+            )
+        },
         resourceURI = resourceURI,
         comicCollectionUri = comicCollectionUri,
         comicListAvailable = comicListAvailable != null,
+        pageNumber = pageNumber,
         insertDate = insertDate
     )
