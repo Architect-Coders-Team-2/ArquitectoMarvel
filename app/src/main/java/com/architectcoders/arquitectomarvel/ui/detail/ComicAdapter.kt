@@ -4,39 +4,27 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ComicItemBinding
-import com.architectcoders.arquitectomarvel.model.database.DetailedComicEntity
-import com.architectcoders.arquitectomarvel.model.loadUrl
+import com.architectcoders.domain.comics.Result as ComicResult
 
-class ComicAdapter : ListAdapter<DetailedComicEntity, ComicAdapter.ViewHolder>(DiffUtilCallback) {
+class ComicAdapter : ListAdapter<ComicResult, ComicViewHolder>(DiffUtilCallback) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ComicViewHolder {
         val binding =
             ComicItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+        return ComicViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ComicViewHolder, position: Int) {
         val detailedComicEntity = getItem(position)
         holder.bind(detailedComicEntity)
     }
-
-    class ViewHolder(private val binding: ComicItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(detailedComicEntity: DetailedComicEntity) {
-            binding.comicImage.loadUrl(detailedComicEntity.thumbnail)
-            binding.comicTitle.text =
-                detailedComicEntity.title ?: binding.root.context.getString(R.string.content_not_available)
-        }
-    }
 }
 
-private object DiffUtilCallback : DiffUtil.ItemCallback<DetailedComicEntity>() {
-    override fun areItemsTheSame(oldItem: DetailedComicEntity, newItem: DetailedComicEntity): Boolean =
-        oldItem.resourceUri == newItem.resourceUri
+private object DiffUtilCallback : DiffUtil.ItemCallback<ComicResult>() {
+    override fun areItemsTheSame(oldItem: ComicResult, newItem: ComicResult): Boolean =
+        oldItem.resourceURI == newItem.resourceURI
 
-    override fun areContentsTheSame(oldItem: DetailedComicEntity, newItem: DetailedComicEntity): Boolean =
+    override fun areContentsTheSame(oldItem: ComicResult, newItem: ComicResult): Boolean =
         oldItem == newItem
 }
