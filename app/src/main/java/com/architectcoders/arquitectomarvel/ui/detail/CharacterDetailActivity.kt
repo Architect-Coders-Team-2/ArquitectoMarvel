@@ -56,22 +56,20 @@ class CharacterDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun setCharacterDetails(character: CharacterResult?) {
-        character?.let { selectedCharacter ->
-            this.selectedCharacter = selectedCharacter
-            binding.headerHeroImage.loadUrl(
-                selectedCharacter.thumbnail?.path,
-                selectedCharacter.thumbnail?.extension
-            )
-            binding.toolbar.title = selectedCharacter.name ?: EMPTY_TEXT
-            binding.toolbarLayout.title = selectedCharacter.name ?: EMPTY_TEXT
-            binding.contentHeroDetail.heroContent.text =
-                if (selectedCharacter.description.isNullOrBlank()) {
-                    getString(R.string.content_not_available)
-                } else {
-                    selectedCharacter.description
-                }
-        }
+    private fun setCharacterDetails(character: CharacterResult) {
+        this.selectedCharacter = character
+        binding.headerHeroImage.loadUrl(
+            character.thumbnail?.path,
+            character.thumbnail?.extension
+        )
+        binding.toolbar.title = character.name ?: EMPTY_TEXT
+        binding.toolbarLayout.title = character.name ?: EMPTY_TEXT
+        binding.contentHeroDetail.heroContent.text =
+            if (character.description.isNullOrBlank()) {
+                getString(R.string.content_not_available)
+            } else {
+                character.description
+            }
     }
 
     private fun updateFAB(

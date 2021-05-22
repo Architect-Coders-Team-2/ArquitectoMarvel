@@ -32,7 +32,7 @@ class CharacterDetailViewModel(
 
     sealed class UiModel {
         object Loading : UiModel()
-        class SetCharacterDetails(val character: CharacterResult?) : UiModel()
+        class SetCharacterDetails(val character: CharacterResult) : UiModel()
         class UpdateFAB(
             val isCharacterFavorite: Boolean,
             val listener: (
@@ -66,8 +66,8 @@ class CharacterDetailViewModel(
     }
 
     private suspend fun getCharacterId(characterId: Int) {
-        val characters = getCharacterById.invoke(characterId)
-        _model.value = UiModel.SetCharacterDetails(characters.characterData?.results?.first())
+        val character = getCharacterById.invoke(characterId)
+        _model.value = UiModel.SetCharacterDetails(character)
     }
 
     private suspend fun isCharacterFavorite(characterId: Int) {
