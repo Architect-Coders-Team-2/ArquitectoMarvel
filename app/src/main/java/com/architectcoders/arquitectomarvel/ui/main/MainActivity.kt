@@ -14,18 +14,19 @@ import com.architectcoders.arquitectomarvel.data.*
 import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailActivity
+import com.architectcoders.arquitectomarvel.ui.main.di.MainActivityComponent
+import com.architectcoders.arquitectomarvel.ui.main.di.MainActivityModule
 import com.architectcoders.arquitectomarvel.ui.main.pagination.ResultLoadStateAdapter
-import com.architectcoders.domain.characters.Characters
-
 import com.architectcoders.domain.characters.Result
-import com.architectcoders.usecases.GetCharacters
-import com.architectcoders.usecases.IUseCase
 import kotlinx.coroutines.flow.collectLatest
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: MainViewModel
+    private lateinit var component: MainActivityComponent
+    private  val viewModel: MainViewModel by lazy {
+        getViewModel { component.mainViewModel }
+    }
     private val characterAdapter: CharacterAdapter by lazy {
         CharacterAdapter(::navigateTo)
     }
@@ -34,19 +35,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initViewModel()
+        initComponents()
         setUpViews()
         observersViewModel()
     }
 
-    private fun initViewModel() {
-        viewModel = getViewModel {
-            MainViewModel(
-                GetCharacters(
-                    RepositoryLocationService.providerRepository(this)
-                )
-            )
-        }
+    private fun initComponents() {
+      component = app.component.add(MainActivityModule())
     }
 
     private fun setUpViews() {

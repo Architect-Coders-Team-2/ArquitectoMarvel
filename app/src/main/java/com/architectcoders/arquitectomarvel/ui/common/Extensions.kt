@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
+import com.architectcoders.arquitectomarvel.App
 import com.architectcoders.arquitectomarvel.R
 import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -73,3 +74,5 @@ inline fun <reified T : Activity> Context.startActivity(
 ) {
     startActivity(intentFor<T>(body), options)
 }
+val Context.app: App
+    get() = applicationContext as App

@@ -115,4 +115,8 @@ dependencies {
 
     // Paging 3
     implementation "androidx.paging:paging-runtime-ktx:3.0.0"
+
+    //Dagger
+    implementation 'com.google.dagger:dagger:2.33'
+    kapt 'com.google.dagger:dagger-compiler:2.31.2'
 }

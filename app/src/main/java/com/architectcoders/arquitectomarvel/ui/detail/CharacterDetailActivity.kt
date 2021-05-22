@@ -12,6 +12,8 @@ import com.architectcoders.arquitectomarvel.data.database.models.toComicEntityLi
 import com.architectcoders.arquitectomarvel.databinding.ActivityCharacterDetailBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel.UiModel
+import com.architectcoders.arquitectomarvel.ui.detail.di.CharacterDetailActivityComponent
+import com.architectcoders.arquitectomarvel.ui.detail.di.CharacterDetailActivityModule
 import com.architectcoders.usecases.*
 import timber.log.Timber
 import com.architectcoders.domain.characters.Result as CharacterResult
@@ -19,7 +21,8 @@ import com.architectcoders.domain.characters.Result as CharacterResult
 class CharacterDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCharacterDetailBinding
-    private lateinit var viewModel: CharacterDetailViewModel
+    private lateinit var component: CharacterDetailActivityComponent
+    private val viewModel by lazy { getViewModel { component.characterDetailViewModel } }
     private val adapter by lazy { ComicAdapter() }
     private var selectedCharacter: CharacterResult? = null
     private var isCharacterFavorite = false
@@ -32,32 +35,18 @@ class CharacterDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        initViewModel()
+        initComponent()
         binding.contentHeroDetail.comicList.adapter = adapter
         viewModel.model.observe(this, Observer(::updateUi))
     }
-    private fun initViewModel(){
-        val characterRepository = RepositoryLocationService.providerRepository(this)
-        viewModel = getViewModel {
-            CharacterDetailViewModel(
-                GetCharacterById(characterRepository),
-                IsCharacterFavorite(characterRepository),
-                GetComicsFromCharacterId(characterRepository),
-                InsertFavoriteCharacter(characterRepository),
-                InsertFavoriteComic(characterRepository),
-                DeleteFavoriteCharacter(characterRepository),
-                DeleteFavoriteComic(characterRepository)
-            )
-        }
-    }
+   private fun initComponent(){
+       component = app.component.add(CharacterDetailActivityModule(intent.getIntExtra(EXTRA_SELECTED_HERO, -1)))
+
+   }
     private fun updateUi(model: UiModel) {
         binding.contentHeroDetail.progress.isVisible = model is UiModel.Loading
         when (model) {
-            is UiModel.RequestCharacterById -> model.listener(
-                intent.extras?.getInt(
-                    EXTRA_SELECTED_HERO
-                ) ?: 0
-            )
+
             is UiModel.SetCharacterDetails -> setCharacterDetails(model.character)
             is UiModel.ShowToast -> toast(model.msgResource)
             is UiModel.UpdateFAB -> updateFAB(model.isCharacterFavorite, model.listener)

@@ -1,5 +1,6 @@
 package com.architectcoders.arquitectomarvel.data.database.models.relations
 
+import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.architectcoders.arquitectomarvel.data.database.models.CharacterEntity
