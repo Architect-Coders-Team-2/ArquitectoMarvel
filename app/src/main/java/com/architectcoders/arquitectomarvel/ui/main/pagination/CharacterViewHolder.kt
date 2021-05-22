@@ -3,16 +3,16 @@ package com.architectcoders.arquitectomarvel.ui.main.pagination
 import androidx.recyclerview.widget.RecyclerView
 import com.architectcoders.arquitectomarvel.databinding.CharacterItemBinding
 import com.architectcoders.arquitectomarvel.ui.common.loadUrl
-import com.architectcoders.domain.characters.Result
+import com.architectcoders.domain.characters.Result as CharacterResult
 
 class CharacterViewHolder(private val binding: CharacterItemBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(mediaService: Result) {
-        binding.heroText.text = mediaService.name
+    fun bind(character: CharacterResult) {
+        binding.heroText.text = character.name
         binding.heroImage.loadUrl(
-            mediaService.thumbnail?.path,
-            mediaService.thumbnail?.extension
+            character.thumbnail?.path,
+            character.thumbnail?.extension
         )
     }
 }
