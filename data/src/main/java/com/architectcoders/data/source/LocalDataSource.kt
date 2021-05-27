@@ -5,7 +5,6 @@ import com.architectcoders.domain.comics.Result as ComicResult
 
 interface LocalDataSource {
     suspend fun getLocalCharacters(): List<CharacterResult>?
-    suspend fun getLocalCharacterById(characterId: Int): CharacterResult
     suspend fun getLastTimeStamp(): Long?
     suspend fun getStoredCharactersCount(): Int
     suspend fun isCharacterFavorite(characterId: Int): Boolean

@@ -1,11 +1,14 @@
 package com.architectcoders.arquitectomarvel.data.database
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.architectcoders.domain.characters.Result
 import com.architectcoders.domain.characters.Thumbnail
+import kotlinx.parcelize.Parcelize
 
 @Entity
+@Parcelize
 data class CharacterEntity(
     @PrimaryKey
     val id: Int,
@@ -17,7 +20,7 @@ data class CharacterEntity(
     val comicListAvailable: Int?,
     val pageNumber: Int?,
     val insertDate: Long?
-)
+): Parcelable
 
 val List<Result>.toCharacterEntityList: List<CharacterEntity>
     get() = map { it.toCharacterEntity }

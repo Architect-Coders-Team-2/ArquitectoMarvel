@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.architectcoders.arquitectomarvel.R
+import com.architectcoders.arquitectomarvel.data.database.CharacterEntity
+import com.architectcoders.arquitectomarvel.data.database.toDomainCharacter
 import com.architectcoders.usecases.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -13,8 +15,7 @@ import com.architectcoders.domain.characters.Result as CharacterResult
 import com.architectcoders.domain.comics.Result as ComicResult
 
 class CharacterDetailViewModel(
-    private val characterId: Int,
-    private val getCharacterById: GetCharacterById,
+    private val characterEntity: CharacterEntity,
     private val isCharacterFavorite: IsCharacterFavorite,
     private val getComicsFromCharacterId: GetComicsFromCharacterId,
     private val insertFavoriteCharacter: InsertFavoriteCharacter,
@@ -48,13 +49,13 @@ class CharacterDetailViewModel(
 
     private fun refresh() {
         _model.value = UiModel.Loading
-        loadCharacterId(characterId)
+        _model.value = UiModel.SetCharacterDetails(characterEntity.toDomainCharacter)
+        loadCharacterId(characterEntity.id)
     }
 
     private fun loadCharacterId(characterId: Int) {
         viewModelScope.launch {
             try {
-                getCharacterId(characterId)
                 isCharacterFavorite(characterId)
                 _model.value = UiModel.Loading
                 getComicsFromCharacterId(characterId)
@@ -63,11 +64,6 @@ class CharacterDetailViewModel(
                 _model.value = UiModel.ShowToast(R.string.no_internet)
             }
         }
-    }
-
-    private suspend fun getCharacterId(characterId: Int) {
-        val character = getCharacterById.invoke(characterId)
-        _model.value = UiModel.SetCharacterDetails(character)
     }
 
     private suspend fun isCharacterFavorite(characterId: Int) {

@@ -24,8 +24,7 @@ class CharacterDetailActivity : AppCompatActivity() {
         getViewModel {
             val characterRepository = ServiceLocator.provideMarvelRepository(this)
             CharacterDetailViewModel(
-                intent.getIntExtra(EXTRA_SELECTED_HERO, 0),
-                GetCharacterById(characterRepository),
+                intent.getParcelableExtra(EXTRA_SELECTED_HERO)!!,
                 IsCharacterFavorite(characterRepository),
                 GetComicsFromCharacterId(characterRepository),
                 InsertFavoriteCharacter(characterRepository),

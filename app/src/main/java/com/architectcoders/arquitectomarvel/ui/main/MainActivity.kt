@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView.*
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.data.*
+import com.architectcoders.arquitectomarvel.data.database.toCharacterEntity
 import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailActivity
@@ -94,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                     getString(R.string.hero_image)
                 )
             startActivity<CharacterDetailActivity>(options = options.toBundle()) {
-                putExtra(EXTRA_SELECTED_HERO, resultValue.id)
+                putExtra(EXTRA_SELECTED_HERO, resultValue.toCharacterEntity)
             }
         }
     }

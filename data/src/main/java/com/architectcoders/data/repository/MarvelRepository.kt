@@ -20,9 +20,6 @@ class MarvelRepository(
     suspend fun getStoredCharactersCount(): Int =
         localDataSource.getStoredCharactersCount()
 
-    suspend fun getRemoteCharacterById(characterId: Int): CharacterResult =
-        localDataSource.getLocalCharacterById(characterId)
-
     suspend fun isLocalCharacterFavorite(characterId: Int): Boolean =
         localDataSource.isCharacterFavorite(characterId)
 
