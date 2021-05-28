@@ -3,8 +3,8 @@ package com.architectcoders.usecases
 import com.architectcoders.data.repository.MarvelRepository
 import com.architectcoders.domain.comics.Result as ComicResult
 
-class DeleteFavoriteComic(private val marvelRepository: MarvelRepository) :
+class InsertLocalFavoriteComic(private val marvelRepository: MarvelRepository) :
     InvokeUseCase<ComicResult, Unit> {
     override suspend fun invoke(param: ComicResult) =
-        marvelRepository.deleteLocalFavoriteComic(param)
+        marvelRepository.insertLocalFavoriteComic(param)
 }
