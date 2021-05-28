@@ -25,13 +25,13 @@ class CharacterDetailActivity : AppCompatActivity() {
             val characterRepository = ServiceLocator.provideMarvelRepository(this)
             CharacterDetailViewModel(
                 intent.getIntExtra(EXTRA_SELECTED_HERO, 0),
-                GetCharacterById(characterRepository),
-                IsCharacterFavorite(characterRepository),
-                GetComicsFromCharacterId(characterRepository),
-                InsertFavoriteCharacter(characterRepository),
-                InsertFavoriteComic(characterRepository),
-                DeleteFavoriteCharacter(characterRepository),
-                DeleteFavoriteComic(characterRepository)
+                GetLocalCharacterById(characterRepository),
+                IsLocalCharacterFavorite(characterRepository),
+                GetRemoteComicsFromCharacterId(characterRepository),
+                InsertLocalFavoriteCharacter(characterRepository),
+                InsertLocalFavoriteComic(characterRepository),
+                DeleteLocalFavoriteCharacter(characterRepository),
+                DeleteLocalFavoriteComic(characterRepository)
             )
         }
     }
