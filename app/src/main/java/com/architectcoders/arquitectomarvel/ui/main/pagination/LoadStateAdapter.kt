@@ -6,7 +6,7 @@ import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import com.architectcoders.arquitectomarvel.databinding.ReposLoadStateFooterViewItemBinding
 
-class ResultLoadStateAdapter(private val retry: () -> Unit) :
+class LoadStateAdapter(private val retry: () -> Unit) :
     LoadStateAdapter<LoadStateViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): LoadStateViewHolder {

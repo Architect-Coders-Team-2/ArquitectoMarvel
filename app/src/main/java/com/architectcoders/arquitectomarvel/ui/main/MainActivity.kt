@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView.*
@@ -15,9 +16,11 @@ import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailActivity
 import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterAdapter
-import com.architectcoders.arquitectomarvel.ui.main.pagination.ResultLoadStateAdapter
+import com.architectcoders.arquitectomarvel.ui.main.pagination.LoadStateAdapter
 import com.architectcoders.domain.characters.Result
-import com.architectcoders.usecases.GetRemoteCharacters
+import com.architectcoders.usecases.*
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 
 class MainActivity : AppCompatActivity() {
@@ -25,11 +28,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val viewModel by lazy {
+        val marvelRepository = ServiceLocator.provideMarvelRepository(this)
         getViewModel {
             MainViewModel(
-                GetRemoteCharacters(
-                   ServiceLocator.provideMarvelRepository(this)
-                )
+                GetRemoteCharacters(marvelRepository),
+                DeleteAllLocalCharacters(marvelRepository),
+                InsertAllLocalCharacters(marvelRepository),
+                GetLastTimeStampFromCharacterEntity(marvelRepository),
+                GetPagingSourceFromCharacterEntity(marvelRepository),
+                GetLocalCharactersCount(marvelRepository)
             )
         }
     }
@@ -38,18 +45,19 @@ class MainActivity : AppCompatActivity() {
         CharacterAdapter(::navigateTo)
     }
 
+    @ExperimentalPagingApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setUpViews()
-        observersViewModel()
+        collectLatestPager()
     }
 
     private fun setUpViews() {
         val columns = calculateColumnsForGridLayout(resources.getDimension(R.dimen.avatar_width))
         val layoutManager = GridLayoutManager(this@MainActivity, columns)
-        val footerAdapter = ResultLoadStateAdapter(characterAdapter::retry)
+        val footerAdapter = LoadStateAdapter(characterAdapter::retry)
         binding.apply {
             mainHeroList.layoutManager = layoutManager
             mainHeroList.adapter = characterAdapter.withLoadStateFooter(footerAdapter)
@@ -70,7 +78,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun observersViewModel() {
+    @ExperimentalPagingApi
+    private fun collectLatestPager() {
         lifecycleScope.launchWhenStarted {
             viewModel.pager.collectLatest {
                 characterAdapter.submitData(lifecycle, it)

@@ -32,5 +32,6 @@ val MarvelResult.toLocalMarvelResult: Result
         resourceURI,
         comics.collectionURI,
         comics.available != null,
+        null,
         null
     )

@@ -5,15 +5,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import com.architectcoders.arquitectomarvel.data.database.CharacterEntity
+import com.architectcoders.arquitectomarvel.data.database.toDomainCharacter
 import com.architectcoders.arquitectomarvel.databinding.CharacterItemBinding
 import com.architectcoders.domain.characters.Result
 
 class CharacterAdapter(private val listener: (Result, View) -> Unit) :
-    PagingDataAdapter<Result, CharacterViewHolder>(DiffCallback) {
+    PagingDataAdapter<CharacterEntity, CharacterViewHolder>(DiffCallback) {
 
-    companion object DiffCallback : DiffUtil.ItemCallback<Result>() {
-        override fun areItemsTheSame(oldItem: Result, newItem: Result) = oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: Result, newItem: Result) = oldItem == newItem
+    companion object DiffCallback : DiffUtil.ItemCallback<CharacterEntity>() {
+        override fun areItemsTheSame(oldItem: CharacterEntity, newItem: CharacterEntity) =
+            oldItem.id == newItem.id
+
+        override fun areContentsTheSame(oldItem: CharacterEntity, newItem: CharacterEntity) =
+            oldItem == newItem
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
@@ -23,11 +28,10 @@ class CharacterAdapter(private val listener: (Result, View) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
-        val result = getItem(position)
-        if (result != null) {
-            holder.bind(result)
+        getItem(position)?.let { characterEntity ->
+            holder.bind(characterEntity.toDomainCharacter)
             holder.itemView.setOnClickListener {
-                listener(result, it)
+                listener(characterEntity.toDomainCharacter, it)
             }
         }
     }

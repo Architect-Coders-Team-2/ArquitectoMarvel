@@ -6,7 +6,7 @@ import com.architectcoders.domain.characters.Thumbnail
 import com.architectcoders.domain.comics.Result
 
 @Entity
-data class ComicEntity(
+data class FavoriteComicEntity(
     @PrimaryKey
     val resourceUri: String,
     val thumbnail: String?,
@@ -14,28 +14,33 @@ data class ComicEntity(
     val insertDate: Long?
 )
 
-val List<Result>.toComicEntityList: List<ComicEntity>
-    get() = map { it.toComicEntity }
+val List<Result>.toFavoriteComicEntityList: List<FavoriteComicEntity>
+    get() = map { it.toFavoriteComicEntity }
 
-val Result.toComicEntity: ComicEntity
-    get() = ComicEntity(
+val Result.toFavoriteComicEntity: FavoriteComicEntity
+    get() = FavoriteComicEntity(
         resourceUri = resourceURI ?: "",
         thumbnail = "${thumbnail?.path}.${thumbnail?.extension}",
         title = title,
         insertDate = System.currentTimeMillis()
     )
 
-val List<ComicEntity>.toComicResultList: List<Result>
+val List<FavoriteComicEntity>.toComicResultList: List<Result>
     get() = map { it.toComicResult }
 
-val ComicEntity.toComicResult: Result
+val FavoriteComicEntity.toComicResult: Result
     get() = Result(
         null,
         null,
         null,
         null,
         resourceUri,
-        thumbnail?.split(".")?.let { Thumbnail(it[0], it[1]) },
+        thumbnail?.let {
+            Thumbnail(
+                it.substringBeforeLast("."),
+                it.substringAfterLast(".")
+            )
+        },
         title,
         insertDate = insertDate
     )

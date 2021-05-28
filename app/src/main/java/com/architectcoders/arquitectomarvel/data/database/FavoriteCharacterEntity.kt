@@ -6,7 +6,7 @@ import com.architectcoders.domain.characters.Result
 import com.architectcoders.domain.characters.Thumbnail
 
 @Entity
-data class CharacterEntity(
+data class FavoriteCharacterEntity(
     @PrimaryKey
     val id: Int,
     val name: String?,
@@ -15,15 +15,14 @@ data class CharacterEntity(
     val resourceURI: String?,
     val comicCollectionUri: String?,
     val comicListAvailable: Int?,
-    val pageNumber: Int?,
     val insertDate: Long?
 )
 
-val List<Result>.toCharacterEntityList: List<CharacterEntity>
-    get() = map { it.toCharacterEntity }
+val List<Result>.toFavoriteCharacterEntityList: List<FavoriteCharacterEntity>
+    get() = map { it.toFavoriteCharacterEntity }
 
-val Result.toCharacterEntity: CharacterEntity
-    get() = CharacterEntity(
+val Result.toFavoriteCharacterEntity: FavoriteCharacterEntity
+    get() = FavoriteCharacterEntity(
         id = id,
         name = name,
         description = description,
@@ -31,14 +30,13 @@ val Result.toCharacterEntity: CharacterEntity
         resourceURI = resourceURI,
         comicCollectionUri = comicCollectionUri,
         comicListAvailable = if (comicListAvailable) 1 else 0,
-        pageNumber = pageNumber,
         insertDate = System.currentTimeMillis()
     )
 
-val List<CharacterEntity>.toDomainCharacterList: List<Result>
+val List<FavoriteCharacterEntity>.toDomainCharacterList: List<Result>
     get() = map { it.toDomainCharacter }
 
-val CharacterEntity.toDomainCharacter: Result
+val FavoriteCharacterEntity.toDomainCharacter: Result
     get() = Result(
         id = id,
         name = name,
@@ -52,6 +50,6 @@ val CharacterEntity.toDomainCharacter: Result
         resourceURI = resourceURI,
         comicCollectionUri = comicCollectionUri,
         comicListAvailable = comicListAvailable != null,
-        pageNumber = pageNumber,
+        pageNumber = null,
         insertDate = insertDate
     )
