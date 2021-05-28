@@ -10,11 +10,11 @@ import com.architectcoders.usecases.*
 
 class MainViewModel(
     getRemoteCharacters: GetRemoteCharacters,
-    deleteAllCharacters: DeleteAllCharacters,
-    insertAllCharacters: InsertAllCharacters,
-    getLastTimeStamp: GetLastTimeStamp,
-    getPagingSource: GetPagingSource,
-    getStoredCharactersCount: GetStoredCharactersCount
+    deleteAllLocalCharacters: DeleteAllLocalCharacters,
+    insertAllLocalCharacters: InsertAllLocalCharacters,
+    getLastTimeStampFromCharacterEntity: GetLastTimeStampFromCharacterEntity,
+    getPagingSourceFromCharacterEntity: GetPagingSourceFromCharacterEntity,
+    getLocalCharactersCount: GetLocalCharactersCount
 ) : ViewModel() {
     @ExperimentalPagingApi
     val pager = Pager(
@@ -22,12 +22,12 @@ class MainViewModel(
         remoteMediator =
         CharacterRemoteMediator(
             getRemoteCharacters,
-            deleteAllCharacters,
-            insertAllCharacters,
-            getLastTimeStamp,
-            getStoredCharactersCount
+            deleteAllLocalCharacters,
+            insertAllLocalCharacters,
+            getLastTimeStampFromCharacterEntity,
+            getLocalCharactersCount
         )
     ) {
-        getPagingSource.invoke() as PagingSource<Int, CharacterEntity>
+        getPagingSourceFromCharacterEntity.invoke() as PagingSource<Int, CharacterEntity>
     }.flow.cachedIn(viewModelScope)
 }

@@ -19,6 +19,8 @@ import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterAdapter
 import com.architectcoders.arquitectomarvel.ui.main.pagination.LoadStateAdapter
 import com.architectcoders.domain.characters.Result
 import com.architectcoders.usecases.*
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 
 class MainActivity : AppCompatActivity() {
@@ -30,11 +32,11 @@ class MainActivity : AppCompatActivity() {
         getViewModel {
             MainViewModel(
                 GetRemoteCharacters(marvelRepository),
-                DeleteAllCharacters(marvelRepository),
-                InsertAllCharacters(marvelRepository),
-                GetLastTimeStamp(marvelRepository),
-                GetPagingSource(marvelRepository),
-                GetStoredCharactersCount(marvelRepository)
+                DeleteAllLocalCharacters(marvelRepository),
+                InsertAllLocalCharacters(marvelRepository),
+                GetLastTimeStampFromCharacterEntity(marvelRepository),
+                GetPagingSourceFromCharacterEntity(marvelRepository),
+                GetLocalCharactersCount(marvelRepository)
             )
         }
     }
@@ -49,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setUpViews()
-        observersViewModel()
+        collectLatestPager()
     }
 
     private fun setUpViews() {
@@ -77,7 +79,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @ExperimentalPagingApi
-    private fun observersViewModel() {
+    private fun collectLatestPager() {
         lifecycleScope.launchWhenStarted {
             viewModel.pager.collectLatest {
                 characterAdapter.submitData(lifecycle, it)

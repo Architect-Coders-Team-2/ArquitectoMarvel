@@ -15,15 +15,15 @@ import java.util.concurrent.TimeUnit
 @ExperimentalPagingApi
 class CharacterRemoteMediator(
     private val getRemoteCharacters: GetRemoteCharacters,
-    private val deleteAllCharacters: DeleteAllCharacters,
-    private val insertAllCharacters: InsertAllCharacters,
-    private val getLastTimeStamp: GetLastTimeStamp,
-    private val getStoredCharactersCount: GetStoredCharactersCount
+    private val deleteAllLocalCharacters: DeleteAllLocalCharacters,
+    private val insertAllLocalCharacters: InsertAllLocalCharacters,
+    private val getLastTimeStampFromCharacterEntity: GetLastTimeStampFromCharacterEntity,
+    private val getLocalCharactersCount: GetLocalCharactersCount
 ) : RemoteMediator<Int, CharacterEntity>() {
 
     override suspend fun initialize(): InitializeAction {
         val cacheTimeOut = TimeUnit.DAYS.toMillis(1)
-        val lastTimeStamp = getLastTimeStamp.invoke(Unit) ?: -1L
+        val lastTimeStamp = getLastTimeStampFromCharacterEntity.invoke(Unit) ?: -1L
         return if (lastTimeStamp != -1L && System.currentTimeMillis() - lastTimeStamp >= cacheTimeOut) {
             InitializeAction.LAUNCH_INITIAL_REFRESH
         } else {
@@ -45,17 +45,17 @@ class CharacterRemoteMediator(
             val response = getRemoteCharacters.invoke(nextPageNumber * REQUEST_LIMIT)
             val characterList = response.characterData?.results
             if (characterList.isNullOrEmpty()) {
-                if (response.characterData?.total == getStoredCharactersCount.invoke(Unit)) {
+                if (response.characterData?.total == getLocalCharactersCount.invoke(Unit)) {
                     MediatorResult.Success(endOfPaginationReached = true)
                 } else {
                     MediatorResult.Error(Exception(EMPTY_RESPONSE))
                 }
             } else {
                 if (loadType == LoadType.REFRESH) {
-                    deleteAllCharacters.invoke(Unit)
+                    deleteAllLocalCharacters.invoke(Unit)
                 }
                 characterList.map { it.pageNumber = nextPageNumber }
-                insertAllCharacters.invoke(characterList)
+                insertAllLocalCharacters.invoke(characterList)
                 MediatorResult.Success(endOfPaginationReached = characterList.size < state.config.pageSize)
             }
         } catch (e: IOException) {
