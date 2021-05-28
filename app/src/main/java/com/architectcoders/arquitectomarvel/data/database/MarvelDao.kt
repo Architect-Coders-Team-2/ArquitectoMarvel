@@ -8,42 +8,39 @@ import com.architectcoders.arquitectomarvel.data.database.relations.CharacterWit
 interface MarvelDao {
 
     @Query("SELECT * FROM characterentity ORDER BY name")
-    suspend fun getLocalCharacters(): List<CharacterEntity>?
+    fun getPagingSourceFromCharacterEntity(): PagingSource<Int, CharacterEntity>
 
     @Query("SELECT * FROM characterentity WHERE id = :characterId")
     suspend fun getLocalCharacterById(characterId: Int): CharacterEntity
 
     @Query("SELECT insertDate FROM characterentity LIMIT 1")
-    suspend fun getLastTimeStamp(): Long?
+    suspend fun getLastTimeStampFromCharacterEntity(): Long?
 
     @Query("SELECT COUNT(id) FROM characterentity")
-    suspend fun getStoredCharactersCount(): Int?
+    suspend fun getLocalCharactersCount(): Int?
 
     @Transaction
     @Query("SELECT * FROM characterentity WHERE comicCollectionUri = :comicCollectionUri")
-    suspend fun getCharacterWithComics(comicCollectionUri: String): List<CharacterWithComics>
+    suspend fun getLocalCharacterWithComics(comicCollectionUri: String): List<CharacterWithComics>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAllCharacters(characterList: List<CharacterEntity>)
+    suspend fun insertAllLocalCharacters(characterList: List<CharacterEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFavoriteCharacter(favoriteCharacterEntity: FavoriteCharacterEntity)
+    suspend fun insertLocalFavoriteCharacter(favoriteCharacterEntity: FavoriteCharacterEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFavoriteComic(favoriteComicEntity: FavoriteComicEntity)
+    suspend fun insertLocalFavoriteComic(favoriteComicEntity: FavoriteComicEntity)
 
     @Delete
-    suspend fun deleteFavoriteCharacter(favoriteCharacterEntity: FavoriteCharacterEntity)
+    suspend fun deleteLocalFavoriteCharacter(favoriteCharacterEntity: FavoriteCharacterEntity)
 
     @Delete
-    suspend fun deleteFavoriteComic(favoriteComicEntity: FavoriteComicEntity)
+    suspend fun deleteLocalFavoriteComic(favoriteComicEntity: FavoriteComicEntity)
 
     @Query("SELECT id FROM favoritecharacterentity WHERE id = :id")
-    suspend fun isCharacterFavorite(id: Int): Int?
-
-    @Query("SELECT * FROM characterentity ORDER BY name")
-    fun getPagingSource(): PagingSource<Int, CharacterEntity>
+    suspend fun isLocalCharacterFavorite(id: Int): Int?
 
     @Query("DELETE FROM characterentity")
-    suspend fun deleteAllCharacters()
+    suspend fun deleteAllLocalCharacters()
 }
