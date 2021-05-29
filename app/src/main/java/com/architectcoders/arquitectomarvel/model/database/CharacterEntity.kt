@@ -2,7 +2,7 @@ package com.architectcoders.arquitectomarvel.model.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.architectcoders.arquitectomarvel.model.characters.Result
+import com.architectcoders.domain.characters.Result
 
 @Entity
 data class CharacterEntity(

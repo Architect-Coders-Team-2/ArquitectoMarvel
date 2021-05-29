@@ -3,8 +3,8 @@ package com.architectcoders.arquitectomarvel.model.database
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.architectcoders.arquitectomarvel.model.characters.Result
-import com.architectcoders.arquitectomarvel.model.characters.Thumbnail
+import com.architectcoders.domain.characters.Result
+import com.architectcoders.domain.characters.Thumbnail
 
 @Entity
 data class ResultRoom(
