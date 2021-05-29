@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.*
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.data.*
@@ -20,7 +21,6 @@ import com.architectcoders.arquitectomarvel.ui.main.pagination.LoadStateAdapter
 import com.architectcoders.domain.characters.Result
 import com.architectcoders.usecases.*
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 
 class MainActivity : AppCompatActivity() {
@@ -99,5 +99,10 @@ class MainActivity : AppCompatActivity() {
                 putExtra(EXTRA_SELECTED_HERO, resultValue.id)
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        showIfInternetIsAvailable(binding.root, lifecycle, lifecycleScope)
     }
 }

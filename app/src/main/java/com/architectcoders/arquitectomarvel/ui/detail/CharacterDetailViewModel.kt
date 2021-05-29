@@ -42,7 +42,6 @@ class CharacterDetailViewModel(
             ) -> Unit,
         ) : UiModel()
 
-        class ShowToast(val msgResource: Int) : UiModel()
         class UpdateComics(val comicList: List<ComicResult>) : UiModel()
     }
 
@@ -60,7 +59,6 @@ class CharacterDetailViewModel(
                 getComicsFromCharacterId(characterId)
             } catch (e: UnknownHostException) {
                 Timber.e("qq_MainPresenter.onCreate: $e")
-                _model.value = UiModel.ShowToast(R.string.no_internet)
             }
         }
     }
