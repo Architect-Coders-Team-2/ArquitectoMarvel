@@ -2,7 +2,6 @@ package com.architectcoders.arquitectomarvel.ui.main
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.isVisible
@@ -12,17 +11,17 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView.*
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
-import com.architectcoders.arquitectomarvel.model.*
+import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.HeroDetailActivity
+import com.architectcoders.arquitectomarvel.ui.main.pagination.ResultsLoadStateAdapter
+import com.architectcoders.module.usescases.UseCaseGetCharactersRemote
 import kotlinx.coroutines.flow.collectLatest
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var viewModel: MainViewModel
 
-    private val viewModel by viewModels<MainViewModel> {
-        Factory(Repository(application))
-    }
     private val adapter: AdapterList by lazy {
         AdapterList(viewModel::onResultClick)
     }
@@ -33,6 +32,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        viewModel = getViewModel {
+                MainViewModel(
+                    UseCaseGetCharactersRemote(ServiceLocator.provideMarvelRepository(applicationContext))
+                )
+        }
         setUpViews()
         observersViewModel()
     }

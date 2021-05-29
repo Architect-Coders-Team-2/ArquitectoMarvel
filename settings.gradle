@@ -1,2 +1,5 @@
 include ':app'
 rootProject.name = "ArquitectoMarvel"
+include ':domain'
+include ':data'
+include ':usescases'

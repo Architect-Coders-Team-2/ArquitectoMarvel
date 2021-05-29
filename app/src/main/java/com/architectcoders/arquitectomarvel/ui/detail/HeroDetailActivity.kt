@@ -7,21 +7,24 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.architectcoders.arquitectomarvel.R
+import com.architectcoders.arquitectomarvel.data.local.entities.DetailedComicEntity
+import com.architectcoders.arquitectomarvel.data.local.entities.toDetailedComicEntityList
+import com.architectcoders.arquitectomarvel.data.ui_models.ResultUI
+import com.architectcoders.arquitectomarvel.data.ui_models.fromResultUItoCharacterResult
 import com.architectcoders.arquitectomarvel.databinding.ActivityHeroDetailBinding
-import com.architectcoders.arquitectomarvel.model.*
-import com.architectcoders.arquitectomarvel.model.characters.Result
-import com.architectcoders.arquitectomarvel.model.database.DetailedComicEntity
-import com.architectcoders.arquitectomarvel.model.database.toDetailedComicEntityList
+import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.HeroDetailViewModel.UiModel
-import com.architectcoders.arquitectomarvel.model.comics.Result as ComicResult
+import com.architectcoders.module.usescases.*
+import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.Result as CharacterResult
+import com.architectcoders.arquitectomarvel.data.remote.models_moshi.comics.Result as ComicsResult
 
 class HeroDetailActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityHeroDetailBinding
+    private lateinit var binding: ActivityHeroDetailBinding
     private lateinit var heroDetailViewModel: HeroDetailViewModel
     private val adapter by lazy { ComicAdapter() }
-    var selectedCharacter: Result? = null
-    var isCharacterFavorite = false
+    private var selectedCharacter: ResultUI? = null
+    private var isCharacterFavorite = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +33,19 @@ class HeroDetailActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.contentHeroDetail.comicList.adapter = adapter
-        heroDetailViewModel = getViewModel { HeroDetailViewModel(Repository(application)) }
+
+        val marvelRepository = ServiceLocator.provideMarvelRepository(applicationContext)
+        heroDetailViewModel = getViewModel {
+            HeroDetailViewModel(
+                UseCaseGetComicsRemote(marvelRepository),
+                UseCaseInsertFavoriteCharacter(marvelRepository),
+                UseCaseInsertFavoriteComic(marvelRepository),
+                UseCaseIsCharacterFavorite(marvelRepository),
+                UseCaseDeleteFavoriteCharacter(marvelRepository),
+                UseCaseDeleteFavoriteDetailComic(marvelRepository)
+            )
+        }
+
         heroDetailViewModel.model.observe(this, Observer(::updateUi))
     }
 
@@ -45,16 +60,16 @@ class HeroDetailActivity : AppCompatActivity() {
     }
 
     private fun setHeroDetails(onHeroShown: (Int) -> Unit) {
-        intent.extras?.getParcelable<Result>(EXTRA_SELECTED_HERO)?.let { selectedHero ->
+        intent.extras?.getParcelable<ResultUI>(EXTRA_SELECTED_HERO)?.let { selectedHero ->
             this.selectedCharacter = selectedHero
             binding.headerHeroImage.loadUrl(
-                selectedHero.thumbnail?.path,
-                selectedHero.thumbnail?.extension
+                selectedHero.thumbnail.path,
+                selectedHero.thumbnail.extension
             )
-            binding.toolbar.title = selectedHero.name ?: EMPTY_TEXT
-            binding.toolbarLayout.title = selectedHero.name ?: EMPTY_TEXT
+            binding.toolbar.title = selectedHero.name
+            binding.toolbarLayout.title = selectedHero.name
             binding.contentHeroDetail.heroContent.text =
-                if (selectedHero.description.isNullOrBlank()) {
+                if (selectedHero.description.isBlank()) {
                     getString(R.string.content_not_available)
                 } else {
                     selectedHero.description
@@ -70,7 +85,7 @@ class HeroDetailActivity : AppCompatActivity() {
     private fun updateFAB(
         isCharacterFavorite: Boolean,
         listener: (
-            selectedHero: Result,
+            selectedHero: CharacterResult,
             comicList: MutableList<DetailedComicEntity>,
             isCharacterFavorite: Boolean,
         ) -> Unit,
@@ -89,12 +104,16 @@ class HeroDetailActivity : AppCompatActivity() {
                     android.R.drawable.star_off,
                     this.isCharacterFavorite
                 )
-                listener(character, adapter.currentList, this.isCharacterFavorite)
+                listener(
+                    character.fromResultUItoCharacterResult(),
+                    adapter.currentList,
+                    this.isCharacterFavorite
+                )
             }
         }
     }
 
-    private fun updateComics(comicList: List<ComicResult>) {
+    private fun updateComics(comicList: List<ComicsResult>) {
         if (comicList.isEmpty()) {
             binding.contentHeroDetail.noComics.isVisible = true
         }

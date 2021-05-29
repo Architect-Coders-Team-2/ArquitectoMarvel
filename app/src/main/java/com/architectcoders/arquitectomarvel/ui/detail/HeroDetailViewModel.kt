@@ -5,15 +5,25 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.architectcoders.arquitectomarvel.R
-import com.architectcoders.arquitectomarvel.model.Repository
-import com.architectcoders.arquitectomarvel.model.comics.Result
-import com.architectcoders.arquitectomarvel.model.database.DetailedComicEntity
+import com.architectcoders.arquitectomarvel.data.local.entities.DetailedComicEntity
+import com.architectcoders.arquitectomarvel.data.local.entities.fromDetailedComicEntityToDetailedComic
+import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.toCharacterResultDomain
+import com.architectcoders.arquitectomarvel.data.remote.models_moshi.comics.Result
+import com.architectcoders.arquitectomarvel.data.remote.models_moshi.comics.fromListResult
+import com.architectcoders.module.usescases.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.net.UnknownHostException
-import com.architectcoders.arquitectomarvel.model.characters.Result as CharacterResult
+import com.architectcoders.arquitectomarvel.data.remote.models_moshi.characters.Result as CharacterResult
 
-class HeroDetailViewModel(private val repository: Repository) : ViewModel() {
+class HeroDetailViewModel(
+    private val useCaseGetComicsRemote: UseCaseGetComicsRemote,
+    private val useCaseInsertFavoriteCharacter: UseCaseInsertFavoriteCharacter,
+    private val useCaseInsertFavoriteComic: UseCaseInsertFavoriteComic,
+    private val useCaseIsCharacterFavorite: UseCaseIsCharacterFavorite,
+    private val useCaseDeleteFavoriteCharacter: UseCaseDeleteFavoriteCharacter,
+    private val useCaseDeleteFavoriteDetailComic: UseCaseDeleteFavoriteDetailComic
+) : ViewModel() {
 
     private val _model = MutableLiveData<UiModel>()
     val model: LiveData<UiModel>
@@ -49,11 +59,11 @@ class HeroDetailViewModel(private val repository: Repository) : ViewModel() {
         viewModelScope.launch {
             try {
                 _model.value = UiModel.Loading
-                val isCharacterFavorite = repository.isCharacterFavorite(heroId)
+                val isCharacterFavorite = useCaseIsCharacterFavorite.invoke(heroId)
                 _model.value = UiModel.UpdateFAB(isCharacterFavorite, ::onFabClick)
-                val comic = repository.getComicsFromCharacterRemote(heroId)
-                val comicList = comic?.comicData?.results ?: emptyList()
-                _model.value = UiModel.UpdateComics(comicList)
+                val comic = useCaseGetComicsRemote.invoke(heroId)
+                val comicList = comic.dataComics?.resultComics ?: emptyList()
+                _model.value = UiModel.UpdateComics(comicList.fromListResult())
             } catch (e: UnknownHostException) {
                 Timber.e("qq_MainPresenter.onCreate: $e")
                 _model.value = UiModel.ShowToast(R.string.no_internet)
@@ -68,14 +78,14 @@ class HeroDetailViewModel(private val repository: Repository) : ViewModel() {
     ) {
         viewModelScope.launch {
             if (isCharacterFavorite) {
-                repository.insertFavoriteCharacter(selectedHero)
+                useCaseInsertFavoriteCharacter.invoke(selectedHero.toCharacterResultDomain())
                 comicList.forEach {
-                    repository.insertFavoriteComic(it)
+                    useCaseInsertFavoriteComic.invoke(it.fromDetailedComicEntityToDetailedComic())
                 }
             } else {
-                repository.deleteFavoriteCharacters(selectedHero)
+                useCaseDeleteFavoriteCharacter.invoke(selectedHero.toCharacterResultDomain())
                 comicList.forEach {
-                    repository.deleteFavoriteDetailedComic(it)
+                    useCaseDeleteFavoriteDetailComic.invoke(it.fromDetailedComicEntityToDetailedComic())
                 }
             }
         }
