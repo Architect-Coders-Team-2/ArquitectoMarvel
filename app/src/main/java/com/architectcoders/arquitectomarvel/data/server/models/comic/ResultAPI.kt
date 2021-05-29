@@ -1,7 +1,7 @@
-package com.architectcoders.arquitectomarvel.data.server.uiEntities.marvelComics
+package com.architectcoders.arquitectomarvel.data.server.models.comic
 
-import com.architectcoders.arquitectomarvel.data.server.uiEntities.marvelCharacters.MarvelThumbnail
-import com.architectcoders.arquitectomarvel.data.server.uiEntities.marvelCharacters.toLocalThumbnail
+import com.architectcoders.arquitectomarvel.data.server.models.character.MarvelThumbnail
+import com.architectcoders.arquitectomarvel.data.server.models.character.toDomainThumbnail
 import com.architectcoders.domain.comics.Result
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -24,16 +24,16 @@ data class MarvelResult(
     val title: String?
 )
 
-val List<MarvelResult>.toLocalListResult: List<Result>
-    get() = map { it.toLocalMarvelResult }
+val List<MarvelResult>.toDomainListResult: List<Result>
+    get() = map { it.toDomainMarvelResult }
 
-val MarvelResult.toLocalMarvelResult: Result
+val MarvelResult.toDomainMarvelResult: Result
     get() = Result(
         description,
         id,
-        images?.toLocalListImage,
+        images?.toDomainListImage,
         pageCount,
         resourceURI,
-        thumbnail?.toLocalThumbnail,
+        thumbnail?.toDomainThumbnail,
         title
     )

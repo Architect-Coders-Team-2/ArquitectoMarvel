@@ -1,5 +1,7 @@
 package com.architectcoders.arquitectomarvel.data.database
 
+import com.architectcoders.arquitectomarvel.data.database.models.toCharacterEntity
+import com.architectcoders.arquitectomarvel.data.database.models.toComicEntity
 import com.architectcoders.data.source.LocalDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

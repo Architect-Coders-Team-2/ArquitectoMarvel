@@ -5,9 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.architectcoders.arquitectomarvel.R
-import com.architectcoders.arquitectomarvel.data.database.ComicEntity
-import com.architectcoders.arquitectomarvel.data.database.toComicResult
-import com.architectcoders.data.repository.CharacterRepository
+import com.architectcoders.arquitectomarvel.data.database.models.ComicEntity
+import com.architectcoders.arquitectomarvel.data.database.models.toComicResult
 import com.architectcoders.usecases.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -15,7 +14,15 @@ import java.net.UnknownHostException
 import com.architectcoders.domain.characters.Result as CharacterResult
 import com.architectcoders.domain.comics.Result as ComicResult
 
-class CharacterDetailViewModel(private val characterRepository: CharacterRepository) : ViewModel() {
+class CharacterDetailViewModel(
+    private val getCharacterById: GetCharacterById,
+    private val isCharacterFavorite: IsCharacterFavorite,
+    private val getComicsFromCharacterId: GetComicsFromCharacterId,
+    private val insertFavoriteCharacter: InsertFavoriteCharacter,
+    private val insertFavoriteComic: InsertFavoriteComic,
+    private val deleteFavoriteCharacter: DeleteFavoriteCharacter,
+    private val deleteFavoriteComic: DeleteFavoriteComic
+) : ViewModel() {
 
     private val _model = MutableLiveData<UiModel>()
     val model: LiveData<UiModel>
@@ -61,17 +68,17 @@ class CharacterDetailViewModel(private val characterRepository: CharacterReposit
     }
 
     private suspend fun getCharacterId(characterId: Int) {
-        val characters = GetCharacterById(characterRepository).invoke(characterId)
+        val characters = getCharacterById.invoke(characterId)
         _model.value = UiModel.SetCharacterDetails(characters.characterData?.results?.first())
     }
 
     private suspend fun isCharacterFavorite(characterId: Int) {
-        val isCharacterFavorite = IsCharacterFavorite(characterRepository).invoke(characterId)
+        val isCharacterFavorite = isCharacterFavorite.invoke(characterId)
         _model.value = UiModel.UpdateFAB(isCharacterFavorite, ::onFabClick)
     }
 
     private suspend fun getComicsFromCharacterId(characterId: Int) {
-        val comic = GetComicsFromCharacterId(characterRepository).invoke(characterId)
+        val comic = getComicsFromCharacterId.invoke(characterId)
         val comicList = comic?.comicData?.results ?: emptyList()
         _model.value = UiModel.UpdateComics(comicList)
     }
@@ -83,14 +90,14 @@ class CharacterDetailViewModel(private val characterRepository: CharacterReposit
     ) {
         viewModelScope.launch {
             if (isCharacterFavorite) {
-                InsertFavoriteCharacter(characterRepository).invoke(selectedHero)
+                insertFavoriteCharacter.invoke(selectedHero)
                 comicList.forEach {
-                    InsertFavoriteComic(characterRepository).invoke(it.toComicResult)
+                    insertFavoriteComic.invoke(it.toComicResult)
                 }
             } else {
-                DeleteFavoriteCharacter(characterRepository).invoke(selectedHero)
+                deleteFavoriteCharacter.invoke(selectedHero)
                 comicList.forEach {
-                    DeleteFavoriteComic(characterRepository).invoke(it.toComicResult)
+                    deleteFavoriteComic.invoke(it.toComicResult)
                 }
             }
         }
