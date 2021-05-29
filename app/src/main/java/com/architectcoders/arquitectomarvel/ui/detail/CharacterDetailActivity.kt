@@ -29,9 +29,7 @@ class CharacterDetailActivity : AppCompatActivity() {
                 IsLocalCharacterFavorite(characterRepository),
                 GetRemoteComicsFromCharacterId(characterRepository),
                 InsertLocalFavoriteCharacter(characterRepository),
-                InsertLocalFavoriteComic(characterRepository),
-                DeleteLocalFavoriteCharacter(characterRepository),
-                DeleteLocalFavoriteComic(characterRepository)
+                DeleteLocalFavoriteCharacter(characterRepository)
             )
         }
     }
@@ -76,7 +74,6 @@ class CharacterDetailActivity : AppCompatActivity() {
         isCharacterFavorite: Boolean,
         listener: (
             selectedHero: CharacterResult,
-            comicList: MutableList<ComicResult>,
             isCharacterFavorite: Boolean,
         ) -> Unit
     ) {
@@ -87,14 +84,13 @@ class CharacterDetailActivity : AppCompatActivity() {
     private fun listenToFab(
         listener: (
             selectedHero: CharacterResult,
-            comicList: MutableList<ComicResult>,
-            isCharacterFavorite: Boolean,
+            isCharacterFavorite: Boolean
         ) -> Unit
     ) {
         binding.fab.setOnClickListener {
             selectedCharacter?.let { character ->
                 setCharacterFavorite(this.isCharacterFavorite.not())
-                listener(character, adapter.currentList, this.isCharacterFavorite)
+                listener(character, this.isCharacterFavorite)
             }
         }
     }
