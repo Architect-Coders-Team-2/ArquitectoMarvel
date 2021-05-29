@@ -7,6 +7,9 @@ const val EMPTY_RESPONSE = "Empty response"
 // COMMON
 const val EMPTY_TEXT = "--"
 
+// EXCEPTIONS
+const val SOCKET_NULL = "Socket is null"
+
 // EXTRA
 const val EXTRA_SELECTED_HERO = "extraSelectedHero"
 
