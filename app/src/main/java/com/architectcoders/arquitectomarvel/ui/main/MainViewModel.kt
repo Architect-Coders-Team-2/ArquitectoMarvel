@@ -2,16 +2,32 @@ package com.architectcoders.arquitectomarvel.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.cachedIn
+import androidx.paging.*
+import com.architectcoders.arquitectomarvel.data.database.CharacterEntity
 import com.architectcoders.arquitectomarvel.ui.common.REQUEST_LIMIT
-import com.architectcoders.arquitectomarvel.ui.main.pagination.ResultPagingSource
-import com.architectcoders.usecases.GetRemoteCharacters
+import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterRemoteMediator
+import com.architectcoders.usecases.*
 
-class MainViewModel(private val getRemoteCharacters: GetRemoteCharacters) : ViewModel() {
+class MainViewModel(
+    getRemoteCharacters: GetRemoteCharacters,
+    deleteAllLocalCharacters: DeleteAllLocalCharacters,
+    insertAllLocalCharacters: InsertAllLocalCharacters,
+    getLastTimeStampFromCharacterEntity: GetLastTimeStampFromCharacterEntity,
+    getPagingSourceFromCharacterEntity: GetPagingSourceFromCharacterEntity,
+    getLocalCharactersCount: GetLocalCharactersCount
+) : ViewModel() {
+    @ExperimentalPagingApi
     val pager = Pager(
         config = PagingConfig(pageSize = REQUEST_LIMIT / 2),
-        pagingSourceFactory = { ResultPagingSource(getRemoteCharacters) }
-    ).flow.cachedIn(viewModelScope)
+        remoteMediator =
+        CharacterRemoteMediator(
+            getRemoteCharacters,
+            deleteAllLocalCharacters,
+            insertAllLocalCharacters,
+            getLastTimeStampFromCharacterEntity,
+            getLocalCharactersCount
+        )
+    ) {
+        getPagingSourceFromCharacterEntity.invoke() as PagingSource<Int, CharacterEntity>
+    }.flow.cachedIn(viewModelScope)
 }

@@ -14,13 +14,13 @@ import com.architectcoders.domain.comics.Result as ComicResult
 
 class CharacterDetailViewModel(
     private val characterId: Int,
-    private val getCharacterById: GetCharacterById,
-    private val isCharacterFavorite: IsCharacterFavorite,
-    private val getComicsFromCharacterId: GetComicsFromCharacterId,
-    private val insertFavoriteCharacter: InsertFavoriteCharacter,
-    private val insertFavoriteComic: InsertFavoriteComic,
-    private val deleteFavoriteCharacter: DeleteFavoriteCharacter,
-    private val deleteFavoriteComic: DeleteFavoriteComic
+    private val getLocalCharacterById: GetLocalCharacterById,
+    private val isLocalCharacterFavorite: IsLocalCharacterFavorite,
+    private val getRemoteComicsFromCharacterId: GetRemoteComicsFromCharacterId,
+    private val insertLocalFavoriteCharacter: InsertLocalFavoriteCharacter,
+    private val insertLocalFavoriteComic: InsertLocalFavoriteComic,
+    private val deleteLocalFavoriteCharacter: DeleteLocalFavoriteCharacter,
+    private val deleteLocalFavoriteComic: DeleteLocalFavoriteComic
 ) : ViewModel() {
 
     private val _model = MutableLiveData<UiModel>()
@@ -32,7 +32,7 @@ class CharacterDetailViewModel(
 
     sealed class UiModel {
         object Loading : UiModel()
-        class SetCharacterDetails(val character: CharacterResult?) : UiModel()
+        class SetCharacterDetails(val character: CharacterResult) : UiModel()
         class UpdateFAB(
             val isCharacterFavorite: Boolean,
             val listener: (
@@ -66,17 +66,17 @@ class CharacterDetailViewModel(
     }
 
     private suspend fun getCharacterId(characterId: Int) {
-        val characters = getCharacterById.invoke(characterId)
-        _model.value = UiModel.SetCharacterDetails(characters.characterData?.results?.first())
+        val character = getLocalCharacterById.invoke(characterId)
+        _model.value = UiModel.SetCharacterDetails(character)
     }
 
     private suspend fun isCharacterFavorite(characterId: Int) {
-        val isCharacterFavorite = isCharacterFavorite.invoke(characterId)
+        val isCharacterFavorite = isLocalCharacterFavorite.invoke(characterId)
         _model.value = UiModel.UpdateFAB(isCharacterFavorite, ::onFabClick)
     }
 
     private suspend fun getComicsFromCharacterId(characterId: Int) {
-        val comic = getComicsFromCharacterId.invoke(characterId)
+        val comic = getRemoteComicsFromCharacterId.invoke(characterId)
         val comicList = comic?.comicData?.results ?: emptyList()
         _model.value = UiModel.UpdateComics(comicList)
     }
@@ -88,14 +88,14 @@ class CharacterDetailViewModel(
     ) {
         viewModelScope.launch {
             if (isCharacterFavorite) {
-                insertFavoriteCharacter.invoke(selectedHero)
+                insertLocalFavoriteCharacter.invoke(selectedHero)
                 comicList.forEach {
-                    insertFavoriteComic.invoke(it)
+                    insertLocalFavoriteComic.invoke(it)
                 }
             } else {
-                deleteFavoriteCharacter.invoke(selectedHero)
+                deleteLocalFavoriteCharacter.invoke(selectedHero)
                 comicList.forEach {
-                    deleteFavoriteComic.invoke(it)
+                    deleteLocalFavoriteComic.invoke(it)
                 }
             }
         }

@@ -8,5 +8,6 @@ data class Result(
     val resourceURI: String?,
     val comicCollectionUri: String?,
     val comicListAvailable: Boolean,
-    val insertDate: Long?
+    var pageNumber: Int?,
+    var insertDate: Long?
 )

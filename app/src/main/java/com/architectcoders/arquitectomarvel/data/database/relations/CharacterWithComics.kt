@@ -3,7 +3,7 @@ package com.architectcoders.arquitectomarvel.data.database.relations
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.architectcoders.arquitectomarvel.data.database.CharacterEntity
-import com.architectcoders.arquitectomarvel.data.database.ComicEntity
+import com.architectcoders.arquitectomarvel.data.database.FavoriteComicEntity
 
 data class CharacterWithComics(
     @Embedded val characterEntity: CharacterEntity,
@@ -11,5 +11,5 @@ data class CharacterWithComics(
         parentColumn = "id",
         entityColumn = "resourceUri"
     )
-    val comicEntity: List<ComicEntity>
+    val favoriteComicEntity: List<FavoriteComicEntity>
 )
