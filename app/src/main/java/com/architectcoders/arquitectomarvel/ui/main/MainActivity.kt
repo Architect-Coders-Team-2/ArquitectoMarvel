@@ -19,8 +19,6 @@ import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterAdapter
 import com.architectcoders.arquitectomarvel.ui.main.pagination.LoadStateAdapter
 import com.architectcoders.domain.characters.Result
 import com.architectcoders.usecases.*
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 
 class MainActivity : AppCompatActivity() {

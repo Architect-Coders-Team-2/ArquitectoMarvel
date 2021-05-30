@@ -3,12 +3,20 @@ package com.architectcoders.domain.comics
 import com.architectcoders.domain.characters.Thumbnail
 
 data class Result(
-    val description: String?,
-    val id: Int?,
-    val images: List<Image>?,
-    val pageCount: Int?,
-    val resourceURI: String?,
-    val thumbnail: Thumbnail?,
-    val title: String?,
-    val insertDate: Long?
-)
+    val description: String?= null,
+    val id: Int? = null,
+    val images: List<Image>? = null,
+    val pageCount: Int? = null,
+    val resourceURI: String? = null,
+    val thumbnail: Thumbnail? = null,
+    val title: String? = null,
+    val insertDate: Long? = null
+) {
+    companion object {
+        val EMPTY_LIST_COMICS = listOf(
+            Result(
+                title = "No Comics for this Hero"
+            )
+        )
+    }
+}

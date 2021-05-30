@@ -15,10 +15,10 @@ data class MarvelData(
     @Json(name = "count")
     val count: Int?,
     @Json(name = "results")
-    val results: List<MarvelResult>?
+    val results: List<MarvelResult>
 )
 
 val MarvelData.toLocalData: Data
     get() = Data(
-        count, limit, offset, results?.toLocalListResult, total
+        count, limit, offset, results.toLocalListResult, total
     )

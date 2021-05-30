@@ -32,11 +32,11 @@ class MarvelDataSource(
             marvelCredentialDataSource.hash
         ).toLocalCharacters
 
-    override suspend fun getRemoteComics(characterId: Int): Comic? =
+    override suspend fun getRemoteComics(characterId: Int): Comic =
         marvelApi.getComics(
             characterId,
             marvelCredentialDataSource.timeStamp,
             marvelCredentialDataSource.publicKey,
             marvelCredentialDataSource.hash
-        )?.toLocalComic
+        ).toLocalComic
 }

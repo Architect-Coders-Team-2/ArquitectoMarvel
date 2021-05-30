@@ -7,12 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.architectcoders.arquitectomarvel.R
+import com.architectcoders.arquitectomarvel.data.database.toComicResultList
 import com.architectcoders.arquitectomarvel.databinding.ActivityCharacterDetailBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel.UiModel
 import com.architectcoders.usecases.*
+import java.net.UnknownHostException
 import com.architectcoders.domain.characters.Result as CharacterResult
-import com.architectcoders.domain.comics.Result as ComicResult
 
 class CharacterDetailActivity : AppCompatActivity() {
 
@@ -27,9 +28,13 @@ class CharacterDetailActivity : AppCompatActivity() {
                 intent.getIntExtra(EXTRA_SELECTED_HERO, 0),
                 GetLocalCharacterById(characterRepository),
                 IsLocalCharacterFavorite(characterRepository),
-                GetRemoteComicsFromCharacterId(characterRepository),
                 InsertLocalFavoriteCharacter(characterRepository),
-                DeleteLocalFavoriteCharacter(characterRepository)
+                DeleteLocalFavoriteCharacter(characterRepository),
+                ComicsRepository(
+                    GetRemoteComicsFromCharacterId(characterRepository),
+                    InsertComicsForHeroLocal(characterRepository),
+                    GiveMeDao(characterRepository)
+                )
             )
         }
     }
@@ -42,6 +47,21 @@ class CharacterDetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.contentHeroDetail.comicList.adapter = adapter
         characterDetailViewModel.model.observe(this, Observer(::updateUi))
+        showComics()
+    }
+
+    private fun showComics() {
+        binding.contentHeroDetail.apply {
+            characterDetailViewModel.comics.observe(this@CharacterDetailActivity) { result ->
+                adapter.submitList(result.data?.toComicResultList ?: emptyList())
+                progress.isVisible = result is Resource.Loading && result.data.isNullOrEmpty()
+                noComics.isVisible = result is Resource.Error && result.data.isNullOrEmpty()
+                if (result.error is UnknownHostException) {
+                    noComics.text = getString(R.string.no_internet)
+                }
+            }
+        }
+
     }
 
     private fun updateUi(model: UiModel) {
@@ -50,8 +70,8 @@ class CharacterDetailActivity : AppCompatActivity() {
             is UiModel.SetCharacterDetails -> setCharacterDetails(model.character)
             is UiModel.ShowToast -> toast(model.msgResource)
             is UiModel.UpdateFAB -> updateFAB(model.isCharacterFavorite, model.listener)
-            is UiModel.UpdateComics -> updateComics(model.comicList)
         }
+
     }
 
     private fun setCharacterDetails(character: CharacterResult) {
@@ -102,13 +122,6 @@ class CharacterDetailActivity : AppCompatActivity() {
             android.R.drawable.star_off,
             this.isCharacterFavorite
         )
-    }
-
-    private fun updateComics(comicList: List<ComicResult>) {
-        if (comicList.isEmpty()) {
-            binding.contentHeroDetail.noComics.isVisible = true
-        }
-        adapter.submitList(comicList)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

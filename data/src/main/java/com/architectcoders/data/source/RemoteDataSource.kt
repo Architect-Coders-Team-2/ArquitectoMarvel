@@ -7,5 +7,5 @@ interface RemoteDataSource {
     val credentialsDataSource: CredentialsDataSource
     suspend fun getRemoteCharacters(offset: Int): Characters
     suspend fun getRemoteCharacterById(characterId: Int): Characters
-    suspend fun getRemoteComics(characterId: Int): Comic?
+    suspend fun getRemoteComics(characterId: Int): Comic
 }

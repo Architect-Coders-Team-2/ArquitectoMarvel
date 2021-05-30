@@ -9,8 +9,8 @@ data class MarvelComic(
     @Json(name = "code")
     val code: Int?,
     @Json(name = "data")
-    val comicData: MarvelData?
+    val comicData: MarvelData
 )
 
 val MarvelComic.toLocalComic: Comic
-    get() = Comic(code, comicData?.toLocalData)
+    get() = Comic(code, comicData.toLocalData)

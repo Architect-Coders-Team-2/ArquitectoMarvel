@@ -5,21 +5,25 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.architectcoders.arquitectomarvel.R
-import com.architectcoders.usecases.*
+import com.architectcoders.usecases.DeleteLocalFavoriteCharacter
+import com.architectcoders.usecases.GetLocalCharacterById
+import com.architectcoders.usecases.InsertLocalFavoriteCharacter
+import com.architectcoders.usecases.IsLocalCharacterFavorite
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.net.UnknownHostException
 import com.architectcoders.domain.characters.Result as CharacterResult
-import com.architectcoders.domain.comics.Result as ComicResult
 
 class CharacterDetailViewModel(
     private val characterId: Int,
     private val getLocalCharacterById: GetLocalCharacterById,
     private val isLocalCharacterFavorite: IsLocalCharacterFavorite,
-    private val getRemoteComicsFromCharacterId: GetRemoteComicsFromCharacterId,
     private val insertLocalFavoriteCharacter: InsertLocalFavoriteCharacter,
-    private val deleteLocalFavoriteCharacter: DeleteLocalFavoriteCharacter
+    private val deleteLocalFavoriteCharacter: DeleteLocalFavoriteCharacter,
+    private val comicsRepository: ComicsRepository
 ) : ViewModel() {
+
+    val comics get() = comicsRepository.getComics(characterId)
 
     private val _model = MutableLiveData<UiModel>()
     val model: LiveData<UiModel>
@@ -40,7 +44,6 @@ class CharacterDetailViewModel(
         ) : UiModel()
 
         class ShowToast(val msgResource: Int) : UiModel()
-        class UpdateComics(val comicList: List<ComicResult>) : UiModel()
     }
 
     private fun refresh() {
@@ -54,7 +57,6 @@ class CharacterDetailViewModel(
                 getCharacterId(characterId)
                 isCharacterFavorite(characterId)
                 _model.value = UiModel.Loading
-                getComicsFromCharacterId(characterId)
             } catch (e: UnknownHostException) {
                 Timber.e("qq_MainPresenter.onCreate: $e")
                 _model.value = UiModel.ShowToast(R.string.no_internet)
@@ -70,12 +72,6 @@ class CharacterDetailViewModel(
     private suspend fun isCharacterFavorite(characterId: Int) {
         val isCharacterFavorite = isLocalCharacterFavorite.invoke(characterId)
         _model.value = UiModel.UpdateFAB(isCharacterFavorite, ::onFabClick)
-    }
-
-    private suspend fun getComicsFromCharacterId(characterId: Int) {
-        val comic = getRemoteComicsFromCharacterId.invoke(characterId)
-        val comicList = comic?.comicData?.results ?: emptyList()
-        _model.value = UiModel.UpdateComics(comicList)
     }
 
     private fun onFabClick(
