@@ -47,7 +47,7 @@ class MarvelRepository(
         localDataSource.fetchComicsForHero(map)
     }
 
-    fun giveMeDao(): Any {
-        return localDataSource.marvelDao
+    fun getComicsForHero(idHero: Int): Any {
+        return localDataSource.getComicsForHero(idHero)
     }
 }

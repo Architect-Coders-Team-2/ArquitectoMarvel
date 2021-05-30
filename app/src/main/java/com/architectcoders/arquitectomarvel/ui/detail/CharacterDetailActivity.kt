@@ -33,7 +33,7 @@ class CharacterDetailActivity : AppCompatActivity() {
                 ComicsRepository(
                     GetRemoteComicsFromCharacterId(characterRepository),
                     InsertComicsForHeroLocal(characterRepository),
-                    GiveMeDao(characterRepository)
+                    GetComicsForHero(characterRepository)
                 )
             )
         }

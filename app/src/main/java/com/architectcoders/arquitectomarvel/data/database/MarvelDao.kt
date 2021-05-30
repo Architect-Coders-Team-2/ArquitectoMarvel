@@ -2,6 +2,8 @@ package com.architectcoders.arquitectomarvel.data.database
 
 import androidx.paging.PagingSource
 import androidx.room.*
+import com.architectcoders.arquitectomarvel.ui.detail.ComicsRepository.Companion.COMICS
+import com.architectcoders.arquitectomarvel.ui.detail.ComicsRepository.Companion.ID_HERO
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -46,8 +48,8 @@ interface MarvelDao {
 
     @Transaction
     suspend fun fetchComicsForHero(map: Map<String, Any>) {
-        val idHero = map["idHero"] as Int
-        val comics = map["comics"] as List<ComicEntity>
+        val idHero = map[ID_HERO] as Int
+        val comics = map[COMICS] as List<ComicEntity>
         deleteComicsForHero(idHero)
         comics.map {
             it.idHero = idHero

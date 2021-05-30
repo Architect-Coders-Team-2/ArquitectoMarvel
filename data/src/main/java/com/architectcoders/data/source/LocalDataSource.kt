@@ -15,7 +15,6 @@ interface LocalDataSource {
     suspend fun deleteLocalFavoriteComic(idHero: Int)
     fun getPagingSourceFromCharacterEntity(): Any?
 
-    val marvelDao: Any
-    suspend fun getComicsForHero(idHero: Int): Any
+    fun getComicsForHero(idHero: Int): Any
     suspend fun fetchComicsForHero(map: Map<String, Any>)
 }

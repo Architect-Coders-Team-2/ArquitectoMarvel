@@ -9,7 +9,7 @@ import com.architectcoders.domain.comics.Result as ComicResult
 
 class RoomDataSource(db: MarvelDatabase) : LocalDataSource {
 
-    override val marvelDao = db.marvelDao
+    private val marvelDao = db.marvelDao
 
     override suspend fun getLocalCharacterById(characterId: Int): CharacterResult =
         marvelDao.getLocalCharacterById(characterId).toDomainCharacter
@@ -35,9 +35,6 @@ class RoomDataSource(db: MarvelDatabase) : LocalDataSource {
     override suspend fun isLocalCharacterFavorite(characterId: Int): Boolean =
         marvelDao.isLocalCharacterFavorite(characterId) != null
 
-//    override fun insertLocalFavoriteComic(listComics: List<ComicResult>) =
-//        marvelDao.insertComics(listComics.toComicEntityList)
-
     override suspend fun deleteLocalFavoriteComic(idHero: Int) =
         marvelDao.deleteComicsForHero(idHero)
 
@@ -48,7 +45,7 @@ class RoomDataSource(db: MarvelDatabase) : LocalDataSource {
         marvelDao.fetchComicsForHero(map)
     }
 
-    override suspend fun getComicsForHero(idHero: Int): Any {
+    override fun getComicsForHero(idHero: Int): Any {
         return marvelDao.selecetComicsForHero(idHero)
     }
 }
