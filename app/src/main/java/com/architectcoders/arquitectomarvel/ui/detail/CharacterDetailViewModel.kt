@@ -20,10 +20,10 @@ class CharacterDetailViewModel(
     private val isLocalCharacterFavorite: IsLocalCharacterFavorite,
     private val insertLocalFavoriteCharacter: InsertLocalFavoriteCharacter,
     private val deleteLocalFavoriteCharacter: DeleteLocalFavoriteCharacter,
-    private val comicsRepository: ComicsRepository
+    private val getComicsInteractor: GetComicsInteractor
 ) : ViewModel() {
 
-    val comics get() = comicsRepository.getComics(characterId)
+    val comics get() = getComicsInteractor.invoke(characterId)
 
     private val _model = MutableLiveData<UiModel>()
     val model: LiveData<UiModel>

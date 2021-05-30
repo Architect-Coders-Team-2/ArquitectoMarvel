@@ -2,8 +2,8 @@ package com.architectcoders.arquitectomarvel.data.database
 
 import androidx.paging.PagingSource
 import androidx.room.*
-import com.architectcoders.arquitectomarvel.ui.detail.ComicsRepository.Companion.COMICS
-import com.architectcoders.arquitectomarvel.ui.detail.ComicsRepository.Companion.ID_HERO
+import com.architectcoders.arquitectomarvel.ui.detail.GetComicsInteractor.Companion.COMICS
+import com.architectcoders.arquitectomarvel.ui.detail.GetComicsInteractor.Companion.ID_HERO
 import kotlinx.coroutines.flow.Flow
 
 @Dao

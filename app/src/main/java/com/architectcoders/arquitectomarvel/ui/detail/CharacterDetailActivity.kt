@@ -30,7 +30,7 @@ class CharacterDetailActivity : AppCompatActivity() {
                 IsLocalCharacterFavorite(characterRepository),
                 InsertLocalFavoriteCharacter(characterRepository),
                 DeleteLocalFavoriteCharacter(characterRepository),
-                ComicsRepository(
+                GetComicsInteractor(
                     GetRemoteComicsFromCharacterId(characterRepository),
                     InsertComicsForHeroLocal(characterRepository),
                     GetComicsForHero(characterRepository)

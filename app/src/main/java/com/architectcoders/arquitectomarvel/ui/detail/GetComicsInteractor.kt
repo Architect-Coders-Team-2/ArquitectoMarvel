@@ -9,13 +9,13 @@ import com.architectcoders.usecases.GetRemoteComicsFromCharacterId
 import com.architectcoders.usecases.InsertComicsForHeroLocal
 import kotlinx.coroutines.flow.Flow
 
-class ComicsRepository(
+class GetComicsInteractor(
     private val getRemoteComicsFromCharacterId: GetRemoteComicsFromCharacterId,
     private val insertComicsForHeroLocal: InsertComicsForHeroLocal,
     private val getComicsForHero: GetComicsForHero,
 ) {
 
-    fun getComics(idHero: Int) = networkBoundResource(
+    fun invoke(idHero: Int) = networkBoundResource(
         query = {
                 getComicsForHero.invoke(idHero) as Flow<List<ComicEntity>>
         },
