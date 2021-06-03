@@ -9,15 +9,16 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.architectcoders.arquitectomarvel.data.ui_models.ResultUI
-import com.architectcoders.arquitectomarvel.data.usescases_impl.UseCaseGetCharactersRemoteImpl
 import com.architectcoders.arquitectomarvel.ui.common.Event
 import com.architectcoders.arquitectomarvel.ui.common.PAGE_SIZE
 import com.architectcoders.arquitectomarvel.ui.main.pagination.HerosPagingSource
+import com.architectcoders.module.usescases.UseCaseGetCharactersRemote
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val useCaseGetCharactersRemoteImpl: UseCaseGetCharactersRemoteImpl) : ViewModel() {
+class MainViewModel @Inject constructor(private val useCaseGetCharactersRemote: UseCaseGetCharactersRemote) :
+    ViewModel() {
 
     private val _navigation = MutableLiveData<Event<ResultUI>>()
     val navigation: LiveData<Event<ResultUI>> = _navigation
@@ -29,7 +30,7 @@ class MainViewModel @Inject constructor(private val useCaseGetCharactersRemoteIm
         config = PagingConfig(
             pageSize = PAGE_SIZE
         ),
-        pagingSourceFactory = { HerosPagingSource(useCaseGetCharactersRemoteImpl) }
+        pagingSourceFactory = { HerosPagingSource(useCaseGetCharactersRemote) }
     ).flow.cachedIn(viewModelScope)
 
     fun onResultClick(result: ResultUI, view: View) {

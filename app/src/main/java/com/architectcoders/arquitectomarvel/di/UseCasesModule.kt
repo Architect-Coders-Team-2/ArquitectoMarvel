@@ -1,40 +1,40 @@
 package com.architectcoders.arquitectomarvel.di
 
 import com.architectcoders.arquitectomarvel.data.usescases_impl.*
-import com.architectcoders.module.data.MarvelRepository
+import com.architectcoders.module.usescases.*
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn(ActivityComponent::class)
-class UseCasesModule {
+@InstallIn(SingletonComponent::class)
+abstract class UseCasesModule {
 
-    @Provides
-    fun provideUseCaseGetCharactersRemote(
-        marvelRepository: MarvelRepository
-    ): UseCaseGetCharactersRemoteImpl = UseCaseGetCharactersRemoteImpl(marvelRepository)
+    @Binds
+    abstract fun bindUseCaseGetCharactersRemote(
+        useCaseGetCharactersRemoteImpl: UseCaseGetCharactersRemoteImpl
+    ): UseCaseGetCharactersRemote
 
-    @Provides
-    fun provideUseCaseGetComicsRemote(
-        marvelRepository: MarvelRepository
-    ): UseCaseGetComicsRemoteImpl = UseCaseGetComicsRemoteImpl(marvelRepository)
+    @Binds
+    abstract fun bindUseCaseInsertFavoriteCharacter(
+        useCaseInsertFavoriteCharacterImpl: UseCaseInsertFavoriteCharacterImpl
+    ): UseCaseInsertFavoriteCharacter
 
-    @Provides
-    fun provideUseCaseInsertFavoriteCharacter(
-        marvelRepository: MarvelRepository
-    ): UseCaseInsertFavoriteCharacterImpl = UseCaseInsertFavoriteCharacterImpl(marvelRepository)
+    @Binds
+    abstract fun bindUseCaseIsCharacterFavorite(
+        useCaseIsCharacterFavoriteImpl: UseCaseIsCharacterFavoriteImpl
+    ): UseCaseIsCharacterFavorite
 
-    @Provides
-    fun provideUseCaseIsCharacterFavorite(
-        marvelRepository: MarvelRepository
-    ): UseCaseIsCharacterFavoriteImpl = UseCaseIsCharacterFavoriteImpl(marvelRepository)
+    @Binds
+    abstract fun bindUseCaseDeleteFavoriteCharacter(
+        useCaseDeleteFavoriteCharacterImpl: UseCaseDeleteFavoriteCharacterImpl
+    ): UseCaseDeleteFavoriteCharacter
 
-    @Provides
-    fun provideUseCaseDeleteFavoriteCharacter(
-        marvelRepository: MarvelRepository
-    ): UseCaseDeleteFavoriteCharacterImpl = UseCaseDeleteFavoriteCharacterImpl(marvelRepository)
+    @Binds
+    abstract fun bindUseCaseGetComicsRemote(
+        useCaseGetComicsRemoteImpl: UseCaseGetComicsRemoteImpl
+    ): UseCaseGetComicsRemote
 
 }
 

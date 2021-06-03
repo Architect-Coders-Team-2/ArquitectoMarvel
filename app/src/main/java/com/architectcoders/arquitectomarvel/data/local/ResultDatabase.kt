@@ -14,7 +14,8 @@ import com.architectcoders.arquitectomarvel.data.local.entities.ResultRoom
         CharacterEntity::class,
         DetailedComicEntity::class
     ],
-    version = 1
+    version = 1,
+    exportSchema = false
 )
 abstract class ResultDatabase : RoomDatabase() {
 
