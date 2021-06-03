@@ -9,7 +9,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.*
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.data.*
@@ -103,6 +102,17 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        showIfInternetIsAvailable(binding.root, lifecycle, lifecycleScope)
+        val repo = ServiceLocator.provideInternetProvideRepo(
+            this, lifecycle, lifecycleScope
+        )
+        val useCaseInternetConnection = UseCaseInternetConnection(repo)
+        useCaseInternetConnection.invoke(::showSnack)
+//        showIfInternetIsAvailable(binding.root, lifecycle, lifecycleScope)
+    }
+
+    private fun showSnack(boolean: Boolean) {
+        val noInternetSnackBar =
+            Snackbar.make(binding.root, R.string.no_internet, Snackbar.LENGTH_LONG)
+        if (!boolean) noInternetSnackBar.show() else noInternetSnackBar.dismiss()
     }
 }

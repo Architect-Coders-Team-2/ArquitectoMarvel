@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
@@ -14,7 +13,6 @@ import androidx.lifecycle.*
 import com.architectcoders.arquitectomarvel.R
 import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collect
 import java.math.BigInteger
 import java.security.MessageDigest
@@ -76,21 +74,23 @@ inline fun <reified T : Activity> Context.startActivity(
 }
 
 fun Context.showIfInternetIsAvailable(
-    view: View,
+//    view: View,
     lifecycle: Lifecycle,
-    lifecycleCoroutineScope: LifecycleCoroutineScope
+    lifecycleCoroutineScope: LifecycleCoroutineScope,
+    isActive: (Boolean) -> Unit
 ) {
-    val noInternetSnackBar = Snackbar.make(view, R.string.no_internet, Snackbar.LENGTH_LONG)
+//    val noInternetSnackBar = Snackbar.make(view, R.string.no_internet, Snackbar.LENGTH_LONG)
     lifecycleCoroutineScope.launchWhenStarted {
         InternetConnectionManager(
             this@showIfInternetIsAvailable,
             lifecycle
         ).isInternetAvailable.collect { isAvailable ->
-            if (isAvailable) {
-                noInternetSnackBar.dismiss()
-            } else {
-                noInternetSnackBar.show()
-            }
+            isActive(isAvailable)
+//            if (isAvailable) {
+//                noInternetSnackBar.dismiss()
+//            } else {
+//                noInternetSnackBar.show()
+//            }
         }
     }
 }
