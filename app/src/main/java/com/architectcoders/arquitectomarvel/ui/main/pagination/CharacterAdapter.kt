@@ -30,8 +30,8 @@ class CharacterAdapter(private val listener: (Result, View) -> Unit) :
     override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
         getItem(position)?.let { characterEntity ->
             holder.bind(characterEntity.toDomainCharacter)
-            holder.imageViewHero.setOnClickListener {
-                listener(characterEntity.toDomainCharacter, it)
+            holder.itemView.setOnClickListener {
+                listener(characterEntity.toDomainCharacter, holder.imageViewHero)
             }
         }
     }
