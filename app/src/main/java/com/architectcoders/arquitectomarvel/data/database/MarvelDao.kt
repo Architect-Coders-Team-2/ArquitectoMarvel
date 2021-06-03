@@ -38,7 +38,7 @@ interface MarvelDao {
 
     // Comics
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertComics(comicEntity: List<ComicEntity>)
+    suspend fun insertComics(comicEntity: List<ComicEntity>)
 
     @Query("DELETE FROM COMICENTITY WHERE idHero = :idHero")
     suspend fun deleteComicsForHero(idHero: Int)
