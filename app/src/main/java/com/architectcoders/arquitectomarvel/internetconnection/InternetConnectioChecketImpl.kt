@@ -2,22 +2,15 @@ package com.architectcoders.arquitectomarvel.internetconnection
 
 import android.content.Context
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleCoroutineScope
-import com.architectcoders.arquitectomarvel.ui.common.showIfInternetIsAvailable
+import com.architectcoders.arquitectomarvel.ui.common.InternetConnectionManager
 import com.architectcoders.data.source.InternetConnectionSource
 
 class InternetConnectioChecketImpl(
     private val context: Context,
-    private val lifecycle: Lifecycle,
-    private val lifecycleCoroutineScope: LifecycleCoroutineScope
+    private val lifecycle: Lifecycle
 ) : InternetConnectionSource {
 
     override fun isInternetAvaible(avaible: (Boolean) -> Unit) {
-        context.showIfInternetIsAvailable(
-            lifecycle,
-            lifecycleCoroutineScope
-        ) {
-            avaible(it)
-        }
+        InternetConnectionManager(context, lifecycle) { avaible(it) }
     }
 }

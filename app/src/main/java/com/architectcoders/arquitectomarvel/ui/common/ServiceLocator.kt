@@ -2,7 +2,6 @@ package com.architectcoders.arquitectomarvel.ui.common
 
 import android.content.Context
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleCoroutineScope
 import com.architectcoders.arquitectomarvel.data.database.MarvelDatabase
 import com.architectcoders.arquitectomarvel.data.database.RoomDataSource
 import com.architectcoders.arquitectomarvel.data.server.MarvelCredentialDataSource
@@ -16,27 +15,22 @@ object ServiceLocator {
 
     fun internetConnectionProvider(
         context: Context,
-        lifecycle: Lifecycle,
-        lifecycleCoroutineScope: LifecycleCoroutineScope
+        lifecycle: Lifecycle
     ): InternetConnectionSource =
         InternetConnectioChecketImpl(
             context,
-            lifecycle,
-            lifecycleCoroutineScope
+            lifecycle
         )
 
     fun provideInternetProvideRepo(
         context: Context,
-        lifecycle: Lifecycle,
-        lifecycleCoroutineScope: LifecycleCoroutineScope
+        lifecycle: Lifecycle
     ) = InternetAvaibleRepo(
         internetConnectionProvider(
             context,
-            lifecycle,
-            lifecycleCoroutineScope
+            lifecycle
         )
     )
-
 
     fun provideMarvelRepository(context: Context): MarvelRepository =
         MarvelRepository(

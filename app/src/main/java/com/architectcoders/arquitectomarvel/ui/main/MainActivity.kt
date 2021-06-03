@@ -19,12 +19,16 @@ import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterAdapter
 import com.architectcoders.arquitectomarvel.ui.main.pagination.LoadStateAdapter
 import com.architectcoders.domain.characters.Result
 import com.architectcoders.usecases.*
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    private val useCaseInternetConnection by lazy {
+        val repoInetChech = ServiceLocator.provideInternetProvideRepo(this, lifecycle)
+        UseCaseInternetConnection(repoInetChech)
+    }
 
     private val viewModel by lazy {
         val marvelRepository = ServiceLocator.provideMarvelRepository(this)
@@ -51,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setUpViews()
         collectLatestPager()
+        useCaseInternetConnection.invoke(binding.root::showSnackBarWithoutInet)
     }
 
     private fun setUpViews() {
@@ -98,21 +103,5 @@ class MainActivity : AppCompatActivity() {
                 putExtra(EXTRA_SELECTED_HERO, resultValue.id)
             }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        val repo = ServiceLocator.provideInternetProvideRepo(
-            this, lifecycle, lifecycleScope
-        )
-        val useCaseInternetConnection = UseCaseInternetConnection(repo)
-        useCaseInternetConnection.invoke(::showSnack)
-//        showIfInternetIsAvailable(binding.root, lifecycle, lifecycleScope)
-    }
-
-    private fun showSnack(boolean: Boolean) {
-        val noInternetSnackBar =
-            Snackbar.make(binding.root, R.string.no_internet, Snackbar.LENGTH_LONG)
-        if (!boolean) noInternetSnackBar.show() else noInternetSnackBar.dismiss()
     }
 }
