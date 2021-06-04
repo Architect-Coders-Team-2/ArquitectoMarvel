@@ -2,16 +2,16 @@ package com.architectcoders.data.repository
 
 import com.architectcoders.data.source.LocalDataSource
 import com.architectcoders.data.source.RemoteDataSource
-import com.architectcoders.domain.characters.Characters
+import com.architectcoders.domain.characters.HerosPayload
 import com.architectcoders.domain.comics.Comic
-import com.architectcoders.domain.characters.Result as CharacterResult
+import com.architectcoders.domain.characters.Hero as CharacterResult
 import com.architectcoders.domain.comics.Result as ComicResult
 
 class MarvelRepository(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
 ) {
-    suspend fun getRemoteCharacters(offset: Int): Characters =
+    suspend fun getRemoteCharacters(offset: Int): HerosPayload =
         remoteDataSource.getRemoteCharacters(offset)
 
     suspend fun getLocalCharactersCount(): Int =

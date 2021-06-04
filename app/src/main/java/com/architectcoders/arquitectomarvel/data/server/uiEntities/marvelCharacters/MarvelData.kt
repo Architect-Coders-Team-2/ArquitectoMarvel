@@ -20,5 +20,5 @@ data class MarvelData(
 
 val MarvelData.toLocalData: Data
     get() = Data(
-        offset, limit, total, count, results?.toLocalListResult
+        offset, limit, total, count, results?.toLocalListHero
     )

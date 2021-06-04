@@ -2,7 +2,7 @@ package com.architectcoders.arquitectomarvel.data.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.architectcoders.domain.characters.Result
+import com.architectcoders.domain.characters.Hero
 import com.architectcoders.domain.characters.Thumbnail
 
 @Entity
@@ -12,32 +12,30 @@ data class FavoriteCharacterEntity(
     val name: String?,
     val description: String?,
     val thumbnail: String?,
-    val resourceURI: String?,
     val comicCollectionUri: String?,
     val comicListAvailable: Int?,
     val insertDate: Long?
 )
 
-val List<Result>.toFavoriteCharacterEntityList: List<FavoriteCharacterEntity>
+val List<Hero>.toFavoriteCharacterEntityList: List<FavoriteCharacterEntity>
     get() = map { it.toFavoriteCharacterEntity }
 
-val Result.toFavoriteCharacterEntity: FavoriteCharacterEntity
+val Hero.toFavoriteCharacterEntity: FavoriteCharacterEntity
     get() = FavoriteCharacterEntity(
         id = id,
         name = name,
         description = description,
         thumbnail = "${thumbnail?.path}.${thumbnail?.extension}",
-        resourceURI = resourceURI,
         comicCollectionUri = comicCollectionUri,
         comicListAvailable = if (comicListAvailable) 1 else 0,
         insertDate = System.currentTimeMillis()
     )
 
-val List<FavoriteCharacterEntity>.toDomainCharacterList: List<Result>
+val List<FavoriteCharacterEntity>.toDomainCharacterList: List<Hero>
     get() = map { it.toDomainCharacter }
 
-val FavoriteCharacterEntity.toDomainCharacter: Result
-    get() = Result(
+val FavoriteCharacterEntity.toDomainCharacter: Hero
+    get() = Hero(
         id = id,
         name = name,
         description = description,
@@ -47,7 +45,6 @@ val FavoriteCharacterEntity.toDomainCharacter: Result
                 it.substringAfterLast(".")
             )
         },
-        resourceURI = resourceURI,
         comicCollectionUri = comicCollectionUri,
         comicListAvailable = comicListAvailable != null,
         pageNumber = null,

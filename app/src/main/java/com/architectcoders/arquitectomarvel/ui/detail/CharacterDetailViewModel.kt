@@ -9,7 +9,7 @@ import com.architectcoders.usecases.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.net.UnknownHostException
-import com.architectcoders.domain.characters.Result as CharacterResult
+import com.architectcoders.domain.characters.Hero as CharacterResult
 import com.architectcoders.domain.comics.Result as ComicResult
 
 class CharacterDetailViewModel(

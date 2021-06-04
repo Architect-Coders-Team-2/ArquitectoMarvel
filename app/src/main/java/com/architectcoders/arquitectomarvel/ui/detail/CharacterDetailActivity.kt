@@ -11,7 +11,7 @@ import com.architectcoders.arquitectomarvel.databinding.ActivityCharacterDetailB
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel.UiModel
 import com.architectcoders.usecases.*
-import com.architectcoders.domain.characters.Result as CharacterResult
+import com.architectcoders.domain.characters.Hero as CharacterResult
 import com.architectcoders.domain.comics.Result as ComicResult
 
 class CharacterDetailActivity : AppCompatActivity() {

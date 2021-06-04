@@ -1,6 +1,6 @@
 package com.architectcoders.arquitectomarvel.data.server.uiEntities.marvelCharacters
 
-import com.architectcoders.domain.characters.Result
+import com.architectcoders.domain.characters.Hero
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -20,16 +20,15 @@ data class MarvelResult(
     val comics: MarvelComics = MarvelComics()
 )
 
-val List<MarvelResult>.toLocalListResult: List<Result>
-    get() = map { it.toLocalMarvelResult }
+val List<MarvelResult>.toLocalListHero: List<Hero>
+    get() = map { it.toLocalMarvelHero }
 
-val MarvelResult.toLocalMarvelResult: Result
-    get() = Result(
+val MarvelResult.toLocalMarvelHero: Hero
+    get() = Hero(
         id,
         name,
         description,
         thumbnail?.toLocalThumbnail,
-        resourceURI,
         comics.collectionURI,
         comics.available != null,
         null,

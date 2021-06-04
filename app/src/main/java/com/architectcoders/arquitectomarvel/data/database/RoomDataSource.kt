@@ -2,7 +2,7 @@ package com.architectcoders.arquitectomarvel.data.database
 
 import androidx.paging.PagingSource
 import com.architectcoders.data.source.LocalDataSource
-import com.architectcoders.domain.characters.Result as CharacterResult
+import com.architectcoders.domain.characters.Hero as CharacterResult
 import com.architectcoders.domain.comics.Result as ComicResult
 
 class RoomDataSource(db: MarvelDatabase) : LocalDataSource {
@@ -18,7 +18,7 @@ class RoomDataSource(db: MarvelDatabase) : LocalDataSource {
     override suspend fun getLocalCharactersCount(): Int =
         characterDao.getLocalCharactersCount() ?: 0
 
-    override suspend fun insertAllLocalCharacters(characterList: List<com.architectcoders.domain.characters.Result>) =
+    override suspend fun insertAllLocalCharacters(characterList: List<com.architectcoders.domain.characters.Hero>) =
         characterDao.insertAllLocalCharacters(characterList.toCharacterEntityList)
 
     override suspend fun deleteAllLocalCharacters() =

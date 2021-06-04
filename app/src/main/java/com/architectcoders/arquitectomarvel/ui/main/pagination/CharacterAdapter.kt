@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.DiffUtil
 import com.architectcoders.arquitectomarvel.data.database.CharacterEntity
 import com.architectcoders.arquitectomarvel.data.database.toDomainCharacter
 import com.architectcoders.arquitectomarvel.databinding.CharacterItemBinding
-import com.architectcoders.domain.characters.Result
+import com.architectcoders.domain.characters.Hero
 
-class CharacterAdapter(private val listener: (Result, View) -> Unit) :
+class CharacterAdapter(private val listener: (Hero, View) -> Unit) :
     PagingDataAdapter<CharacterEntity, CharacterViewHolder>(DiffCallback) {
 
     companion object DiffCallback : DiffUtil.ItemCallback<CharacterEntity>() {

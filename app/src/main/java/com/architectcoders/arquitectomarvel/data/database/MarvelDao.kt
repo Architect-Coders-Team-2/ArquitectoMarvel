@@ -2,7 +2,6 @@ package com.architectcoders.arquitectomarvel.data.database
 
 import androidx.paging.PagingSource
 import androidx.room.*
-import com.architectcoders.arquitectomarvel.data.database.relations.CharacterWithComics
 
 @Dao
 interface MarvelDao {
@@ -18,10 +17,6 @@ interface MarvelDao {
 
     @Query("SELECT COUNT(id) FROM characterentity")
     suspend fun getLocalCharactersCount(): Int?
-
-    @Transaction
-    @Query("SELECT * FROM characterentity WHERE comicCollectionUri = :comicCollectionUri")
-    suspend fun getLocalCharacterWithComics(comicCollectionUri: String): List<CharacterWithComics>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllLocalCharacters(characterList: List<CharacterEntity>)
