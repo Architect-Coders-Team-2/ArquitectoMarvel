@@ -15,3 +15,8 @@ const val EXTRA_SELECTED_HERO = "extraSelectedHero"
 
 // LIMIT OF CHARACTERS TO REQUEST
 const val REQUEST_LIMIT = 36
+
+// PING
+const val PING_HOSTNAME = "8.8.8.8"
+const val PING_PORT = 53
+const val PING_TIMEOUT = 1500
