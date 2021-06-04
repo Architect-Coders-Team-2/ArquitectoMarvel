@@ -24,12 +24,11 @@ import kotlinx.coroutines.flow.collectLatest
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
-    private val useCaseInternetConnection by lazy {
-        val repoInetChech = ServiceLocator.provideInternetProvideRepo(this, lifecycle)
-        UseCaseInternetConnection(repoInetChech)
+    private val networkRepository by lazy {
+        ServiceLocator.provideNetworkRepository(
+            applicationContext
+        )
     }
-
     private val viewModel by lazy {
         val marvelRepository = ServiceLocator.provideMarvelRepository(this)
         getViewModel {
@@ -55,7 +54,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setUpViews()
         collectLatestPager()
-        useCaseInternetConnection.invoke(binding.root::showSnackBarWithoutInet)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        lifecycleScope.launchWhenStarted {
+            RegisterNetworkManager(networkRepository).invoke(binding.root::showSnackBarWithoutInternet)
+        }
     }
 
     private fun setUpViews() {
@@ -103,5 +108,10 @@ class MainActivity : AppCompatActivity() {
                 putExtra(EXTRA_SELECTED_HERO, resultValue.id)
             }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        UnregisterNetworkManager(networkRepository).invoke()
     }
 }

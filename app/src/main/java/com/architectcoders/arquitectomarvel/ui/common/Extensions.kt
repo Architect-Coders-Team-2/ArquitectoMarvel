@@ -76,6 +76,8 @@ inline fun <reified T : Activity> Context.startActivity(
     startActivity(intentFor<T>(body), options)
 }
 
-fun View.showSnackBarWithoutInet(isInetAvaible: Boolean) {
-    if (!isInetAvaible) Snackbar.make(this, R.string.no_internet, Snackbar.LENGTH_LONG).show()
+fun View.showSnackBarWithoutInternet(isInternetAvailable: Boolean) {
+    if (!isInternetAvailable) {
+        Snackbar.make(this, R.string.no_internet, Snackbar.LENGTH_LONG).show()
+    }
 }

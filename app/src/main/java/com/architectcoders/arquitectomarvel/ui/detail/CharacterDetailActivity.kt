@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityCharacterDetailBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
@@ -20,6 +21,11 @@ class CharacterDetailActivity : AppCompatActivity() {
     private val adapter by lazy { ComicAdapter() }
     private var selectedCharacter: CharacterResult? = null
     private var isCharacterFavorite = false
+    private val networkRepository by lazy {
+        ServiceLocator.provideNetworkRepository(
+            applicationContext
+        )
+    }
     private val characterDetailViewModel by lazy {
         getViewModel {
             val characterRepository = ServiceLocator.provideMarvelRepository(this)
@@ -36,11 +42,6 @@ class CharacterDetailActivity : AppCompatActivity() {
         }
     }
 
-    private val useCaseInternetConnection by lazy {
-        val repoInetChech = ServiceLocator.provideInternetProvideRepo(this, lifecycle)
-        UseCaseInternetConnection(repoInetChech)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCharacterDetailBinding.inflate(LayoutInflater.from(this))
@@ -49,7 +50,13 @@ class CharacterDetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.contentHeroDetail.comicList.adapter = adapter
         characterDetailViewModel.model.observe(this, Observer(::updateUi))
-        useCaseInternetConnection.invoke(binding.root::showSnackBarWithoutInet)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        lifecycleScope.launchWhenStarted {
+            RegisterNetworkManager(networkRepository).invoke(binding.root::showSnackBarWithoutInternet)
+        }
     }
 
     private fun updateUi(model: UiModel) {
@@ -126,5 +133,10 @@ class CharacterDetailActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        UnregisterNetworkManager(networkRepository).invoke()
     }
 }
