@@ -9,7 +9,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.*
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.data.*
@@ -20,12 +19,16 @@ import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterAdapter
 import com.architectcoders.arquitectomarvel.ui.main.pagination.LoadStateAdapter
 import com.architectcoders.domain.characters.Result
 import com.architectcoders.usecases.*
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    private val useCaseInternetConnection by lazy {
+        val repoInetChech = ServiceLocator.provideInternetProvideRepo(this, lifecycle)
+        UseCaseInternetConnection(repoInetChech)
+    }
 
     private val viewModel by lazy {
         val marvelRepository = ServiceLocator.provideMarvelRepository(this)
@@ -52,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setUpViews()
         collectLatestPager()
+        useCaseInternetConnection.invoke(binding.root::showSnackBarWithoutInet)
     }
 
     private fun setUpViews() {
@@ -99,10 +103,5 @@ class MainActivity : AppCompatActivity() {
                 putExtra(EXTRA_SELECTED_HERO, resultValue.id)
             }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        showIfInternetIsAvailable(binding.root, lifecycle, lifecycleScope)
     }
 }

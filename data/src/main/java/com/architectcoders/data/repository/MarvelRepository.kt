@@ -9,7 +9,7 @@ import com.architectcoders.domain.comics.Result as ComicResult
 
 class MarvelRepository(
     private val remoteDataSource: RemoteDataSource,
-    private val localDataSource: LocalDataSource,
+    private val localDataSource: LocalDataSource
 ) {
     suspend fun getRemoteCharacters(offset: Int): Characters =
         remoteDataSource.getRemoteCharacters(offset)

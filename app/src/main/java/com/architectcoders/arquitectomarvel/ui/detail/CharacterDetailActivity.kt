@@ -6,13 +6,11 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityCharacterDetailBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel.UiModel
 import com.architectcoders.usecases.*
-import com.google.android.material.snackbar.Snackbar
 import com.architectcoders.domain.characters.Result as CharacterResult
 import com.architectcoders.domain.comics.Result as ComicResult
 
@@ -38,6 +36,11 @@ class CharacterDetailActivity : AppCompatActivity() {
         }
     }
 
+    private val useCaseInternetConnection by lazy {
+        val repoInetChech = ServiceLocator.provideInternetProvideRepo(this, lifecycle)
+        UseCaseInternetConnection(repoInetChech)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCharacterDetailBinding.inflate(LayoutInflater.from(this))
@@ -46,6 +49,7 @@ class CharacterDetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.contentHeroDetail.comicList.adapter = adapter
         characterDetailViewModel.model.observe(this, Observer(::updateUi))
+        useCaseInternetConnection.invoke(binding.root::showSnackBarWithoutInet)
     }
 
     private fun updateUi(model: UiModel) {
@@ -114,11 +118,6 @@ class CharacterDetailActivity : AppCompatActivity() {
             binding.contentHeroDetail.noComics.isVisible = true
         }
         adapter.submitList(comicList)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        showIfInternetIsAvailable(binding.root, lifecycle, lifecycleScope)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

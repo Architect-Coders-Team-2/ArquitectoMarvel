@@ -13,8 +13,6 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -22,14 +20,16 @@ import java.io.IOException
 import java.net.InetSocketAddress
 import javax.net.SocketFactory
 
-class InternetConnectionManager(context: Context, lifecycle: Lifecycle) : LifecycleObserver {
+class InternetConnectionManager(
+    context: Context,
+    lifecycle: Lifecycle,
+    private val isAvaibleInternet: (Boolean) -> Unit
+) : LifecycleObserver {
 
     private lateinit var networkCallback: ConnectivityManager.NetworkCallback
     private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     private val validNetworks: MutableSet<Network> = HashSet()
-    private val _isInternetAvailable = MutableStateFlow(false)
-    val isInternetAvailable: StateFlow<Boolean> get() = _isInternetAvailable
 
     init {
         lifecycle.addObserver(this)
@@ -58,7 +58,7 @@ class InternetConnectionManager(context: Context, lifecycle: Lifecycle) : Lifecy
                         if (doesNetworkHasInternet()) {
                             withContext(Dispatchers.Main) {
                                 validNetworks.add(network)
-                                _isInternetAvailable.value = true
+                                isAvaibleInternet(true)
                             }
                         }
                     }
@@ -75,14 +75,14 @@ class InternetConnectionManager(context: Context, lifecycle: Lifecycle) : Lifecy
                     networkCapabilities.hasCapability(NET_CAPABILITY_VALIDATED)
                 ) {
                     validNetworks.add(network)
-                    _isInternetAvailable.value = true
+                    isAvaibleInternet(true)
                 }
             }
         }
 
         override fun onLost(network: Network) {
             validNetworks.remove(network)
-            _isInternetAvailable.value = validNetworks.isNotEmpty()
+            isAvaibleInternet(validNetworks.isNotEmpty())
         }
     }
 
