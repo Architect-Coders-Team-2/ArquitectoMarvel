@@ -1,10 +1,10 @@
-package com.architectcoders.arquitectomarvel.data.server.uiEntities.marvelCharacters
+package com.architectcoders.arquitectomarvel.data.server.uiEntities.heros
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class MarvelComics(
+data class HerosComicsMs(
     @Json(name = "available")
     val available: Int? = null,
     @Json(name = "collectionURI")

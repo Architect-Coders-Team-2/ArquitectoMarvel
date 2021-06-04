@@ -1,7 +1,7 @@
 package com.architectcoders.arquitectomarvel.data.server
 
-import com.architectcoders.arquitectomarvel.data.server.uiEntities.marvelCharacters.toLocalHerosPayload
-import com.architectcoders.arquitectomarvel.data.server.uiEntities.marvelComics.toLocalComicsPayload
+import com.architectcoders.arquitectomarvel.data.server.uiEntities.comics.toLocalComicsPayload
+import com.architectcoders.arquitectomarvel.data.server.uiEntities.heros.toLocalHerosPayload
 import com.architectcoders.data.source.CredentialsDataSource
 import com.architectcoders.data.source.RemoteDataSource
 import com.architectcoders.domain.comics.ComicsPayload
