@@ -2,11 +2,11 @@ package com.architectcoders.arquitectomarvel.data.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.architectcoders.domain.characters.Thumbnail
-import com.architectcoders.domain.comics.Result
+import com.architectcoders.domain.Thumbnail
+import com.architectcoders.domain.comics.Comic
 
 @Entity
-data class FavoriteComicEntity(
+data class ComicEntity(
     @PrimaryKey
     val resourceUri: String,
     val thumbnail: String?,
@@ -14,22 +14,22 @@ data class FavoriteComicEntity(
     val insertDate: Long?
 )
 
-val List<Result>.toFavoriteComicEntityList: List<FavoriteComicEntity>
-    get() = map { it.toFavoriteComicEntity }
+val List<Comic>.toComicEntityList: List<ComicEntity>
+    get() = map { it.toComicEntity }
 
-val Result.toFavoriteComicEntity: FavoriteComicEntity
-    get() = FavoriteComicEntity(
+val Comic.toComicEntity: ComicEntity
+    get() = ComicEntity(
         resourceUri = resourceURI ?: "",
         thumbnail = "${thumbnail?.path}.${thumbnail?.extension}",
         title = title,
         insertDate = System.currentTimeMillis()
     )
 
-val List<FavoriteComicEntity>.toComicResultList: List<Result>
-    get() = map { it.toComicResult }
+val List<ComicEntity>.toComicComicList: List<Comic>
+    get() = map { it.toComicComic }
 
-val FavoriteComicEntity.toComicResult: Result
-    get() = Result(
+val ComicEntity.toComicComic: Comic
+    get() = Comic(
         null,
         null,
         null,

@@ -2,11 +2,11 @@ package com.architectcoders.arquitectomarvel.data.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.architectcoders.domain.characters.Hero
-import com.architectcoders.domain.characters.Thumbnail
+import com.architectcoders.domain.Thumbnail
+import com.architectcoders.domain.heros.Hero
 
 @Entity
-data class CharacterEntity(
+data class HeroEntity(
     @PrimaryKey
     val id: Int,
     val name: String?,
@@ -18,11 +18,11 @@ data class CharacterEntity(
     val insertDate: Long?
 )
 
-val List<Hero>.toCharacterEntityList: List<CharacterEntity>
-    get() = map { it.toCharacterEntity }
+val List<Hero>.toHeroEntityList: List<HeroEntity>
+    get() = map { it.toHeroEntity }
 
-val Hero.toCharacterEntity: CharacterEntity
-    get() = CharacterEntity(
+val Hero.toHeroEntity: HeroEntity
+    get() = HeroEntity(
         id = id,
         name = name,
         description = description,
@@ -33,10 +33,10 @@ val Hero.toCharacterEntity: CharacterEntity
         insertDate = System.currentTimeMillis()
     )
 
-val List<CharacterEntity>.toDomainCharacterList: List<Hero>
+val List<HeroEntity>.toDomainCharacterList: List<Hero>
     get() = map { it.toDomainCharacter }
 
-val CharacterEntity.toDomainCharacter: Hero
+val HeroEntity.toDomainCharacter: Hero
     get() = Hero(
         id = id,
         name = name,

@@ -1,6 +1,6 @@
-package com.architectcoders.domain.characters
+package com.architectcoders.domain.heros
 
-data class Data(
+data class DataHeros(
     val offset: Int?,
     val limit: Int?,
     val total: Int?,

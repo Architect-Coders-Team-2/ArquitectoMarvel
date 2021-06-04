@@ -1,6 +1,6 @@
 package com.architectcoders.arquitectomarvel.data.server.uiEntities.marvelCharacters
 
-import com.architectcoders.domain.characters.Thumbnail
+import com.architectcoders.domain.Thumbnail
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 

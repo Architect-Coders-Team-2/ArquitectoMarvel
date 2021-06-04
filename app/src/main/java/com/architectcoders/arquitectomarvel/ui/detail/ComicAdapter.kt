@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.architectcoders.arquitectomarvel.databinding.ComicItemBinding
-import com.architectcoders.domain.comics.Result as ComicResult
+import com.architectcoders.domain.comics.Comic as ComicResult
 
 class ComicAdapter : ListAdapter<ComicResult, ComicViewHolder>(DiffUtilCallback) {
 

@@ -2,7 +2,7 @@ package com.architectcoders.arquitectomarvel.data.server.uiEntities.marvelComics
 
 import com.architectcoders.arquitectomarvel.data.server.uiEntities.marvelCharacters.MarvelThumbnail
 import com.architectcoders.arquitectomarvel.data.server.uiEntities.marvelCharacters.toLocalThumbnail
-import com.architectcoders.domain.comics.Result
+import com.architectcoders.domain.comics.Comic
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -24,11 +24,11 @@ data class MarvelResult(
     val title: String?
 )
 
-val List<MarvelResult>.toLocalListResult: List<Result>
-    get() = map { it.toLocalMarvelResult }
+val List<MarvelResult>.toLocalListComic: List<Comic>
+    get() = map { it.toLocalMarvelComic }
 
-val MarvelResult.toLocalMarvelResult: Result
-    get() = Result(
+val MarvelResult.toLocalMarvelComic: Comic
+    get() = Comic(
         description,
         id,
         images?.toLocalListImage,

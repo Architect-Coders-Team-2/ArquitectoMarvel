@@ -17,7 +17,7 @@ import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailActivity
 import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterAdapter
 import com.architectcoders.arquitectomarvel.ui.main.pagination.LoadStateAdapter
-import com.architectcoders.domain.characters.Hero
+import com.architectcoders.domain.heros.Hero
 import com.architectcoders.usecases.*
 import kotlinx.coroutines.flow.collectLatest
 

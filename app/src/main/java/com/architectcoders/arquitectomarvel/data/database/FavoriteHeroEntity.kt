@@ -2,11 +2,11 @@ package com.architectcoders.arquitectomarvel.data.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.architectcoders.domain.characters.Hero
-import com.architectcoders.domain.characters.Thumbnail
+import com.architectcoders.domain.Thumbnail
+import com.architectcoders.domain.heros.Hero
 
 @Entity
-data class FavoriteCharacterEntity(
+data class FavoriteHeroEntity(
     @PrimaryKey
     val id: Int,
     val name: String?,
@@ -17,11 +17,11 @@ data class FavoriteCharacterEntity(
     val insertDate: Long?
 )
 
-val List<Hero>.toFavoriteCharacterEntityList: List<FavoriteCharacterEntity>
-    get() = map { it.toFavoriteCharacterEntity }
+val List<Hero>.toFavoriteHeroEntityList: List<FavoriteHeroEntity>
+    get() = map { it.toFavoriteHeroEntity }
 
-val Hero.toFavoriteCharacterEntity: FavoriteCharacterEntity
-    get() = FavoriteCharacterEntity(
+val Hero.toFavoriteHeroEntity: FavoriteHeroEntity
+    get() = FavoriteHeroEntity(
         id = id,
         name = name,
         description = description,
@@ -31,10 +31,10 @@ val Hero.toFavoriteCharacterEntity: FavoriteCharacterEntity
         insertDate = System.currentTimeMillis()
     )
 
-val List<FavoriteCharacterEntity>.toDomainCharacterList: List<Hero>
+val List<FavoriteHeroEntity>.toDomainCharacterList: List<Hero>
     get() = map { it.toDomainCharacter }
 
-val FavoriteCharacterEntity.toDomainCharacter: Hero
+val FavoriteHeroEntity.toDomainCharacter: Hero
     get() = Hero(
         id = id,
         name = name,

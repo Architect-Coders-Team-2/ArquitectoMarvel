@@ -1,6 +1,6 @@
 package com.architectcoders.arquitectomarvel.data.server.uiEntities.marvelCharacters
 
-import com.architectcoders.domain.characters.Hero
+import com.architectcoders.domain.heros.Hero
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 

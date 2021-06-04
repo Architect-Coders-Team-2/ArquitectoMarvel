@@ -1,6 +1,6 @@
 package com.architectcoders.arquitectomarvel.data.server.uiEntities.marvelCharacters
 
-import com.architectcoders.domain.characters.HerosPayload
+import com.architectcoders.domain.heros.HerosPayload
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -15,4 +15,4 @@ data class MarvelCharacters(
 )
 
 val MarvelCharacters.toLocalHerosPayload: HerosPayload
-    get() = HerosPayload(code, status, characterData?.toLocalData)
+    get() = HerosPayload(code, status, characterData?.toLocalDataHeros)

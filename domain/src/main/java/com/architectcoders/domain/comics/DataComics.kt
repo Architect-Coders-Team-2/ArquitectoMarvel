@@ -1,9 +1,9 @@
 package com.architectcoders.domain.comics
 
-data class Data(
+data class DataComics(
     val count: Int?,
     val limit: Int?,
     val offset: Int?,
-    val results: List<Result>?,
+    val comics: List<Comic>?,
     val total: Int?
 )

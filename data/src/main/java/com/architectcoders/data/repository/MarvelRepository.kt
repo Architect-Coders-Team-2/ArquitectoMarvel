@@ -2,10 +2,10 @@ package com.architectcoders.data.repository
 
 import com.architectcoders.data.source.LocalDataSource
 import com.architectcoders.data.source.RemoteDataSource
-import com.architectcoders.domain.characters.HerosPayload
-import com.architectcoders.domain.comics.Comic
-import com.architectcoders.domain.characters.Hero as CharacterResult
-import com.architectcoders.domain.comics.Result as ComicResult
+import com.architectcoders.domain.comics.ComicsPayload
+import com.architectcoders.domain.heros.HerosPayload
+import com.architectcoders.domain.comics.Comic as ComicResult
+import com.architectcoders.domain.heros.Hero as CharacterResult
 
 class MarvelRepository(
     private val remoteDataSource: RemoteDataSource,
@@ -23,7 +23,7 @@ class MarvelRepository(
     suspend fun isLocalCharacterFavorite(characterId: Int): Boolean =
         localDataSource.isLocalCharacterFavorite(characterId)
 
-    suspend fun getRemoteComicsFromCharacterId(characterId: Int): Comic? =
+    suspend fun getRemoteComicsFromCharacterId(characterId: Int): ComicsPayload? =
         remoteDataSource.getRemoteComics(characterId)
 
     suspend fun insertAllLocalCharacters(characterList: List<CharacterResult>) =

@@ -1,4 +1,6 @@
-package com.architectcoders.domain.characters
+package com.architectcoders.domain.heros
+
+import com.architectcoders.domain.Thumbnail
 
 data class Hero(
     val id: Int,

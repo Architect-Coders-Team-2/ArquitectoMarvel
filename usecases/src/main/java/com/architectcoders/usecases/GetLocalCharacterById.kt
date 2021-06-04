@@ -1,7 +1,7 @@
 package com.architectcoders.usecases
 
 import com.architectcoders.data.repository.MarvelRepository
-import com.architectcoders.domain.characters.Hero as CharacterResult
+import com.architectcoders.domain.heros.Hero as CharacterResult
 
 class GetLocalCharacterById(private val marvelRepository: MarvelRepository) :
     InvokeUseCase<Int, Any> {

@@ -1,7 +1,7 @@
 package com.architectcoders.data.source
 
-import com.architectcoders.domain.characters.Hero as CharacterResult
-import com.architectcoders.domain.comics.Result as ComicResult
+import com.architectcoders.domain.comics.Comic as ComicResult
+import com.architectcoders.domain.heros.Hero as CharacterResult
 
 interface LocalDataSource {
     suspend fun getLocalCharacterById(characterId: Int): CharacterResult

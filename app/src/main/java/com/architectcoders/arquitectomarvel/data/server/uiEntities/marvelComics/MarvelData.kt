@@ -1,6 +1,6 @@
 package com.architectcoders.arquitectomarvel.data.server.uiEntities.marvelComics
 
-import com.architectcoders.domain.comics.Data
+import com.architectcoders.domain.comics.DataComics
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -18,7 +18,7 @@ data class MarvelData(
     val results: List<MarvelResult>?
 )
 
-val MarvelData.toLocalData: Data
-    get() = Data(
-        count, limit, offset, results?.toLocalListResult, total
+val MarvelData.toLocalDataHero: DataComics
+    get() = DataComics(
+        count, limit, offset, results?.toLocalListComic, total
     )

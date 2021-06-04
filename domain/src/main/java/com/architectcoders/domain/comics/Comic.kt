@@ -1,6 +1,14 @@
 package com.architectcoders.domain.comics
 
+import com.architectcoders.domain.Thumbnail
+
 data class Comic(
-    val code: Int?,
-    val comicData: Data?
+    val description: String?,
+    val id: Int?,
+    val images: List<Thumbnail>?,
+    val pageCount: Int?,
+    val resourceURI: String?,
+    val thumbnail: Thumbnail?,
+    val title: String?,
+    val insertDate: Long?
 )

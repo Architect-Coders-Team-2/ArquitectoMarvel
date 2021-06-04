@@ -9,8 +9,8 @@ import com.architectcoders.usecases.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.net.UnknownHostException
-import com.architectcoders.domain.characters.Hero as CharacterResult
-import com.architectcoders.domain.comics.Result as ComicResult
+import com.architectcoders.domain.comics.Comic as ComicResult
+import com.architectcoders.domain.heros.Hero as CharacterResult
 
 class CharacterDetailViewModel(
     private val characterId: Int,
@@ -77,7 +77,7 @@ class CharacterDetailViewModel(
 
     private suspend fun getComicsFromCharacterId(characterId: Int) {
         val comic = getRemoteComicsFromCharacterId.invoke(characterId)
-        val comicList = comic?.comicData?.results ?: emptyList()
+        val comicList = comic?.comicDataComics?.comics ?: emptyList()
         _model.value = UiModel.UpdateComics(comicList)
     }
 
