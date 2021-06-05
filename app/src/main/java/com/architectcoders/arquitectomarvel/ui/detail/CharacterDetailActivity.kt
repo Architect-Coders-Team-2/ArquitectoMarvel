@@ -55,8 +55,12 @@ class CharacterDetailActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         lifecycleScope.launchWhenStarted {
-            RegisterNetworkManager(networkRepository).invoke(binding.root::showSnackBarWithoutInternet)
+            RegisterNetworkManager(networkRepository).invoke(::shouldShowOfflineMessage)
         }
+    }
+
+    private fun shouldShowOfflineMessage(internetAvailable: Boolean) {
+        binding.contentHeroDetail.offlineStatus.isVisible = !internetAvailable
     }
 
     private fun updateUi(model: UiModel) {
