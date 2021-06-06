@@ -1,4 +1,4 @@
-package com.architectcoders.domain.comics
+package com.architectcoders.domain.comic
 
 data class ComicsPayload(
     val code: Int?,

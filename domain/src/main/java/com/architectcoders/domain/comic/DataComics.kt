@@ -1,4 +1,4 @@
-package com.architectcoders.domain.comics
+package com.architectcoders.domain.comic
 
 data class DataComics(
     val count: Int?,

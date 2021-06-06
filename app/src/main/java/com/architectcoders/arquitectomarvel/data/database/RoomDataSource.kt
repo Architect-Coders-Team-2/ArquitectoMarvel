@@ -2,14 +2,14 @@ package com.architectcoders.arquitectomarvel.data.database
 
 import androidx.paging.PagingSource
 import com.architectcoders.data.source.LocalDataSource
-import com.architectcoders.domain.comics.Comic as ComicResult
-import com.architectcoders.domain.heros.Hero as CharacterResult
+import com.architectcoders.domain.character.Character
+import com.architectcoders.domain.comic.Comic
 
 class RoomDataSource(db: MarvelDatabase) : LocalDataSource {
 
     private val characterDao = db.marvelDao
 
-    override suspend fun getLocalCharacterById(characterId: Int): CharacterResult =
+    override suspend fun getLocalCharacterById(characterId: Int): Character =
         characterDao.getLocalCharacterById(characterId).toDomainCharacter
 
     override suspend fun getLastTimeStampFromCharacterEntity(): Long? =
@@ -18,27 +18,27 @@ class RoomDataSource(db: MarvelDatabase) : LocalDataSource {
     override suspend fun getLocalCharactersCount(): Int =
         characterDao.getLocalCharactersCount() ?: 0
 
-    override suspend fun insertAllLocalCharacters(characterList: List<com.architectcoders.domain.heros.Hero>) =
-        characterDao.insertAllLocalCharacters(characterList.toHeroEntityList)
+    override suspend fun insertAllLocalCharacters(characterList: List<Character>) =
+        characterDao.insertAllLocalCharacters(characterList.toCharacterEntityList)
 
     override suspend fun deleteAllLocalCharacters() =
         characterDao.deleteAllLocalCharacters()
 
-    override suspend fun insertLocalFavoriteCharacter(favoriteCharacter: CharacterResult) =
-        characterDao.insertLocalFavoriteCharacter(favoriteCharacter.toFavoriteHeroEntity)
+    override suspend fun insertLocalFavoriteCharacter(favoriteCharacter: Character) =
+        characterDao.insertLocalFavoriteCharacter(favoriteCharacter.toFavoriteCharacterEntity)
 
-    override suspend fun deleteLocalFavoriteCharacter(favoriteCharacter: CharacterResult) =
-        characterDao.deleteLocalFavoriteCharacter(favoriteCharacter.toFavoriteHeroEntity)
+    override suspend fun deleteLocalFavoriteCharacter(favoriteCharacter: Character) =
+        characterDao.deleteLocalFavoriteCharacter(favoriteCharacter.toFavoriteCharacterEntity)
 
     override suspend fun isLocalCharacterFavorite(characterId: Int): Boolean =
         characterDao.isLocalCharacterFavorite(characterId) != null
 
-    override suspend fun insertLocalFavoriteComic(favoriteComic: ComicResult) =
+    override suspend fun insertLocalFavoriteComic(favoriteComic: Comic) =
         characterDao.insertLocalFavoriteComic(favoriteComic.toComicEntity)
 
-    override suspend fun deleteLocalFavoriteComic(favoriteComic: ComicResult) =
+    override suspend fun deleteLocalFavoriteComic(favoriteComic: Comic) =
         characterDao.deleteLocalFavoriteComic(favoriteComic.toComicEntity)
 
-    override fun getPagingSourceFromCharacterEntity(): PagingSource<Int, HeroEntity> =
+    override fun getPagingSourceFromCharacterEntity(): PagingSource<Int, CharacterEntity> =
         characterDao.getPagingSourceFromCharacterEntity()
 }

@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.architectcoders.arquitectomarvel.databinding.ComicItemBinding
-import com.architectcoders.domain.comics.Comic as ComicResult
+import com.architectcoders.domain.comic.Comic
 
-class ComicAdapter : ListAdapter<ComicResult, ComicViewHolder>(DiffUtilCallback) {
+class ComicAdapter : ListAdapter<Comic, ComicViewHolder>(DiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ComicViewHolder {
         val binding =
@@ -21,10 +21,10 @@ class ComicAdapter : ListAdapter<ComicResult, ComicViewHolder>(DiffUtilCallback)
     }
 }
 
-private object DiffUtilCallback : DiffUtil.ItemCallback<ComicResult>() {
-    override fun areItemsTheSame(oldItem: ComicResult, newItem: ComicResult): Boolean =
+private object DiffUtilCallback : DiffUtil.ItemCallback<Comic>() {
+    override fun areItemsTheSame(oldItem: Comic, newItem: Comic): Boolean =
         oldItem.resourceURI == newItem.resourceURI
 
-    override fun areContentsTheSame(oldItem: ComicResult, newItem: ComicResult): Boolean =
+    override fun areContentsTheSame(oldItem: Comic, newItem: Comic): Boolean =
         oldItem == newItem
 }

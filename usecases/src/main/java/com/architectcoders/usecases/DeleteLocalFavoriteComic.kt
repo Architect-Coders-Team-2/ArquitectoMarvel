@@ -1,7 +1,7 @@
 package com.architectcoders.usecases
 
 import com.architectcoders.data.repository.MarvelRepository
-import com.architectcoders.domain.comics.Comic as ComicResult
+import com.architectcoders.domain.comic.Comic as ComicResult
 
 class DeleteLocalFavoriteComic(private val marvelRepository: MarvelRepository) :
     InvokeUseCase<ComicResult, Unit> {

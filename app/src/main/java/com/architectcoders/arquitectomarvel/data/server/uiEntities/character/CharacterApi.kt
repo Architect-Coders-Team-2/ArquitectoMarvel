@@ -1,13 +1,13 @@
-package com.architectcoders.arquitectomarvel.data.server.uiEntities.heros
+package com.architectcoders.arquitectomarvel.data.server.uiEntities.character
 
-import com.architectcoders.arquitectomarvel.data.server.uiEntities.MarvelThumbnailMs
+import com.architectcoders.arquitectomarvel.data.server.uiEntities.ThumbnailApi
 import com.architectcoders.arquitectomarvel.data.server.uiEntities.toLocalThumbnail
-import com.architectcoders.domain.heros.Hero
+import com.architectcoders.domain.character.Character
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class HerosMs(
+data class CharacterApi(
     @Json(name = "id")
     val id: Int = -1,
     @Json(name = "name")
@@ -15,22 +15,22 @@ data class HerosMs(
     @Json(name = "description")
     val description: String? = null,
     @Json(name = "thumbnail")
-    val thumbnailMs: MarvelThumbnailMs? = null,
+    val thumbnailApi: ThumbnailApi? = null,
     @Json(name = "resourceURI")
     val resourceURI: String? = null,
     @Json(name = "comics")
-    val comicsMs: HerosComicsMs = HerosComicsMs()
+    val comicsMs: CharacterComicApi = CharacterComicApi()
 )
 
-val List<HerosMs>.toLocalListHero: List<Hero>
-    get() = map { it.toLocalMarvelHero }
+val List<CharacterApi>.toLocalListCharacters: List<Character>
+    get() = map { it.toLocalMarvelCharacter }
 
-val HerosMs.toLocalMarvelHero: Hero
-    get() = Hero(
+val CharacterApi.toLocalMarvelCharacter: Character
+    get() = Character(
         id,
         name,
         description,
-        thumbnailMs?.toLocalThumbnail,
+        thumbnailApi?.toLocalThumbnail,
         comicsMs.collectionURI,
         comicsMs.available != null,
         null,

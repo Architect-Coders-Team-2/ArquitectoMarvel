@@ -4,7 +4,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import com.architectcoders.arquitectomarvel.data.database.HeroEntity
+import com.architectcoders.arquitectomarvel.data.database.CharacterEntity
 import com.architectcoders.arquitectomarvel.ui.common.EMPTY_RESPONSE
 import com.architectcoders.arquitectomarvel.ui.common.REQUEST_LIMIT
 import com.architectcoders.usecases.*
@@ -19,7 +19,7 @@ class CharacterRemoteMediator(
     private val insertAllLocalCharacters: InsertAllLocalCharacters,
     private val getLastTimeStampFromCharacterEntity: GetLastTimeStampFromCharacterEntity,
     private val getLocalCharactersCount: GetLocalCharactersCount
-) : RemoteMediator<Int, HeroEntity>() {
+) : RemoteMediator<Int, CharacterEntity>() {
 
     override suspend fun initialize(): InitializeAction {
         val cacheTimeOut = TimeUnit.DAYS.toMillis(1)
@@ -33,7 +33,7 @@ class CharacterRemoteMediator(
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, HeroEntity>
+        state: PagingState<Int, CharacterEntity>
     ): MediatorResult {
         return try {
 
@@ -43,9 +43,9 @@ class CharacterRemoteMediator(
                 LoadType.APPEND -> state.lastItemOrNull()?.pageNumber?.plus(1) ?: 0
             }
             val response = getRemoteCharacters.invoke(nextPageNumber * REQUEST_LIMIT)
-            val characterList = response.characterDataHeros?.heroes
+            val characterList = response.characterDataCharacters?.characters
             if (characterList.isNullOrEmpty()) {
-                if (response.characterDataHeros?.total == getLocalCharactersCount.invoke(Unit)) {
+                if (response.characterDataCharacters?.total == getLocalCharactersCount.invoke(Unit)) {
                     MediatorResult.Success(endOfPaginationReached = true)
                 } else {
                     MediatorResult.Error(Exception(EMPTY_RESPONSE))

@@ -3,10 +3,10 @@ package com.architectcoders.arquitectomarvel.data.database
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.architectcoders.domain.Thumbnail
-import com.architectcoders.domain.heros.Hero
+import com.architectcoders.domain.character.Character
 
 @Entity
-data class HeroEntity(
+data class FavoriteCharacterEntity(
     @PrimaryKey
     val id: Int,
     val name: String?,
@@ -14,30 +14,28 @@ data class HeroEntity(
     val thumbnail: String?,
     val comicCollectionUri: String?,
     val comicListAvailable: Int?,
-    val pageNumber: Int?,
     val insertDate: Long?
 )
 
-val List<Hero>.toHeroEntityList: List<HeroEntity>
-    get() = map { it.toHeroEntity }
+val List<Character>.toFavoriteCharacterEntityList: List<FavoriteCharacterEntity>
+    get() = map { it.toFavoriteCharacterEntity }
 
-val Hero.toHeroEntity: HeroEntity
-    get() = HeroEntity(
+val Character.toFavoriteCharacterEntity: FavoriteCharacterEntity
+    get() = FavoriteCharacterEntity(
         id = id,
         name = name,
         description = description,
         thumbnail = "${thumbnail?.path}.${thumbnail?.extension}",
         comicCollectionUri = comicCollectionUri,
         comicListAvailable = if (comicListAvailable) 1 else 0,
-        pageNumber = pageNumber,
         insertDate = System.currentTimeMillis()
     )
 
-val List<HeroEntity>.toDomainCharacterList: List<Hero>
+val List<FavoriteCharacterEntity>.toDomainCharacterList: List<Character>
     get() = map { it.toDomainCharacter }
 
-val HeroEntity.toDomainCharacter: Hero
-    get() = Hero(
+val FavoriteCharacterEntity.toDomainCharacter: Character
+    get() = Character(
         id = id,
         name = name,
         description = description,
@@ -49,6 +47,6 @@ val HeroEntity.toDomainCharacter: Hero
         },
         comicCollectionUri = comicCollectionUri,
         comicListAvailable = comicListAvailable != null,
-        pageNumber = pageNumber,
+        pageNumber = null,
         insertDate = insertDate
     )

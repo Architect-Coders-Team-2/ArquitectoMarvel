@@ -1,7 +1,7 @@
 package com.architectcoders.usecases
 
 import com.architectcoders.data.repository.MarvelRepository
-import com.architectcoders.domain.comics.ComicsPayload
+import com.architectcoders.domain.comic.ComicsPayload
 
 class GetRemoteComicsFromCharacterId(private val marvelRepository: MarvelRepository) :
     InvokeUseCase<Int, ComicsPayload> {

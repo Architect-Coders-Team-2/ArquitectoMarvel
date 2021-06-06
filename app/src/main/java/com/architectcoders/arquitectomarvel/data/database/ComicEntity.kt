@@ -3,7 +3,7 @@ package com.architectcoders.arquitectomarvel.data.database
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.architectcoders.domain.Thumbnail
-import com.architectcoders.domain.comics.Comic
+import com.architectcoders.domain.comic.Comic
 
 @Entity
 data class ComicEntity(

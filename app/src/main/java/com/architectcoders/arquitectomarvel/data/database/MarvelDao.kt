@@ -6,36 +6,36 @@ import androidx.room.*
 @Dao
 interface MarvelDao {
 
-    @Query("SELECT * FROM heroentity ORDER BY name")
-    fun getPagingSourceFromCharacterEntity(): PagingSource<Int, HeroEntity>
+    @Query("SELECT * FROM characterentity ORDER BY name")
+    fun getPagingSourceFromCharacterEntity(): PagingSource<Int, CharacterEntity>
 
-    @Query("SELECT * FROM heroentity WHERE id = :characterId")
-    suspend fun getLocalCharacterById(characterId: Int): HeroEntity
+    @Query("SELECT * FROM characterentity WHERE id = :characterId")
+    suspend fun getLocalCharacterById(characterId: Int): CharacterEntity
 
-    @Query("SELECT insertDate FROM heroentity LIMIT 1")
+    @Query("SELECT insertDate FROM characterentity LIMIT 1")
     suspend fun getLastTimeStampFromCharacterEntity(): Long?
 
-    @Query("SELECT COUNT(id) FROM heroentity")
+    @Query("SELECT COUNT(id) FROM characterentity")
     suspend fun getLocalCharactersCount(): Int?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAllLocalCharacters(heroList: List<HeroEntity>)
+    suspend fun insertAllLocalCharacters(characterList: List<CharacterEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertLocalFavoriteCharacter(favoriteHeroEntity: FavoriteHeroEntity)
+    suspend fun insertLocalFavoriteCharacter(favoriteCharacterEntity: FavoriteCharacterEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLocalFavoriteComic(comicEntity: ComicEntity)
 
     @Delete
-    suspend fun deleteLocalFavoriteCharacter(favoriteHeroEntity: FavoriteHeroEntity)
+    suspend fun deleteLocalFavoriteCharacter(favoriteCharacterEntity: FavoriteCharacterEntity)
 
     @Delete
     suspend fun deleteLocalFavoriteComic(comicEntity: ComicEntity)
 
-    @Query("SELECT id FROM favoriteheroentity WHERE id = :id")
+    @Query("SELECT id FROM favoritecharacterentity WHERE id = :id")
     suspend fun isLocalCharacterFavorite(id: Int): Int?
 
-    @Query("DELETE FROM heroentity")
+    @Query("DELETE FROM characterentity")
     suspend fun deleteAllLocalCharacters()
 }

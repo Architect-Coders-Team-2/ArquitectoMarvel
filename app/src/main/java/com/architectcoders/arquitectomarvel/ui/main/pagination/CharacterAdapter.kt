@@ -5,19 +5,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import com.architectcoders.arquitectomarvel.data.database.HeroEntity
+import com.architectcoders.arquitectomarvel.data.database.CharacterEntity
 import com.architectcoders.arquitectomarvel.data.database.toDomainCharacter
 import com.architectcoders.arquitectomarvel.databinding.CharacterItemBinding
-import com.architectcoders.domain.heros.Hero
+import com.architectcoders.domain.character.Character
 
-class CharacterAdapter(private val listener: (Hero, View) -> Unit) :
-    PagingDataAdapter<HeroEntity, CharacterViewHolder>(DiffCallback) {
+class CharacterAdapter(private val listener: (Character, View) -> Unit) :
+    PagingDataAdapter<CharacterEntity, CharacterViewHolder>(DiffCallback) {
 
-    companion object DiffCallback : DiffUtil.ItemCallback<HeroEntity>() {
-        override fun areItemsTheSame(oldItem: HeroEntity, newItem: HeroEntity) =
+    companion object DiffCallback : DiffUtil.ItemCallback<CharacterEntity>() {
+        override fun areItemsTheSame(oldItem: CharacterEntity, newItem: CharacterEntity) =
             oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: HeroEntity, newItem: HeroEntity) =
+        override fun areContentsTheSame(oldItem: CharacterEntity, newItem: CharacterEntity) =
             oldItem == newItem
     }
 

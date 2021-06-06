@@ -5,15 +5,15 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class ComicImageMs(
+data class ComicImageApi(
     @Json(name = "path")
     val path: String?,
     @Json(name = "extension")
     val extension: String?
 )
 
-val List<ComicImageMs>.toLocalListImage: List<Thumbnail>
+val List<ComicImageApi>.toLocalListImage: List<Thumbnail>
     get() = map { it.toLocalImage }
 
-val ComicImageMs.toLocalImage: Thumbnail
+val ComicImageApi.toLocalImage: Thumbnail
     get() = Thumbnail(path, extension)

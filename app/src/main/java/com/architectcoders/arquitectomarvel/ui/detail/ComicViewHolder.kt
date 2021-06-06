@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ComicItemBinding
 import com.architectcoders.arquitectomarvel.ui.common.loadUrl
-import com.architectcoders.domain.comics.Comic
+import com.architectcoders.domain.comic.Comic
 
 class ComicViewHolder(private val binding: ComicItemBinding) :
     RecyclerView.ViewHolder(binding.root) {

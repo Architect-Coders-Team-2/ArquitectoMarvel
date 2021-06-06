@@ -3,7 +3,7 @@ package com.architectcoders.arquitectomarvel.ui.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
-import com.architectcoders.arquitectomarvel.data.database.HeroEntity
+import com.architectcoders.arquitectomarvel.data.database.CharacterEntity
 import com.architectcoders.arquitectomarvel.ui.common.REQUEST_LIMIT
 import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterRemoteMediator
 import com.architectcoders.usecases.*
@@ -28,6 +28,6 @@ class MainViewModel(
             getLocalCharactersCount
         )
     ) {
-        getPagingSourceFromCharacterEntity.invoke() as PagingSource<Int, HeroEntity>
+        getPagingSourceFromCharacterEntity.invoke() as PagingSource<Int, CharacterEntity>
     }.flow.cachedIn(viewModelScope)
 }

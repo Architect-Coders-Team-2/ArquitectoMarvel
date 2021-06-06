@@ -1,40 +1,40 @@
 package com.architectcoders.arquitectomarvel.data.server.uiEntities.comics
 
-import com.architectcoders.arquitectomarvel.data.server.uiEntities.MarvelThumbnailMs
+import com.architectcoders.arquitectomarvel.data.server.uiEntities.ThumbnailApi
 import com.architectcoders.arquitectomarvel.data.server.uiEntities.toLocalThumbnail
-import com.architectcoders.domain.comics.Comic
+import com.architectcoders.domain.comic.Comic
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class ComicMs(
+data class ComicApi(
     @Json(name = "description")
     val description: String?,
     @Json(name = "id")
     val id: Int?,
     @Json(name = "images")
-    val imageMs: List<ComicImageMs>?,
+    val comicImageApi: List<ComicImageApi>?,
     @Json(name = "pageCount")
     val pageCount: Int?,
     @Json(name = "resourceURI")
     val resourceURI: String?,
     @Json(name = "thumbnail")
-    val thumbnailMs: MarvelThumbnailMs?,
+    val thumbnailApi: ThumbnailApi?,
     @Json(name = "title")
     val title: String?
 )
 
-val List<ComicMs>.toLocalListComic: List<Comic>
+val List<ComicApi>.toLocalListComic: List<Comic>
     get() = map { it.toLocalMarvelComic }
 
-val ComicMs.toLocalMarvelComic: Comic
+val ComicApi.toLocalMarvelComic: Comic
     get() = Comic(
         description,
         id,
-        imageMs?.toLocalListImage,
+        comicImageApi?.toLocalListImage,
         pageCount,
         resourceURI,
-        thumbnailMs?.toLocalThumbnail,
+        thumbnailApi?.toLocalThumbnail,
         title,
         null
     )

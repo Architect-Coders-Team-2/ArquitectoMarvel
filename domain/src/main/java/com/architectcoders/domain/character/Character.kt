@@ -1,8 +1,8 @@
-package com.architectcoders.domain.heros
+package com.architectcoders.domain.character
 
 import com.architectcoders.domain.Thumbnail
 
-data class Hero(
+data class Character(
     val id: Int,
     val name: String?,
     val description: String?,

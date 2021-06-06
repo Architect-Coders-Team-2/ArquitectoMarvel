@@ -1,11 +1,11 @@
-package com.architectcoders.arquitectomarvel.data.server.uiEntities.heros
+package com.architectcoders.arquitectomarvel.data.server.uiEntities.comics
 
-import com.architectcoders.domain.heros.DataHeros
+import com.architectcoders.domain.comic.DataComics
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class HerosData(
+data class ComicsDataApi(
     @Json(name = "offset")
     val offset: Int?,
     @Json(name = "limit")
@@ -15,10 +15,10 @@ data class HerosData(
     @Json(name = "count")
     val count: Int?,
     @Json(name = "results")
-    val results: List<HerosMs>?
+    val results: List<ComicApi>?
 )
 
-val HerosData.toLocalDataHeros: DataHeros
-    get() = DataHeros(
-        offset, limit, total, count, results?.toLocalListHero
+val ComicsDataApi.toDomainDataComics: DataComics
+    get() = DataComics(
+        count, limit, offset, results?.toLocalListComic, total
     )
