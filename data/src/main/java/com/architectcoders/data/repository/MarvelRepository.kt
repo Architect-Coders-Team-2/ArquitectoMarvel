@@ -45,9 +45,8 @@ class MarvelRepository(
 
     suspend fun fetchComicsForHero(map: Map<String, Any>) =
         localDataSource.fetchComicsForHero(map)
-    
 
     fun getComicsForHero(idHero: Int): Any =
-        return localDataSource.getComicsForHero(idHero)
+        localDataSource.getComicsForHero(idHero)
     
 }
