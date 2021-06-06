@@ -31,7 +31,7 @@ class CharacterAdapter(private val listener: (Character, View) -> Unit) :
         getItem(position)?.let { characterEntity ->
             holder.bind(characterEntity.toDomainCharacter)
             holder.itemView.setOnClickListener {
-                listener(characterEntity.toDomainCharacter, holder.imageViewHero)
+                listener(characterEntity.toDomainCharacter, holder.imageCharacter)
             }
         }
     }

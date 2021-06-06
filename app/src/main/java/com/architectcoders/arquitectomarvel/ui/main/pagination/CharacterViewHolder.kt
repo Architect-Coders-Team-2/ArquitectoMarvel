@@ -8,6 +8,8 @@ import com.architectcoders.domain.character.Character
 class CharacterViewHolder(private val binding: CharacterItemBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
+    val imageCharacter = binding.heroImage
+
     fun bind(character: Character) {
         binding.heroText.text = character.name
         binding.heroImage.loadUrl(
