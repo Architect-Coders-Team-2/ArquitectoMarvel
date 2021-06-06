@@ -1,7 +1,7 @@
 package com.architectcoders.usecases
 
 import com.architectcoders.data.repository.MarvelRepository
-import com.architectcoders.domain.characters.Result as CharacterResult
+import com.architectcoders.domain.character.Character as CharacterResult
 
 class InsertLocalFavoriteCharacter(private val marvelRepository: MarvelRepository) :
     InvokeUseCase<CharacterResult, Unit> {

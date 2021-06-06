@@ -5,12 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.architectcoders.arquitectomarvel.R
+import com.architectcoders.domain.character.Character
+import com.architectcoders.domain.comic.Comic
 import com.architectcoders.usecases.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.net.UnknownHostException
-import com.architectcoders.domain.characters.Result as CharacterResult
-import com.architectcoders.domain.comics.Result as ComicResult
 
 class CharacterDetailViewModel(
     private val characterId: Int,
@@ -32,18 +32,18 @@ class CharacterDetailViewModel(
 
     sealed class UiModel {
         object Loading : UiModel()
-        class SetCharacterDetails(val character: CharacterResult) : UiModel()
+        class SetCharacterDetails(val character: Character) : UiModel()
         class UpdateFAB(
             val isCharacterFavorite: Boolean,
             val listener: (
-                selectedHero: CharacterResult,
-                comicList: MutableList<ComicResult>,
+                selectedHero: Character,
+                comicList: MutableList<Comic>,
                 isCharacterFavorite: Boolean,
             ) -> Unit,
         ) : UiModel()
 
         class ShowToast(val msgResource: Int) : UiModel()
-        class UpdateComics(val comicList: List<ComicResult>) : UiModel()
+        class UpdateComics(val comicList: List<Comic>) : UiModel()
     }
 
     private fun refresh() {
@@ -77,13 +77,13 @@ class CharacterDetailViewModel(
 
     private suspend fun getComicsFromCharacterId(characterId: Int) {
         val comic = getRemoteComicsFromCharacterId.invoke(characterId)
-        val comicList = comic?.comicData?.results ?: emptyList()
+        val comicList = comic?.comicDataComics?.comics ?: emptyList()
         _model.value = UiModel.UpdateComics(comicList)
     }
 
     private fun onFabClick(
-        selectedHero: CharacterResult,
-        comicList: MutableList<ComicResult>,
+        selectedHero: Character,
+        comicList: MutableList<Comic>,
         isCharacterFavorite: Boolean,
     ) {
         viewModelScope.launch {
