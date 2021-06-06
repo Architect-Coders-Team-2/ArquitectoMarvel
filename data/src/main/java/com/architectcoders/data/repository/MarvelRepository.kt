@@ -43,11 +43,11 @@ class MarvelRepository(
     fun getPagingSourceFromCharacterEntity(): Any? =
         localDataSource.getPagingSourceFromCharacterEntity()
 
-    suspend fun fetchComicsForHero(map: Map<String, Any>) {
+    suspend fun fetchComicsForHero(map: Map<String, Any>) =
         localDataSource.fetchComicsForHero(map)
-    }
+    
 
-    fun getComicsForHero(idHero: Int): Any {
+    fun getComicsForHero(idHero: Int): Any =
         return localDataSource.getComicsForHero(idHero)
-    }
+    
 }
