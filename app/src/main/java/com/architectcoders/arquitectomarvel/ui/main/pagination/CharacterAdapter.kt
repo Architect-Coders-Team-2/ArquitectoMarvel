@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.DiffUtil
 import com.architectcoders.arquitectomarvel.data.database.CharacterEntity
 import com.architectcoders.arquitectomarvel.data.database.toDomainCharacter
 import com.architectcoders.arquitectomarvel.databinding.CharacterItemBinding
-import com.architectcoders.domain.characters.Result
+import com.architectcoders.domain.character.Character
 
-class CharacterAdapter(private val listener: (Result, View) -> Unit) :
+class CharacterAdapter(private val listener: (Character, View) -> Unit) :
     PagingDataAdapter<CharacterEntity, CharacterViewHolder>(DiffCallback) {
 
     companion object DiffCallback : DiffUtil.ItemCallback<CharacterEntity>() {
@@ -31,7 +31,7 @@ class CharacterAdapter(private val listener: (Result, View) -> Unit) :
         getItem(position)?.let { characterEntity ->
             holder.bind(characterEntity.toDomainCharacter)
             holder.itemView.setOnClickListener {
-                listener(characterEntity.toDomainCharacter, it)
+                listener(characterEntity.toDomainCharacter, holder.imageCharacter)
             }
         }
     }

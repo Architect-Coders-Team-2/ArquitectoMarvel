@@ -11,15 +11,15 @@ import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityCharacterDetailBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel.UiModel
+import com.architectcoders.domain.character.Character
+import com.architectcoders.domain.comic.Comic
 import com.architectcoders.usecases.*
-import com.architectcoders.domain.characters.Result as CharacterResult
-import com.architectcoders.domain.comics.Result as ComicResult
 
 class CharacterDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCharacterDetailBinding
     private val adapter by lazy { ComicAdapter() }
-    private var selectedCharacter: CharacterResult? = null
+    private var selectedCharacter: Character? = null
     private var isCharacterFavorite = false
     private val networkRepository by lazy {
         ServiceLocator.provideNetworkRepository(
@@ -72,7 +72,7 @@ class CharacterDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun setCharacterDetails(character: CharacterResult) {
+    private fun setCharacterDetails(character: Character) {
         this.selectedCharacter = character
         binding.headerHeroImage.loadUrl(
             character.thumbnail?.path,
@@ -91,8 +91,8 @@ class CharacterDetailActivity : AppCompatActivity() {
     private fun updateFAB(
         isCharacterFavorite: Boolean,
         listener: (
-            selectedHero: CharacterResult,
-            comicList: MutableList<ComicResult>,
+            selectedHero: Character,
+            comicList: MutableList<Comic>,
             isCharacterFavorite: Boolean,
         ) -> Unit
     ) {
@@ -102,8 +102,8 @@ class CharacterDetailActivity : AppCompatActivity() {
 
     private fun listenToFab(
         listener: (
-            selectedHero: CharacterResult,
-            comicList: MutableList<ComicResult>,
+            selectedHero: Character,
+            comicList: MutableList<Comic>,
             isCharacterFavorite: Boolean,
         ) -> Unit
     ) {
@@ -124,7 +124,7 @@ class CharacterDetailActivity : AppCompatActivity() {
         )
     }
 
-    private fun updateComics(comicList: List<ComicResult>) {
+    private fun updateComics(comicList: List<Comic>) {
         if (comicList.isEmpty()) {
             binding.contentHeroDetail.noComics.isVisible = true
         }

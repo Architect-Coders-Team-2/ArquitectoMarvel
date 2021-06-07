@@ -21,7 +21,7 @@ import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailActivity
 import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterAdapter
 import com.architectcoders.arquitectomarvel.ui.main.pagination.LoadStateAdapter
-import com.architectcoders.domain.characters.Result
+import com.architectcoders.domain.character.Character
 import com.architectcoders.usecases.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -102,8 +102,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateTo(result: Result, view: View) {
-        Event(result).getContentIfNotHandled()?.let { resultValue ->
+    private fun navigateTo(character: Character, view: View) {
+        Event(character).getContentIfNotHandled()?.let { resultValue ->
             val options =
                 ActivityOptionsCompat.makeSceneTransitionAnimation(
                     this,

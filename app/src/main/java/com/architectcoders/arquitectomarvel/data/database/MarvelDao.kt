@@ -2,7 +2,6 @@ package com.architectcoders.arquitectomarvel.data.database
 
 import androidx.paging.PagingSource
 import androidx.room.*
-import com.architectcoders.arquitectomarvel.data.database.relations.CharacterWithComics
 
 @Dao
 interface MarvelDao {
@@ -19,10 +18,6 @@ interface MarvelDao {
     @Query("SELECT COUNT(id) FROM characterentity")
     suspend fun getLocalCharactersCount(): Int?
 
-    @Transaction
-    @Query("SELECT * FROM characterentity WHERE comicCollectionUri = :comicCollectionUri")
-    suspend fun getLocalCharacterWithComics(comicCollectionUri: String): List<CharacterWithComics>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllLocalCharacters(characterList: List<CharacterEntity>)
 
@@ -30,13 +25,13 @@ interface MarvelDao {
     suspend fun insertLocalFavoriteCharacter(favoriteCharacterEntity: FavoriteCharacterEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertLocalFavoriteComic(favoriteComicEntity: FavoriteComicEntity)
+    suspend fun insertLocalFavoriteComic(comicEntity: ComicEntity)
 
     @Delete
     suspend fun deleteLocalFavoriteCharacter(favoriteCharacterEntity: FavoriteCharacterEntity)
 
     @Delete
-    suspend fun deleteLocalFavoriteComic(favoriteComicEntity: FavoriteComicEntity)
+    suspend fun deleteLocalFavoriteComic(comicEntity: ComicEntity)
 
     @Query("SELECT id FROM favoritecharacterentity WHERE id = :id")
     suspend fun isLocalCharacterFavorite(id: Int): Int?

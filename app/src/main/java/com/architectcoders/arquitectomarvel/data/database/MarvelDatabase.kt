@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase
     entities = [
         CharacterEntity::class,
         FavoriteCharacterEntity::class,
-        FavoriteComicEntity::class
+        ComicEntity::class
     ],
     version = 1
 )

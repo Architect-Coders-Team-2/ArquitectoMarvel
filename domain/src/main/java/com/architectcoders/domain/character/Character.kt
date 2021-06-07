@@ -1,11 +1,12 @@
-package com.architectcoders.domain.characters
+package com.architectcoders.domain.character
 
-data class Result(
+import com.architectcoders.domain.Thumbnail
+
+data class Character(
     val id: Int,
     val name: String?,
     val description: String?,
     val thumbnail: Thumbnail?,
-    val resourceURI: String?,
     val comicCollectionUri: String?,
     val comicListAvailable: Boolean,
     var pageNumber: Int?,
