@@ -90,6 +90,9 @@ class MainActivity : AppCompatActivity() {
         }
         characterAdapter.addLoadStateListener {
             binding.progress.isVisible = it.refresh is LoadState.Loading
+            if (it.mediator?.refresh is LoadState.Error) {
+                footerAdapter.loadState = it.refresh
+            }
         }
     }
 
