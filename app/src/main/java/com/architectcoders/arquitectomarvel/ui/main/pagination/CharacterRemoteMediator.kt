@@ -21,6 +21,8 @@ class CharacterRemoteMediator(
     private val getLocalCharactersCount: GetLocalCharactersCount
 ) : RemoteMediator<Int, CharacterEntity>() {
 
+    private lateinit var lastMediatorResult: MediatorResult
+
     override suspend fun initialize(): InitializeAction {
         val cacheTimeOut = TimeUnit.DAYS.toMillis(1)
         val lastTimeStamp = getLastTimeStampFromCharacterEntity.invoke(Unit) ?: -1L
@@ -35,14 +37,19 @@ class CharacterRemoteMediator(
         loadType: LoadType,
         state: PagingState<Int, CharacterEntity>
     ): MediatorResult {
-        return try {
-
+        lastMediatorResult = try {
             val nextPageNumber = when (loadType) {
-                LoadType.REFRESH -> 0
+                LoadType.REFRESH -> {
+                    if (::lastMediatorResult.isInitialized && lastMediatorResult is MediatorResult.Error) {
+                        state.lastItemOrNull()?.pageNumber?.plus(1) ?: 0
+                    } else {
+                        0
+                    }
+                }
                 LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
                 LoadType.APPEND -> state.lastItemOrNull()?.pageNumber?.plus(1) ?: 0
             }
-            val response = getRemoteCharacters.invoke(nextPageNumber * REQUEST_LIMIT)
+            val response = getRemoteCharacters.invoke(nextPageNumber.times(REQUEST_LIMIT))
             val characterList = response.characterData?.characters
             if (characterList.isNullOrEmpty()) {
                 if (response.characterData?.total == getLocalCharactersCount.invoke(Unit)) {
@@ -51,7 +58,7 @@ class CharacterRemoteMediator(
                     MediatorResult.Error(Exception(EMPTY_RESPONSE))
                 }
             } else {
-                if (loadType == LoadType.REFRESH) {
+                if (loadType == LoadType.REFRESH && nextPageNumber == 0) {
                     deleteAllLocalCharacters.invoke(Unit)
                 }
                 characterList.map { it.pageNumber = nextPageNumber }
@@ -63,5 +70,6 @@ class CharacterRemoteMediator(
         } catch (e: HttpException) {
             MediatorResult.Error(e)
         }
+        return lastMediatorResult
     }
 }
