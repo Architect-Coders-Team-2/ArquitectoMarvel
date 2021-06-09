@@ -5,15 +5,19 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityCharacterDetailBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
-import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel.UiModel
+import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel.UiModelCharacter
+import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel.UiModelComic
 import com.architectcoders.domain.character.Character
 import com.architectcoders.domain.comic.Comic
 import com.architectcoders.usecases.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.shareIn
 
 class CharacterDetailActivity : AppCompatActivity() {
 
@@ -49,7 +53,7 @@ class CharacterDetailActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.contentHeroDetail.comicList.adapter = adapter
-        characterDetailViewModel.model.observe(this, Observer(::updateUi))
+        updateUi()
     }
 
     override fun onStart() {
@@ -63,12 +67,34 @@ class CharacterDetailActivity : AppCompatActivity() {
         binding.contentHeroDetail.offlineStatus.isVisible = !internetAvailable
     }
 
-    private fun updateUi(model: UiModel) {
-        binding.contentHeroDetail.progress.isVisible = model is UiModel.Loading
-        when (model) {
-            is UiModel.SetCharacterDetails -> setCharacterDetails(model.character)
-            is UiModel.UpdateFAB -> updateFAB(model.isCharacterFavorite, model.listener)
-            is UiModel.UpdateComics -> updateComics(model.comicList)
+    private fun updateUi() {
+        lifecycleScope.launchWhenStarted {
+            characterDetailViewModel.uiModelCharacter.collect {
+                updateCharacter(it)
+            }
+        }
+        lifecycleScope.launchWhenStarted {
+            characterDetailViewModel.uiModelComic.collect {
+                updateComic(it)
+            }
+        }
+    }
+
+    private fun updateCharacter(uiModelCharacter: UiModelCharacter) {
+        binding.contentHeroDetail.progress.isVisible = uiModelCharacter is UiModelCharacter.Loading
+        if (uiModelCharacter is UiModelCharacter.SetUiDetailsCharacter) {
+            setCharacterDetails(uiModelCharacter.character)
+            updateFAB(
+                uiModelCharacter.isCharacterFavorite,
+                uiModelCharacter.listener
+            )
+        }
+    }
+
+    private fun updateComic(uiModelComic: UiModelComic) {
+        binding.contentHeroDetail.progress.isVisible = uiModelComic is UiModelComic.Loading
+        if (uiModelComic is UiModelComic.UpdateComics) {
+            updateComics(uiModelComic.comicList)
         }
     }
 
@@ -89,14 +115,19 @@ class CharacterDetailActivity : AppCompatActivity() {
     }
 
     private fun updateFAB(
-        isCharacterFavorite: Boolean,
+        isCharacterFavorite: Flow<Int>,
         listener: (
             selectedHero: Character,
             comicList: MutableList<Comic>,
             isCharacterFavorite: Boolean,
         ) -> Unit
     ) {
-        setCharacterFavorite(isCharacterFavorite)
+        lifecycleScope.launchWhenStarted {
+            isCharacterFavorite.shareIn(lifecycleScope, SharingStarted.WhileSubscribed(), 1)
+                .collect {
+                    setCharacterFavorite(it > 0)
+                }
+        }
         listenToFab(listener)
     }
 
