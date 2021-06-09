@@ -20,7 +20,7 @@ class MarvelRepository(
     suspend fun getLocalCharacterById(characterId: Int): Character =
         localDataSource.getLocalCharacterById(characterId)
 
-    suspend fun isLocalCharacterFavorite(characterId: Int): Boolean =
+    fun isLocalCharacterFavorite(characterId: Int): Any =
         localDataSource.isLocalCharacterFavorite(characterId)
 
     suspend fun getRemoteComicsFromCharacterId(characterId: Int): ComicsPayload? =
