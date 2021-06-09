@@ -2,6 +2,8 @@ package com.architectcoders.arquitectomarvel.data.database
 
 import androidx.paging.PagingSource
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 @Dao
 interface MarvelDao {
@@ -33,8 +35,8 @@ interface MarvelDao {
     @Delete
     suspend fun deleteLocalFavoriteComic(comicEntity: ComicEntity)
 
-    @Query("SELECT id FROM favoritecharacterentity WHERE id = :id")
-    suspend fun isLocalCharacterFavorite(id: Int): Int?
+    @Query("SELECT COUNT(id) FROM favoritecharacterentity WHERE id = :id")
+    fun isLocalCharacterFavorite(id: Int): Flow<Int>
 
     @Query("DELETE FROM characterentity")
     suspend fun deleteAllLocalCharacters()

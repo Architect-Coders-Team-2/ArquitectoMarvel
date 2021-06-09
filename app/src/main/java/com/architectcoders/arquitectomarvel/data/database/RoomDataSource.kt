@@ -4,6 +4,8 @@ import androidx.paging.PagingSource
 import com.architectcoders.data.source.LocalDataSource
 import com.architectcoders.domain.character.Character
 import com.architectcoders.domain.comic.Comic
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 class RoomDataSource(db: MarvelDatabase) : LocalDataSource {
 
@@ -30,8 +32,8 @@ class RoomDataSource(db: MarvelDatabase) : LocalDataSource {
     override suspend fun deleteLocalFavoriteCharacter(favoriteCharacter: Character) =
         characterDao.deleteLocalFavoriteCharacter(favoriteCharacter.toFavoriteCharacterEntity)
 
-    override suspend fun isLocalCharacterFavorite(characterId: Int): Boolean =
-        characterDao.isLocalCharacterFavorite(characterId) != null
+    override fun isLocalCharacterFavorite(characterId: Int): Flow<Int> =
+        characterDao.isLocalCharacterFavorite(characterId)
 
     override suspend fun insertLocalFavoriteComic(favoriteComic: Comic) =
         characterDao.insertLocalFavoriteComic(favoriteComic.toComicEntity)
