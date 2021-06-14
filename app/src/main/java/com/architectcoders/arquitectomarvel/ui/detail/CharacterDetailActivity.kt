@@ -50,12 +50,12 @@ class CharacterDetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.contentHeroDetail.comicList.adapter = adapter
         characterDetailViewModel.model.observe(this, Observer(::updateUi))
+        manageNetworkManager()
     }
 
-    override fun onStart() {
-        super.onStart()
+    private fun manageNetworkManager() {
         lifecycleScope.launchWhenStarted {
-            RegisterNetworkManager(networkRepository).invoke(::shouldShowOfflineMessage)
+            ManageNetworkManager(networkRepository).invoke(lifecycle, ::shouldShowOfflineMessage)
         }
     }
 
@@ -137,10 +137,5 @@ class CharacterDetailActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        UnregisterNetworkManager(networkRepository).invoke()
     }
 }

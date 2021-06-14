@@ -60,13 +60,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setUpViews()
         collectLatestPager()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        lifecycleScope.launchWhenStarted {
-            RegisterNetworkManager(networkRepository).invoke(::shouldShowOfflineIcon)
-        }
+        manageNetworkManager()
     }
 
     private fun setUpViews() {
@@ -102,6 +96,12 @@ class MainActivity : AppCompatActivity() {
             viewModel.pager.collectLatest {
                 characterAdapter.submitData(lifecycle, it)
             }
+        }
+    }
+
+    private fun manageNetworkManager() {
+        lifecycleScope.launchWhenStarted {
+            ManageNetworkManager(networkRepository).invoke(lifecycle, ::shouldShowOfflineIcon)
         }
     }
 
@@ -144,10 +144,5 @@ class MainActivity : AppCompatActivity() {
             delay(200)
             menuItem?.isVisible = !internetAvailable
         }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        UnregisterNetworkManager(networkRepository).invoke()
     }
 }
