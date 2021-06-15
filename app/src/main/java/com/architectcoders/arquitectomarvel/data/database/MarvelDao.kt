@@ -16,7 +16,7 @@ interface MarvelDao {
     suspend fun getLastTimeStampFromCharacterEntity(): Long?
 
     @Query("SELECT COUNT(id) FROM characterentity")
-    suspend fun getLocalCharactersCount(): Int?
+    suspend fun getLocalCharactersCount(): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllLocalCharacters(characterList: List<CharacterEntity>)

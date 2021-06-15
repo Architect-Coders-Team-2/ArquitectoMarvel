@@ -16,7 +16,7 @@ class RoomDataSource(db: MarvelDatabase) : LocalDataSource {
         characterDao.getLastTimeStampFromCharacterEntity()
 
     override suspend fun getLocalCharactersCount(): Int =
-        characterDao.getLocalCharactersCount() ?: 0
+        characterDao.getLocalCharactersCount()
 
     override suspend fun insertAllLocalCharacters(characterList: List<Character>) =
         characterDao.insertAllLocalCharacters(characterList.toCharacterEntityList)
