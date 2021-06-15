@@ -11,7 +11,7 @@ const val EMPTY_TEXT = "--"
 const val SOCKET_NULL = "Socket is null"
 
 // EXTRA
-const val EXTRA_SELECTED_HERO = "extraSelectedHero"
+const val EXTRA_SELECTED_CHARACTER = "extraSelectedCharacter"
 
 // LIMIT OF CHARACTERS TO REQUEST
 const val REQUEST_LIMIT = 36

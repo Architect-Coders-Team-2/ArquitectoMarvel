@@ -5,9 +5,6 @@ import com.architectcoders.data.source.NetworkDataSource
 class NetworkRepository(
     private val networkDataSource: NetworkDataSource
 ) {
-    suspend fun registerNetworkManager(listener: (Boolean) -> Unit) =
-        networkDataSource.registerNetworkManager(listener)
-
-    fun unregisterNetworkManager() =
-        networkDataSource.unregisterNetworkManager()
+    suspend fun manageNetworkManager(lifecycle: Any, listener: (Boolean) -> Unit) =
+        networkDataSource.manageNetworkManager(lifecycle, listener)
 }

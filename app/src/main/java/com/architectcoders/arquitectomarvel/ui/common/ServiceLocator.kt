@@ -4,7 +4,7 @@ import android.content.Context
 import com.architectcoders.arquitectomarvel.data.database.MarvelDatabase
 import com.architectcoders.arquitectomarvel.data.database.RoomDataSource
 import com.architectcoders.arquitectomarvel.data.server.MarvelCredentialDataSource
-import com.architectcoders.arquitectomarvel.internetconnection.NetworkDataSourceImpl
+import com.architectcoders.arquitectomarvel.network.NetworkDataSourceImpl
 import com.architectcoders.data.repository.NetworkRepository
 import com.architectcoders.arquitectomarvel.data.server.RetrofitDataSource
 import com.architectcoders.data.repository.MarvelRepository

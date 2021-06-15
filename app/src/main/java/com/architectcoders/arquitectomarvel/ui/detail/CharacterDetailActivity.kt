@@ -34,7 +34,7 @@ class CharacterDetailActivity : AppCompatActivity() {
         getViewModel {
             val characterRepository = ServiceLocator.provideMarvelRepository(this)
             CharacterDetailViewModel(
-                intent.getIntExtra(EXTRA_SELECTED_HERO, 0),
+                intent.getIntExtra(EXTRA_SELECTED_CHARACTER, 0),
                 GetLocalCharacterById(characterRepository),
                 IsLocalCharacterFavorite(characterRepository),
                 GetRemoteComicsFromCharacterId(characterRepository),
@@ -52,19 +52,9 @@ class CharacterDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        binding.contentHeroDetail.comicList.adapter = adapter
+        binding.contentCharacterDetail.comicList.adapter = adapter
         updateUi()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        lifecycleScope.launchWhenStarted {
-            RegisterNetworkManager(networkRepository).invoke(::shouldShowOfflineMessage)
-        }
-    }
-
-    private fun shouldShowOfflineMessage(internetAvailable: Boolean) {
-        binding.contentHeroDetail.offlineStatus.isVisible = !internetAvailable
+        manageNetworkManager()
     }
 
     private fun updateUi() {
@@ -81,7 +71,7 @@ class CharacterDetailActivity : AppCompatActivity() {
     }
 
     private fun updateCharacter(uiModelCharacter: UiModelCharacter) {
-        binding.contentHeroDetail.progress.isVisible = uiModelCharacter is UiModelCharacter.Loading
+        binding.contentCharacterDetail.progress.isVisible = uiModelCharacter is UiModelCharacter.Loading
         if (uiModelCharacter is UiModelCharacter.SetUiDetailsCharacter) {
             setCharacterDetails(uiModelCharacter.character)
             updateFAB(
@@ -92,7 +82,7 @@ class CharacterDetailActivity : AppCompatActivity() {
     }
 
     private fun updateComic(uiModelComic: UiModelComic) {
-        binding.contentHeroDetail.progress.isVisible = uiModelComic is UiModelComic.Loading
+        binding.contentCharacterDetail.progress.isVisible = uiModelComic is UiModelComic.Loading
         if (uiModelComic is UiModelComic.UpdateComics) {
             updateComics(uiModelComic.comicList)
         }
@@ -100,13 +90,13 @@ class CharacterDetailActivity : AppCompatActivity() {
 
     private fun setCharacterDetails(character: Character) {
         this.selectedCharacter = character
-        binding.headerHeroImage.loadUrl(
+        binding.headerCharacterImage.loadUrl(
             character.thumbnail?.path,
             character.thumbnail?.extension
         )
         binding.toolbar.title = character.name ?: EMPTY_TEXT
         binding.toolbarLayout.title = character.name ?: EMPTY_TEXT
-        binding.contentHeroDetail.heroContent.text =
+        binding.contentCharacterDetail.characterContent.text =
             if (character.description.isNullOrBlank()) {
                 getString(R.string.content_not_available)
             } else {
@@ -117,7 +107,7 @@ class CharacterDetailActivity : AppCompatActivity() {
     private fun updateFAB(
         isCharacterFavorite: Flow<Int>,
         listener: (
-            selectedHero: Character,
+            selectedCharacter: Character,
             comicList: MutableList<Comic>,
             isCharacterFavorite: Boolean,
         ) -> Unit
@@ -133,7 +123,7 @@ class CharacterDetailActivity : AppCompatActivity() {
 
     private fun listenToFab(
         listener: (
-            selectedHero: Character,
+            selectedCharacter: Character,
             comicList: MutableList<Comic>,
             isCharacterFavorite: Boolean,
         ) -> Unit
@@ -157,9 +147,19 @@ class CharacterDetailActivity : AppCompatActivity() {
 
     private fun updateComics(comicList: List<Comic>) {
         if (comicList.isEmpty()) {
-            binding.contentHeroDetail.noComics.isVisible = true
+            binding.contentCharacterDetail.noComics.isVisible = true
         }
         adapter.submitList(comicList)
+    }
+
+    private fun manageNetworkManager() {
+        lifecycleScope.launchWhenStarted {
+            ManageNetworkManager(networkRepository).invoke(lifecycle, ::shouldShowOfflineMessage)
+        }
+    }
+
+    private fun shouldShowOfflineMessage(internetAvailable: Boolean) {
+        binding.contentCharacterDetail.offlineStatus.isVisible = !internetAvailable
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -168,10 +168,5 @@ class CharacterDetailActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        UnregisterNetworkManager(networkRepository).invoke()
     }
 }

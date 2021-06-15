@@ -1,12 +1,13 @@
 package com.architectcoders.arquitectomarvel.ui.common
 
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkCapabilities
+import android.content.Context
+import android.net.*
 import android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET
 import android.net.NetworkCapabilities.NET_CAPABILITY_VALIDATED
-import android.net.NetworkRequest
 import android.os.Build
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,17 +20,32 @@ import java.net.InetSocketAddress
 import javax.net.SocketFactory
 
 class NetworkManager(
-    private val connectivityManager: ConnectivityManager,
-    private var networkCallback: ConnectivityManager.NetworkCallback?
-) {
+    context: Context,
+    lifecycle: Lifecycle
+) : LifecycleObserver {
+    private val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    private lateinit var networkCallback: ConnectivityManager.NetworkCallback
     private val validNetworks: MutableSet<Network> = HashSet()
     private val _isInternetAvailable = MutableStateFlow(false)
     val isInternetAvailable: StateFlow<Boolean> get() = _isInternetAvailable
 
     init {
+        lifecycle.addObserver(this)
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    private fun start() {
         networkCallback = createNetworkCallback()
         val networkRequest = NetworkRequest.Builder().addCapability(NET_CAPABILITY_INTERNET).build()
-        networkCallback?.let { connectivityManager.registerNetworkCallback(networkRequest, it) }
+        connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
+        _isInternetAvailable.value = false
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    private fun stop() {
+        validNetworks.clear()
+        connectivityManager.unregisterNetworkCallback(networkCallback)
     }
 
     private fun createNetworkCallback() = object : ConnectivityManager.NetworkCallback() {

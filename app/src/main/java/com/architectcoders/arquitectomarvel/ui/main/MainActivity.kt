@@ -60,22 +60,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setUpViews()
         collectLatestPager()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        lifecycleScope.launchWhenStarted {
-            RegisterNetworkManager(networkRepository).invoke(::shouldShowOfflineIcon)
-        }
+        manageNetworkManager()
     }
 
     private fun setUpViews() {
         val columns = calculateColumnsForGridLayout(resources.getDimension(R.dimen.avatar_width))
         val layoutManager = GridLayoutManager(this@MainActivity, columns)
         val footerAdapter = LoadStateAdapter(characterAdapter::retry)
-        binding.apply {
-            mainHeroList.layoutManager = layoutManager
-            mainHeroList.adapter = characterAdapter.withLoadStateFooter(footerAdapter)
+        binding.mainCharacterList.apply {
+            this.layoutManager = layoutManager
+            adapter = characterAdapter.withLoadStateFooter(footerAdapter)
         }
 
         // This helps to centre the ProgressBar by using the number of columns from the main list
@@ -105,16 +99,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun manageNetworkManager() {
+        lifecycleScope.launchWhenStarted {
+            ManageNetworkManager(networkRepository).invoke(lifecycle, ::shouldShowOfflineIcon)
+        }
+    }
+
     private fun navigateTo(character: Character, view: View) {
         Event(character).getContentIfNotHandled()?.let { resultValue ->
             val options =
                 ActivityOptionsCompat.makeSceneTransitionAnimation(
                     this,
                     view,
-                    getString(R.string.hero_image)
+                    getString(R.string.character_image)
                 )
             startActivity<CharacterDetailActivity>(options = options.toBundle()) {
-                putExtra(EXTRA_SELECTED_HERO, resultValue.id)
+                putExtra(EXTRA_SELECTED_CHARACTER, resultValue.id)
             }
         }
     }
@@ -144,10 +144,5 @@ class MainActivity : AppCompatActivity() {
             delay(200)
             menuItem?.isVisible = !internetAvailable
         }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        UnregisterNetworkManager(networkRepository).invoke()
     }
 }
