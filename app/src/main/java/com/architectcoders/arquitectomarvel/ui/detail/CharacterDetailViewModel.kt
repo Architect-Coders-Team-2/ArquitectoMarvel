@@ -1,21 +1,23 @@
 package com.architectcoders.arquitectomarvel.ui.detail
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.data.database.models.ComicEntity
 import com.architectcoders.arquitectomarvel.data.database.models.toComicResult
+import com.architectcoders.arquitectomarvel.ui.common.EXTRA_SELECTED_HERO
 import com.architectcoders.usecases.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.net.UnknownHostException
+import javax.inject.Inject
+import javax.inject.Named
 import com.architectcoders.domain.characters.Result as CharacterResult
 import com.architectcoders.domain.comics.Result as ComicResult
 
-class CharacterDetailViewModel(
-    private val id: Int,
+@HiltViewModel
+class CharacterDetailViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val getCharacterById: GetCharacterById,
     private val isCharacterFavorite: IsCharacterFavorite,
     private val getComicsFromCharacterId: GetComicsFromCharacterId,
@@ -49,6 +51,7 @@ class CharacterDetailViewModel(
     }
 
     private fun refresh() {
+        val id = savedStateHandle[EXTRA_SELECTED_HERO] ?: 0
          searchCharacterById(id)
     }
 

@@ -3,6 +3,7 @@ package com.architectcoders.arquitectomarvel.ui.detail
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -12,20 +13,20 @@ import com.architectcoders.arquitectomarvel.data.database.models.toComicEntityLi
 import com.architectcoders.arquitectomarvel.databinding.ActivityCharacterDetailBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel.UiModel
-import com.architectcoders.arquitectomarvel.ui.detail.di.CharacterDetailActivityComponent
 import com.architectcoders.arquitectomarvel.ui.detail.di.CharacterDetailActivityModule
 import com.architectcoders.usecases.*
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import com.architectcoders.domain.characters.Result as CharacterResult
 
+@AndroidEntryPoint
 class CharacterDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCharacterDetailBinding
-    private lateinit var component: CharacterDetailActivityComponent
-    private val viewModel by lazy { getViewModel { component.characterDetailViewModel } }
     private val adapter by lazy { ComicAdapter() }
     private var selectedCharacter: CharacterResult? = null
     private var isCharacterFavorite = false
+    private val viewModel: CharacterDetailViewModel by viewModels()
 
 
 
@@ -35,14 +36,10 @@ class CharacterDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        initComponent()
         binding.contentHeroDetail.comicList.adapter = adapter
         viewModel.model.observe(this, Observer(::updateUi))
     }
-   private fun initComponent(){
-       component = app.component.add(CharacterDetailActivityModule(intent.getIntExtra(EXTRA_SELECTED_HERO, -1)))
 
-   }
     private fun updateUi(model: UiModel) {
         binding.contentHeroDetail.progress.isVisible = model is UiModel.Loading
         when (model) {

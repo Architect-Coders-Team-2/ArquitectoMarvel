@@ -7,9 +7,11 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.architectcoders.arquitectomarvel.ui.main.pagination.ResultPagingSource
 import com.architectcoders.usecases.GetCharacters
-import com.architectcoders.usecases.IUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class MainViewModel(
+@HiltViewModel
+class MainViewModel @Inject constructor(
 private val getCharacters: GetCharacters
 ) : ViewModel() {
     val pager = Pager(

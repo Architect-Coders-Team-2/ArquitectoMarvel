@@ -2,6 +2,7 @@ package com.architectcoders.arquitectomarvel.ui.main
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.isVisible
@@ -14,19 +15,17 @@ import com.architectcoders.arquitectomarvel.data.*
 import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailActivity
-import com.architectcoders.arquitectomarvel.ui.main.di.MainActivityComponent
-import com.architectcoders.arquitectomarvel.ui.main.di.MainActivityModule
 import com.architectcoders.arquitectomarvel.ui.main.pagination.ResultLoadStateAdapter
 import com.architectcoders.domain.characters.Result
+import dagger.hilt.EntryPoint
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var component: MainActivityComponent
-    private  val viewModel: MainViewModel by lazy {
-        getViewModel { component.mainViewModel }
-    }
+    private val viewModel: MainViewModel by viewModels()
     private val characterAdapter: CharacterAdapter by lazy {
         CharacterAdapter(::navigateTo)
     }
@@ -35,14 +34,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initComponents()
         setUpViews()
         observersViewModel()
     }
 
-    private fun initComponents() {
-      component = app.component.add(MainActivityModule())
-    }
 
     private fun setUpViews() {
         val columns = calculateColumnsForGridLayout(resources.getDimension(R.dimen.avatar_width))

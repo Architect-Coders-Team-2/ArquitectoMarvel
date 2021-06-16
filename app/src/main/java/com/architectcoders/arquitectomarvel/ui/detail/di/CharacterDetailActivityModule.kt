@@ -1,35 +1,21 @@
 package com.architectcoders.arquitectomarvel.ui.detail.di
 
+import android.app.Activity
+import com.architectcoders.arquitectomarvel.ui.common.EXTRA_SELECTED_HERO
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel
 import com.architectcoders.data.repository.CharacterRepository
 import com.architectcoders.usecases.*
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.components.ViewModelComponent
+import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
-class CharacterDetailActivityModule(private val id: Int) {
-
-    @Provides
-    fun detailViewModelProvides(
-            getCharacterById: GetCharacterById,
-            isCharacterFavorite: IsCharacterFavorite,
-            getComicsFromCharacterId: GetComicsFromCharacterId,
-            insertFavoriteCharacter: InsertFavoriteCharacter,
-            insertFavoriteComic: InsertFavoriteComic,
-            deleteFavoriteCharacter: DeleteFavoriteCharacter,
-            deleteFavoriteComic: DeleteFavoriteComic
-    ): CharacterDetailViewModel =
-          CharacterDetailViewModel(
-            id,
-            getCharacterById,
-            isCharacterFavorite,
-            getComicsFromCharacterId,
-            insertFavoriteCharacter,
-            insertFavoriteComic,
-            deleteFavoriteCharacter,
-            deleteFavoriteComic
-        )
-
+@InstallIn(ViewModelComponent::class)
+class CharacterDetailActivityModule{
 
     @Provides
     fun getCharacterByIdProvider(repository: CharacterRepository): GetCharacterById =
