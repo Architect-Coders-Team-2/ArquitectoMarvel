@@ -1,6 +1,6 @@
 package com.architectcoders.arquitectomarvel.data.server.uiEntities.character
 
-import com.architectcoders.domain.character.DataCharacters
+import com.architectcoders.domain.character.CharacterData
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -18,7 +18,7 @@ data class CharacterDataApi(
     val results: List<CharacterApi>?
 )
 
-val CharacterDataApi.toLocalDataCharacters: DataCharacters
-    get() = DataCharacters(
+val CharacterDataApi.toLocalCharacterData: CharacterData
+    get() = CharacterData(
         offset, limit, total, count, results?.toLocalListCharacters
     )

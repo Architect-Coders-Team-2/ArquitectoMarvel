@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class CharacterPayload(
+data class CharacterPayloadApi(
     @Json(name = "code")
     val code: Int?,
     @Json(name = "status")
@@ -14,5 +14,5 @@ data class CharacterPayload(
     val characterDataApi: CharacterDataApi?
 )
 
-val CharacterPayload.toLocalCharactersPayload: CharactersPayload
-    get() = CharactersPayload(code, status, characterDataApi?.toLocalDataCharacters)
+val CharacterPayloadApi.toLocalCharactersPayload: CharactersPayload
+    get() = CharactersPayload(code, status, characterDataApi?.toLocalCharacterData)

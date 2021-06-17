@@ -1,6 +1,6 @@
 package com.architectcoders.domain.character
 
-data class DataCharacters(
+data class CharacterData(
     val offset: Int?,
     val limit: Int?,
     val total: Int?,

@@ -1,18 +1,18 @@
 package com.architectcoders.data.source
 
-import com.architectcoders.domain.character.Character as CharacterResult
-import com.architectcoders.domain.comic.Comic as ComicResult
+import com.architectcoders.domain.character.Character
+import com.architectcoders.domain.comic.Comic
 
 interface LocalDataSource {
-    suspend fun getLocalCharacterById(characterId: Int): CharacterResult
+    suspend fun getLocalCharacterById(characterId: Int): Character
     suspend fun getLastTimeStampFromCharacterEntity(): Long?
     suspend fun getLocalCharactersCount(): Int
     suspend fun isLocalCharacterFavorite(characterId: Int): Boolean
-    suspend fun insertAllLocalCharacters(characterList: List<CharacterResult>)
+    suspend fun insertAllLocalCharacters(characterList: List<Character>)
     suspend fun deleteAllLocalCharacters()
-    suspend fun insertLocalFavoriteCharacter(favoriteCharacter: CharacterResult)
-    suspend fun deleteLocalFavoriteCharacter(favoriteCharacter: CharacterResult)
-    suspend fun insertLocalFavoriteComic(favoriteComic: ComicResult)
-    suspend fun deleteLocalFavoriteComic(favoriteComic: ComicResult)
+    suspend fun insertLocalFavoriteCharacter(favoriteCharacter: Character)
+    suspend fun deleteLocalFavoriteCharacter(favoriteCharacter: Character)
+    suspend fun insertLocalFavoriteComic(favoriteComic: Comic)
+    suspend fun deleteLocalFavoriteComic(favoriteComic: Comic)
     fun getPagingSourceFromCharacterEntity(): Any?
 }

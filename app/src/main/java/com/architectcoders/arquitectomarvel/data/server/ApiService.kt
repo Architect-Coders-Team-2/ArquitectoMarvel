@@ -1,6 +1,6 @@
 package com.architectcoders.arquitectomarvel.data.server
 
-import com.architectcoders.arquitectomarvel.data.server.uiEntities.character.CharacterPayload
+import com.architectcoders.arquitectomarvel.data.server.uiEntities.character.CharacterPayloadApi
 import com.architectcoders.arquitectomarvel.data.server.uiEntities.comics.ComicsPayloadApi
 import com.architectcoders.arquitectomarvel.ui.common.REQUEST_LIMIT
 import retrofit2.http.GET
@@ -16,7 +16,7 @@ interface ApiService {
         @Query("hash") hash: String,
         @Query("offset") offset: Int,
         @Query("limit") limit: Int = REQUEST_LIMIT
-    ): CharacterPayload
+    ): CharacterPayloadApi
 
     @GET("/v1/public/characters/{characterId}")
     suspend fun getCharacterById(
@@ -24,7 +24,7 @@ interface ApiService {
         @Query("ts") ts: Long,
         @Query("apikey") apikey: String,
         @Query("hash") hash: String
-    ): CharacterPayload
+    ): CharacterPayloadApi
 
     @GET("/v1/public/characters/{characterId}/comics")
     suspend fun getComics(

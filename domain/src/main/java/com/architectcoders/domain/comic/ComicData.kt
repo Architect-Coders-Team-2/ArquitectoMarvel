@@ -1,6 +1,6 @@
 package com.architectcoders.domain.comic
 
-data class DataComics(
+data class ComicData(
     val count: Int?,
     val limit: Int?,
     val offset: Int?,

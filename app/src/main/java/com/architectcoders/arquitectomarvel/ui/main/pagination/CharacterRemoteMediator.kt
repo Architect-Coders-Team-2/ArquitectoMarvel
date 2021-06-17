@@ -43,9 +43,9 @@ class CharacterRemoteMediator(
                 LoadType.APPEND -> state.lastItemOrNull()?.pageNumber?.plus(1) ?: 0
             }
             val response = getRemoteCharacters.invoke(nextPageNumber * REQUEST_LIMIT)
-            val characterList = response.characterDataCharacters?.characters
+            val characterList = response.characterData?.characters
             if (characterList.isNullOrEmpty()) {
-                if (response.characterDataCharacters?.total == getLocalCharactersCount.invoke(Unit)) {
+                if (response.characterData?.total == getLocalCharactersCount.invoke(Unit)) {
                     MediatorResult.Success(endOfPaginationReached = true)
                 } else {
                     MediatorResult.Error(Exception(EMPTY_RESPONSE))

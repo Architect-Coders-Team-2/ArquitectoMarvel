@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityCharacterDetailBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
@@ -20,6 +21,11 @@ class CharacterDetailActivity : AppCompatActivity() {
     private val adapter by lazy { ComicAdapter() }
     private var selectedCharacter: Character? = null
     private var isCharacterFavorite = false
+    private val networkRepository by lazy {
+        ServiceLocator.provideNetworkRepository(
+            applicationContext
+        )
+    }
     private val characterDetailViewModel by lazy {
         getViewModel {
             val characterRepository = ServiceLocator.provideMarvelRepository(this)
@@ -44,13 +50,23 @@ class CharacterDetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.contentHeroDetail.comicList.adapter = adapter
         characterDetailViewModel.model.observe(this, Observer(::updateUi))
+        manageNetworkManager()
+    }
+
+    private fun manageNetworkManager() {
+        lifecycleScope.launchWhenStarted {
+            ManageNetworkManager(networkRepository).invoke(lifecycle, ::shouldShowOfflineMessage)
+        }
+    }
+
+    private fun shouldShowOfflineMessage(internetAvailable: Boolean) {
+        binding.contentHeroDetail.offlineStatus.isVisible = !internetAvailable
     }
 
     private fun updateUi(model: UiModel) {
         binding.contentHeroDetail.progress.isVisible = model is UiModel.Loading
         when (model) {
             is UiModel.SetCharacterDetails -> setCharacterDetails(model.character)
-            is UiModel.ShowToast -> toast(model.msgResource)
             is UiModel.UpdateFAB -> updateFAB(model.isCharacterFavorite, model.listener)
             is UiModel.UpdateComics -> updateComics(model.comicList)
         }

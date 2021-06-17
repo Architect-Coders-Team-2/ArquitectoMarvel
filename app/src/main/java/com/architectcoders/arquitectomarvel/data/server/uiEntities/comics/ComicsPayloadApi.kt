@@ -13,4 +13,4 @@ data class ComicsPayloadApi(
 )
 
 val ComicsPayloadApi.toLocalComicsPayload: ComicsPayload
-    get() = ComicsPayload(code, comicsDataApi?.toDomainDataComics)
+    get() = ComicsPayload(code, comicsDataApi?.toDomainComicData)

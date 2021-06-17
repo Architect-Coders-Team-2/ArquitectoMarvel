@@ -1,10 +1,10 @@
 package com.architectcoders.usecases
 
 import com.architectcoders.data.repository.MarvelRepository
-import com.architectcoders.domain.character.Character as CharacterResult
+import com.architectcoders.domain.character.Character
 
 class InsertAllLocalCharacters(private val marvelRepository: MarvelRepository) :
-    InvokeUseCase<List<CharacterResult>, Unit> {
-    override suspend fun invoke(param: List<CharacterResult>) =
+    InvokeUseCase<List<Character>, Unit> {
+    override suspend fun invoke(param: List<Character>) =
         marvelRepository.insertAllLocalCharacters(param)
 }
