@@ -67,9 +67,9 @@ class MainActivity : AppCompatActivity() {
         val columns = calculateColumnsForGridLayout(resources.getDimension(R.dimen.avatar_width))
         val layoutManager = GridLayoutManager(this@MainActivity, columns)
         val footerAdapter = LoadStateAdapter(characterAdapter::retry)
-        binding.apply {
-            mainHeroList.layoutManager = layoutManager
-            mainHeroList.adapter = characterAdapter.withLoadStateFooter(footerAdapter)
+        binding.mainCharacterList.apply {
+            this.layoutManager = layoutManager
+            adapter = characterAdapter.withLoadStateFooter(footerAdapter)
         }
 
         // This helps to centre the ProgressBar by using the number of columns from the main list
@@ -84,6 +84,9 @@ class MainActivity : AppCompatActivity() {
         }
         characterAdapter.addLoadStateListener {
             binding.progress.isVisible = it.refresh is LoadState.Loading
+            if (it.mediator?.refresh is LoadState.Error) {
+                footerAdapter.loadState = it.refresh
+            }
         }
     }
 
@@ -108,10 +111,10 @@ class MainActivity : AppCompatActivity() {
                 ActivityOptionsCompat.makeSceneTransitionAnimation(
                     this,
                     view,
-                    getString(R.string.hero_image)
+                    getString(R.string.character_image)
                 )
             startActivity<CharacterDetailActivity>(options = options.toBundle()) {
-                putExtra(EXTRA_SELECTED_HERO, resultValue.id)
+                putExtra(EXTRA_SELECTED_CHARACTER, resultValue.id)
             }
         }
     }
