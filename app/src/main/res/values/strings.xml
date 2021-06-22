@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">ArquitectoMarvel</string>
 
+    <!-- Biometric logic -->
+    <string name="something_wrong">Something went wrong. Could you try again?</string>
+    <string name="check_favorites">Check favorites characters</string>
+    <string name="biometric_device_credentials">Use Biometric or device credential</string>
+
     <!-- Common -->
     <string name="content_not_available">Content not available</string>
     <string name="no_internet">No internet connection</string>
@@ -11,9 +16,15 @@
     <string name="character_image">Character image</string>
     <string name="comics">Comics</string>
 
-    <!-- Character detail -->
+    <!-- Character's main screen -->
+    <string name="enables_biometric_login">Enables the biometric login to save favorite characters</string>
+
+    <!-- Character's detail -->
     <string name="no_comics">No comic data</string>
     <string name="try_again">Try again</string>
     <string name="timeout">It looks like the server is taking too long to respond, please try again in some time</string>
+
+    <!-- Favorite characters -->
+    <string name="favorite_characters">Favorite characters</string>
 
 </resources>
