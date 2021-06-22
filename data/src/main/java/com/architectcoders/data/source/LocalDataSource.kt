@@ -10,6 +10,7 @@ interface LocalDataSource {
     fun isLocalCharacterFavorite(characterId: Int): Any
     suspend fun insertAllLocalCharacters(characterList: List<Character>)
     suspend fun deleteAllLocalCharacters()
+    suspend fun getLocalFavoriteCharacters(): Any
     suspend fun insertLocalFavoriteCharacter(favoriteCharacter: Character)
     suspend fun deleteLocalFavoriteCharacter(favoriteCharacter: Character)
     suspend fun insertLocalFavoriteComic(favoriteComic: Comic)
