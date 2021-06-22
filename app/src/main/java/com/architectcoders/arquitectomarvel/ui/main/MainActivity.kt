@@ -1,10 +1,12 @@
 package com.architectcoders.arquitectomarvel.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricManager.Authenticators.*
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
@@ -19,6 +21,7 @@ import com.architectcoders.arquitectomarvel.data.*
 import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailActivity
+import com.architectcoders.arquitectomarvel.ui.favorite.FavoriteCharacterActivity
 import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterAdapter
 import com.architectcoders.arquitectomarvel.ui.main.pagination.LoadStateAdapter
 import com.architectcoders.domain.character.Character
@@ -33,6 +36,11 @@ class MainActivity : AppCompatActivity() {
     private val networkRepository by lazy {
         ServiceLocator.provideNetworkRepository(
             applicationContext
+        )
+    }
+    private val biometricRepository by lazy {
+        ServiceLocator.provideBiometricRepository(
+            this
         )
     }
     private val viewModel by lazy {
@@ -61,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         setUpViews()
         collectLatestPager()
         manageNetworkManager()
+        setBiometricLogic()
     }
 
     private fun setUpViews() {
@@ -144,5 +153,17 @@ class MainActivity : AppCompatActivity() {
             delay(200)
             menuItem?.isVisible = !internetAvailable
         }
+    }
+
+    private fun setBiometricLogic() {
+        CheckAuthenticationState(biometricRepository).invoke()
+        binding.favoriteFab.setOnClickListener {
+            SetBiometricAuthentication(biometricRepository).invoke(::navigateToFavorites)
+        }
+    }
+
+    private fun navigateToFavorites() {
+        val intent = Intent(this, FavoriteCharacterActivity::class.java)
+        startActivity(intent)
     }
 }
