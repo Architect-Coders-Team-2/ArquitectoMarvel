@@ -3,7 +3,6 @@ package com.architectcoders.arquitectomarvel.data.database
 import androidx.paging.PagingSource
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 
 @Dao
 interface MarvelDao {
@@ -22,6 +21,9 @@ interface MarvelDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllLocalCharacters(characterList: List<CharacterEntity>)
+
+    @Query("SELECT * FROM favoritecharacterentity ORDER BY name")
+    fun getLocalFavoriteCharacters(): Flow<List<FavoriteCharacterEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLocalFavoriteCharacter(favoriteCharacterEntity: FavoriteCharacterEntity)

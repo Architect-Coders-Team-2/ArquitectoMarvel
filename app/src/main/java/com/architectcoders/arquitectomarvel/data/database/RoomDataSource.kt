@@ -5,7 +5,6 @@ import com.architectcoders.data.source.LocalDataSource
 import com.architectcoders.domain.character.Character
 import com.architectcoders.domain.comic.Comic
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 
 class RoomDataSource(db: MarvelDatabase) : LocalDataSource {
 
@@ -25,6 +24,9 @@ class RoomDataSource(db: MarvelDatabase) : LocalDataSource {
 
     override suspend fun deleteAllLocalCharacters() =
         characterDao.deleteAllLocalCharacters()
+
+    override suspend fun getLocalFavoriteCharacters(): Flow<List<FavoriteCharacterEntity>> =
+        characterDao.getLocalFavoriteCharacters()
 
     override suspend fun insertLocalFavoriteCharacter(favoriteCharacter: Character) =
         characterDao.insertLocalFavoriteCharacter(favoriteCharacter.toFavoriteCharacterEntity)
