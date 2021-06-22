@@ -16,10 +16,6 @@
 
     </style>
 
-    <style name="MainActivityOnly" parent="Theme.ArquitectoMarvel">
-        <item name="android:backgroundTint">@color/cardview_dark_background</item>
-    </style>
-
     <style name="Theme.ArquitectoMarvel.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
