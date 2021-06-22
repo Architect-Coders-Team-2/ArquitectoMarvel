@@ -130,8 +130,8 @@ class CharacterDetailActivity : AppCompatActivity() {
     ) {
         binding.fab.setOnClickListener {
             selectedCharacter?.let { character ->
-                setCharacterFavorite(this.isCharacterFavorite.not())
-                listener(character, adapter.currentList, this.isCharacterFavorite)
+                setCharacterFavorite(isCharacterFavorite.not())
+                listener(character, adapter.currentList, isCharacterFavorite)
             }
         }
     }
@@ -168,5 +168,12 @@ class CharacterDetailActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if (!isCharacterFavorite) {
+            overridePendingTransition(0, 0)
+        }
     }
 }
