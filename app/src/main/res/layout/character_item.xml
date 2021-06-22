@@ -37,7 +37,7 @@
                 android:id="@+id/character_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@color/primaryColor"
+                android:background="@color/cardview_dark_background"
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="2"
