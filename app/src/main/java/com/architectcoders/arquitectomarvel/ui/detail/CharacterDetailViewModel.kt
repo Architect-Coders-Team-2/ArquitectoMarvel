@@ -17,10 +17,11 @@ class CharacterDetailViewModel(
     private val isLocalCharacterFavorite: IsLocalCharacterFavorite,
     private val getRemoteComicsFromCharacterId: GetRemoteComicsFromCharacterId,
     private val insertLocalFavoriteCharacter: InsertLocalFavoriteCharacter,
-    private val insertLocalFavoriteComic: InsertLocalFavoriteComic,
     private val deleteLocalFavoriteCharacter: DeleteLocalFavoriteCharacter,
-    private val deleteLocalFavoriteComic: DeleteLocalFavoriteComic
+    private val getComicsInteractor: GetComicsInteractor
 ) : ViewModel() {
+
+    val comics get() = getComicsInteractor.invoke(characterId)
 
     private val _model = MutableLiveData<UiModel>()
     val model: LiveData<UiModel>
@@ -86,14 +87,8 @@ class CharacterDetailViewModel(
         viewModelScope.launch {
             if (isCharacterFavorite) {
                 insertLocalFavoriteCharacter.invoke(selectedHero)
-                comicList.forEach {
-                    insertLocalFavoriteComic.invoke(it)
-                }
             } else {
                 deleteLocalFavoriteCharacter.invoke(selectedHero)
-                comicList.forEach {
-                    deleteLocalFavoriteComic.invoke(it)
-                }
             }
         }
     }

@@ -2,6 +2,8 @@ package com.architectcoders.arquitectomarvel.data.database
 
 import androidx.paging.PagingSource
 import androidx.room.*
+import com.architectcoders.arquitectomarvel.ui.detail.GetComicsInteractor
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MarvelDao {
@@ -24,18 +26,32 @@ interface MarvelDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLocalFavoriteCharacter(favoriteCharacterEntity: FavoriteCharacterEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertLocalFavoriteComic(comicEntity: ComicEntity)
-
     @Delete
     suspend fun deleteLocalFavoriteCharacter(favoriteCharacterEntity: FavoriteCharacterEntity)
-
-    @Delete
-    suspend fun deleteLocalFavoriteComic(comicEntity: ComicEntity)
 
     @Query("SELECT id FROM favoritecharacterentity WHERE id = :id")
     suspend fun isLocalCharacterFavorite(id: Int): Int?
 
     @Query("DELETE FROM characterentity")
     suspend fun deleteAllLocalCharacters()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertComics(comicEntity: List<ComicEntity>)
+
+    @Query("DELETE FROM COMICENTITY WHERE idHero = :idHero")
+    suspend fun deleteComicsForHero(idHero: Int)
+
+    @Query("SELECT * FROM ComicEntity WHERE idHero = :idHero")
+    fun selecetComicsForHero(idHero: Int): Flow<List<ComicEntity>>
+
+    @Transaction
+    suspend fun fetchComicsForHero(map: Map<String, Any>) {
+        val idHero = map[GetComicsInteractor.ID_HERO] as Int
+        val comics = map[GetComicsInteractor.COMICS] as List<ComicEntity>
+        deleteComicsForHero(idHero)
+        comics.map {
+            it.idHero = idHero
+        }
+        insertComics(comics)
+    }
 }
