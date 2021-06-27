@@ -6,28 +6,36 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.architectcoders.arquitectomarvel.R
-import com.architectcoders.arquitectomarvel.data.database.toComicResultList
+import com.architectcoders.arquitectomarvel.data.database.toComicComicList
 import com.architectcoders.arquitectomarvel.databinding.ActivityCharacterDetailBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel.UiModel
+import com.architectcoders.domain.character.Character
+import com.architectcoders.domain.comic.Comic
 import com.architectcoders.usecases.*
 import java.net.UnknownHostException
-import com.architectcoders.domain.characters.Result as CharacterResult
 
 class CharacterDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCharacterDetailBinding
     private val adapter by lazy { ComicAdapter() }
-    private var selectedCharacter: CharacterResult? = null
+    private var selectedCharacter: Character? = null
     private var isCharacterFavorite = false
+    private val networkRepository by lazy {
+        ServiceLocator.provideNetworkRepository(
+            applicationContext
+        )
+    }
     private val characterDetailViewModel by lazy {
         getViewModel {
             val characterRepository = ServiceLocator.provideMarvelRepository(this)
             CharacterDetailViewModel(
-                intent.getIntExtra(EXTRA_SELECTED_HERO, 0),
+                intent.getIntExtra(EXTRA_SELECTED_CHARACTER, 0),
                 GetLocalCharacterById(characterRepository),
                 IsLocalCharacterFavorite(characterRepository),
+                GetRemoteComicsFromCharacterId(characterRepository),
                 InsertLocalFavoriteCharacter(characterRepository),
                 DeleteLocalFavoriteCharacter(characterRepository),
                 GetComicsInteractor(
@@ -47,34 +55,45 @@ class CharacterDetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.contentHeroDetail.comicList.adapter = adapter
         characterDetailViewModel.model.observe(this, Observer(::updateUi))
+        manageNetworkManager()
         showComics()
     }
 
+
     private fun showComics() {
         binding.contentHeroDetail.apply {
-            characterDetailViewModel.comics.observe(this@CharacterDetailActivity) { result ->
-                adapter.submitList(result.data?.toComicResultList ?: emptyList())
-                progress.isVisible = result is Resource.Loading && result.data.isNullOrEmpty()
-                noComics.isVisible = result is Resource.Error && result.data.isNullOrEmpty()
-                if (result.error is UnknownHostException) {
-                    noComics.text = getString(R.string.no_internet)
+            characterDetailViewModel.comics.observe(this@CharacterDetailActivity) { comicEntity ->
+                adapter.submitList(comicEntity.data?.toComicComicList ?: emptyList())
+                progress.isVisible = comicEntity is Resource.Loading && comicEntity.data.isNullOrEmpty()
+                noComics.isVisible = comicEntity is Resource.Error && comicEntity.data.isNullOrEmpty()
+                if (comicEntity.error is UnknownHostException) {
+                    noComics.text = getString(R.string.no_chached_comics)
                 }
             }
         }
 
     }
 
+    private fun manageNetworkManager() {
+        lifecycleScope.launchWhenStarted {
+            ManageNetworkManager(networkRepository).invoke(lifecycle, ::shouldShowOfflineMessage)
+        }
+    }
+
+    private fun shouldShowOfflineMessage(internetAvailable: Boolean) {
+        binding.contentHeroDetail.offlineStatus.isVisible = !internetAvailable
+    }
+
     private fun updateUi(model: UiModel) {
         binding.contentHeroDetail.progress.isVisible = model is UiModel.Loading
         when (model) {
             is UiModel.SetCharacterDetails -> setCharacterDetails(model.character)
-            is UiModel.ShowToast -> toast(model.msgResource)
             is UiModel.UpdateFAB -> updateFAB(model.isCharacterFavorite, model.listener)
+            is UiModel.UpdateComics -> updateComics(model.comicList)
         }
-
     }
 
-    private fun setCharacterDetails(character: CharacterResult) {
+    private fun setCharacterDetails(character: Character) {
         this.selectedCharacter = character
         binding.headerHeroImage.loadUrl(
             character.thumbnail?.path,
@@ -93,7 +112,8 @@ class CharacterDetailActivity : AppCompatActivity() {
     private fun updateFAB(
         isCharacterFavorite: Boolean,
         listener: (
-            selectedHero: CharacterResult,
+            selectedHero: Character,
+            comicList: MutableList<Comic>,
             isCharacterFavorite: Boolean,
         ) -> Unit
     ) {
@@ -103,14 +123,15 @@ class CharacterDetailActivity : AppCompatActivity() {
 
     private fun listenToFab(
         listener: (
-            selectedHero: CharacterResult,
-            isCharacterFavorite: Boolean
+            selectedHero: Character,
+            comicList: MutableList<Comic>,
+            isCharacterFavorite: Boolean,
         ) -> Unit
     ) {
         binding.fab.setOnClickListener {
             selectedCharacter?.let { character ->
                 setCharacterFavorite(this.isCharacterFavorite.not())
-                listener(character, this.isCharacterFavorite)
+                listener(character, adapter.currentList, this.isCharacterFavorite)
             }
         }
     }
@@ -122,6 +143,13 @@ class CharacterDetailActivity : AppCompatActivity() {
             android.R.drawable.star_off,
             this.isCharacterFavorite
         )
+    }
+
+    private fun updateComics(comicList: List<Comic>) {
+        if (comicList.isEmpty()) {
+            binding.contentHeroDetail.noComics.isVisible = true
+        }
+        adapter.submitList(comicList)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

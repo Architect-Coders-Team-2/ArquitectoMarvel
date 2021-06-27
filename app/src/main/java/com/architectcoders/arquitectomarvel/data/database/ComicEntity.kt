@@ -2,8 +2,8 @@ package com.architectcoders.arquitectomarvel.data.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.architectcoders.domain.characters.Thumbnail
-import com.architectcoders.domain.comics.Result
+import com.architectcoders.domain.Thumbnail
+import com.architectcoders.domain.comic.Comic
 
 @Entity
 data class ComicEntity(
@@ -15,10 +15,10 @@ data class ComicEntity(
     var idHero: Int? = null
 )
 
-val List<Result>.toComicEntityList: List<ComicEntity>
+val List<Comic>.toComicEntityList: List<ComicEntity>
     get() = map { it.toComicEntity }
 
-val Result.toComicEntity: ComicEntity
+val Comic.toComicEntity: ComicEntity
     get() = ComicEntity(
         resourceUri = resourceURI ?: "",
         thumbnail = "${thumbnail?.path}.${thumbnail?.extension}",
@@ -26,11 +26,11 @@ val Result.toComicEntity: ComicEntity
         insertDate = System.currentTimeMillis()
     )
 
-val List<ComicEntity>.toComicResultList: List<Result>
-    get() = map { it.toComicResult }
+val List<ComicEntity>.toComicComicList: List<Comic>
+    get() = map { it.toComicComic }
 
-val ComicEntity.toComicResult: Result
-    get() = Result(
+val ComicEntity.toComicComic: Comic
+    get() = Comic(
         null,
         null,
         null,

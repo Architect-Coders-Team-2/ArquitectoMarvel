@@ -4,15 +4,17 @@
     <!-- Common -->
     <string name="content_not_available">Content not available</string>
     <string name="no_internet">No internet connection</string>
+    <string name="offline">You\'re offline</string>
 
     <!-- Content descriptions -->
     <string name="add_to_favorites_button">Add to favorites button</string>
-    <string name="hero_image">Hero image</string>
+    <string name="character_image">Character image</string>
     <string name="comics">Comics</string>
 
-    <!-- Hero detail -->
+    <!-- Character detail -->
     <string name="no_comics">No comic data</string>
     <string name="try_again">Try again</string>
-    <string name="timeout">Timeout</string>
+    <string name="timeout">It looks like the server is taking too long to respond, please try again in some time</string>
+    <string name="no_chached_comics">No comics cached</string>
 
 </resources>

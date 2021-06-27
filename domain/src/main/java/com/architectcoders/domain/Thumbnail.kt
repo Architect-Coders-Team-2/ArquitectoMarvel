@@ -1,4 +1,4 @@
-package com.architectcoders.domain.characters
+package com.architectcoders.domain
 
 data class Thumbnail(
     val path: String?,

@@ -4,14 +4,25 @@ import android.content.Context
 import com.architectcoders.arquitectomarvel.data.database.MarvelDatabase
 import com.architectcoders.arquitectomarvel.data.database.RoomDataSource
 import com.architectcoders.arquitectomarvel.data.server.MarvelCredentialDataSource
-import com.architectcoders.arquitectomarvel.data.server.MarvelDataSource
+import com.architectcoders.arquitectomarvel.network.NetworkDataSourceImpl
+import com.architectcoders.data.repository.NetworkRepository
+import com.architectcoders.arquitectomarvel.data.server.RetrofitDataSource
 import com.architectcoders.data.repository.MarvelRepository
 
 object ServiceLocator {
 
+    fun provideNetworkRepository(
+        context: Context
+    ): NetworkRepository =
+        NetworkRepository(
+            NetworkDataSourceImpl(
+                context
+            )
+        )
+
     fun provideMarvelRepository(context: Context): MarvelRepository =
         MarvelRepository(
-            MarvelDataSource(MarvelCredentialDataSource()),
+            RetrofitDataSource(MarvelCredentialDataSource()),
             RoomDataSource(MarvelDatabase.getInstance(context))
         )
 }

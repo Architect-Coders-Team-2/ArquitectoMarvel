@@ -2,39 +2,39 @@ package com.architectcoders.data.repository
 
 import com.architectcoders.data.source.LocalDataSource
 import com.architectcoders.data.source.RemoteDataSource
-import com.architectcoders.domain.characters.Characters
-import com.architectcoders.domain.comics.Comic
-import com.architectcoders.domain.characters.Result as CharacterResult
+import com.architectcoders.domain.character.CharactersPayload
+import com.architectcoders.domain.comic.ComicsPayload
+import com.architectcoders.domain.character.Character
 
 class MarvelRepository(
     private val remoteDataSource: RemoteDataSource,
-    private val localDataSource: LocalDataSource,
+    private val localDataSource: LocalDataSource
 ) {
-    suspend fun getRemoteCharacters(offset: Int): Characters =
+    suspend fun getRemoteCharacters(offset: Int): CharactersPayload =
         remoteDataSource.getRemoteCharacters(offset)
 
     suspend fun getLocalCharactersCount(): Int =
         localDataSource.getLocalCharactersCount()
 
-    suspend fun getLocalCharacterById(characterId: Int): CharacterResult =
+    suspend fun getLocalCharacterById(characterId: Int): Character =
         localDataSource.getLocalCharacterById(characterId)
 
     suspend fun isLocalCharacterFavorite(characterId: Int): Boolean =
         localDataSource.isLocalCharacterFavorite(characterId)
 
-    suspend fun getRemoteComicsFromCharacterId(characterId: Int): Comic =
+    suspend fun getRemoteComicsFromCharacterId(characterId: Int): ComicsPayload? =
         remoteDataSource.getRemoteComics(characterId)
 
-    suspend fun insertAllLocalCharacters(characterList: List<CharacterResult>) =
+    suspend fun insertAllLocalCharacters(characterList: List<Character>) =
         localDataSource.insertAllLocalCharacters(characterList)
 
-    suspend fun insertLocalFavoriteCharacter(favoriteCharacter: CharacterResult) =
+    suspend fun insertLocalFavoriteCharacter(favoriteCharacter: Character) =
         localDataSource.insertLocalFavoriteCharacter(favoriteCharacter)
 
     suspend fun deleteAllLocalCharacters() =
         localDataSource.deleteAllLocalCharacters()
 
-    suspend fun deleteLocalFavoriteCharacter(favoriteCharacter: CharacterResult) =
+    suspend fun deleteLocalFavoriteCharacter(favoriteCharacter: Character) =
         localDataSource.deleteLocalFavoriteCharacter(favoriteCharacter)
 
     suspend fun getLastTimeStampFromCharacterEntity(): Long? =
@@ -48,5 +48,4 @@ class MarvelRepository(
 
     fun getComicsForHero(idHero: Int): Any =
         localDataSource.getComicsForHero(idHero)
-    
 }

@@ -2,8 +2,7 @@ package com.architectcoders.arquitectomarvel.data.database
 
 import androidx.paging.PagingSource
 import androidx.room.*
-import com.architectcoders.arquitectomarvel.ui.detail.GetComicsInteractor.Companion.COMICS
-import com.architectcoders.arquitectomarvel.ui.detail.GetComicsInteractor.Companion.ID_HERO
+import com.architectcoders.arquitectomarvel.ui.detail.GetComicsInteractor
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -19,7 +18,7 @@ interface MarvelDao {
     suspend fun getLastTimeStampFromCharacterEntity(): Long?
 
     @Query("SELECT COUNT(id) FROM characterentity")
-    suspend fun getLocalCharactersCount(): Int?
+    suspend fun getLocalCharactersCount(): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllLocalCharacters(characterList: List<CharacterEntity>)
@@ -36,7 +35,6 @@ interface MarvelDao {
     @Query("DELETE FROM characterentity")
     suspend fun deleteAllLocalCharacters()
 
-    // Comics
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertComics(comicEntity: List<ComicEntity>)
 
@@ -48,13 +46,12 @@ interface MarvelDao {
 
     @Transaction
     suspend fun fetchComicsForHero(map: Map<String, Any>) {
-        val idHero = map[ID_HERO] as Int
-        val comics = map[COMICS] as List<ComicEntity>
+        val idHero = map[GetComicsInteractor.ID_HERO] as Int
+        val comics = map[GetComicsInteractor.COMICS] as List<ComicEntity>
         deleteComicsForHero(idHero)
         comics.map {
             it.idHero = idHero
         }
         insertComics(comics)
     }
-
 }
