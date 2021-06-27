@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
+    id 'dagger.hilt.android.plugin'
 }
 
 def secretProperties() {
@@ -119,4 +120,13 @@ dependencies {
 
     // Biometric
     implementation "androidx.biometric:biometric-ktx:1.2.0-alpha03"
+
+    // Hilt
+    implementation 'com.google.dagger:hilt-android:2.37'
+    kapt 'com.google.dagger:hilt-compiler:2.37'
+
+}
+
+kapt {
+    correctErrorTypes = true
 }
