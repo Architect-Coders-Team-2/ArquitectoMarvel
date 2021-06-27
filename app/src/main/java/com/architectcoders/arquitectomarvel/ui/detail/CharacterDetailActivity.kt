@@ -8,12 +8,14 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.architectcoders.arquitectomarvel.R
+import com.architectcoders.arquitectomarvel.data.database.toComicComicList
 import com.architectcoders.arquitectomarvel.databinding.ActivityCharacterDetailBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel.UiModel
 import com.architectcoders.domain.character.Character
 import com.architectcoders.domain.comic.Comic
 import com.architectcoders.usecases.*
+import java.net.UnknownHostException
 
 class CharacterDetailActivity : AppCompatActivity() {
 
@@ -35,9 +37,12 @@ class CharacterDetailActivity : AppCompatActivity() {
                 IsLocalCharacterFavorite(characterRepository),
                 GetRemoteComicsFromCharacterId(characterRepository),
                 InsertLocalFavoriteCharacter(characterRepository),
-                InsertLocalFavoriteComic(characterRepository),
                 DeleteLocalFavoriteCharacter(characterRepository),
-                DeleteLocalFavoriteComic(characterRepository)
+                GetComicsInteractor(
+                    GetRemoteComicsFromCharacterId(characterRepository),
+                    InsertComicsForHeroLocal(characterRepository),
+                    GetComicsForHero(characterRepository)
+                )
             )
         }
     }
@@ -51,6 +56,22 @@ class CharacterDetailActivity : AppCompatActivity() {
         binding.contentHeroDetail.comicList.adapter = adapter
         characterDetailViewModel.model.observe(this, Observer(::updateUi))
         manageNetworkManager()
+        showComics()
+    }
+
+
+    private fun showComics() {
+        binding.contentHeroDetail.apply {
+            characterDetailViewModel.comics.observe(this@CharacterDetailActivity) { comicEntity ->
+                adapter.submitList(comicEntity.data?.toComicComicList ?: emptyList())
+                progress.isVisible = comicEntity is Resource.Loading && comicEntity.data.isNullOrEmpty()
+                noComics.isVisible = comicEntity is Resource.Error && comicEntity.data.isNullOrEmpty()
+                if (comicEntity.error is UnknownHostException) {
+                    noComics.text = getString(R.string.no_chached_comics)
+                }
+            }
+        }
+
     }
 
     private fun manageNetworkManager() {

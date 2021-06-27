@@ -5,7 +5,6 @@ import com.architectcoders.data.source.RemoteDataSource
 import com.architectcoders.domain.character.CharactersPayload
 import com.architectcoders.domain.comic.ComicsPayload
 import com.architectcoders.domain.character.Character
-import com.architectcoders.domain.comic.Comic
 
 class MarvelRepository(
     private val remoteDataSource: RemoteDataSource,
@@ -32,21 +31,21 @@ class MarvelRepository(
     suspend fun insertLocalFavoriteCharacter(favoriteCharacter: Character) =
         localDataSource.insertLocalFavoriteCharacter(favoriteCharacter)
 
-    suspend fun insertLocalFavoriteComic(favoriteComic: Comic) =
-        localDataSource.insertLocalFavoriteComic(favoriteComic)
-
     suspend fun deleteAllLocalCharacters() =
         localDataSource.deleteAllLocalCharacters()
 
     suspend fun deleteLocalFavoriteCharacter(favoriteCharacter: Character) =
         localDataSource.deleteLocalFavoriteCharacter(favoriteCharacter)
 
-    suspend fun deleteLocalFavoriteComic(favoriteComic: Comic) =
-        localDataSource.deleteLocalFavoriteComic(favoriteComic)
-
     suspend fun getLastTimeStampFromCharacterEntity(): Long? =
         localDataSource.getLastTimeStampFromCharacterEntity()
 
     fun getPagingSourceFromCharacterEntity(): Any? =
         localDataSource.getPagingSourceFromCharacterEntity()
+
+    suspend fun fetchComicsForHero(map: Map<String, Any>) =
+        localDataSource.fetchComicsForHero(map)
+
+    fun getComicsForHero(idHero: Int): Any =
+        localDataSource.getComicsForHero(idHero)
 }

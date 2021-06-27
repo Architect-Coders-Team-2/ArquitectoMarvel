@@ -3,7 +3,6 @@ package com.architectcoders.arquitectomarvel.data.database
 import androidx.paging.PagingSource
 import com.architectcoders.data.source.LocalDataSource
 import com.architectcoders.domain.character.Character
-import com.architectcoders.domain.comic.Comic
 
 class RoomDataSource(db: MarvelDatabase) : LocalDataSource {
 
@@ -33,12 +32,14 @@ class RoomDataSource(db: MarvelDatabase) : LocalDataSource {
     override suspend fun isLocalCharacterFavorite(characterId: Int): Boolean =
         characterDao.isLocalCharacterFavorite(characterId) != null
 
-    override suspend fun insertLocalFavoriteComic(favoriteComic: Comic) =
-        characterDao.insertLocalFavoriteComic(favoriteComic.toComicEntity)
-
-    override suspend fun deleteLocalFavoriteComic(favoriteComic: Comic) =
-        characterDao.deleteLocalFavoriteComic(favoriteComic.toComicEntity)
-
     override fun getPagingSourceFromCharacterEntity(): PagingSource<Int, CharacterEntity> =
         characterDao.getPagingSourceFromCharacterEntity()
+
+    override suspend fun fetchComicsForHero(map: Map<String, Any>) {
+        characterDao.fetchComicsForHero(map)
+    }
+
+    override fun getComicsForHero(idHero: Int): Any {
+        return characterDao.selecetComicsForHero(idHero)
+    }
 }
