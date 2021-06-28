@@ -12,7 +12,7 @@ interface LocalDataSource {
     suspend fun deleteAllLocalCharacters()
     suspend fun insertLocalFavoriteCharacter(favoriteCharacter: Character)
     suspend fun deleteLocalFavoriteCharacter(favoriteCharacter: Character)
-    suspend fun insertLocalFavoriteComic(favoriteComic: Comic)
-    suspend fun deleteLocalFavoriteComic(favoriteComic: Comic)
     fun getPagingSourceFromCharacterEntity(): Any?
+    fun getComicsForCharacter(characterId: Int): Any
+    suspend fun fetchComicsForCharacter(map: Map<String, Any>)
 }
