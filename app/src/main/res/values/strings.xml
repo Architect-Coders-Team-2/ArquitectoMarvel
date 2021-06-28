@@ -23,6 +23,7 @@
     <string name="no_comics">No comic data</string>
     <string name="try_again">Try again</string>
     <string name="timeout">It looks like the server is taking too long to respond, please try again in some time</string>
+    <string name="no_cached_comics">No cached comics</string>
 
     <!-- Favorite characters -->
     <string name="favorite_characters">Favorite characters</string>

@@ -11,7 +11,8 @@ data class ComicEntity(
     val resourceUri: String,
     val thumbnail: String?,
     val title: String?,
-    val insertDate: Long?
+    val insertDate: Long?,
+    var characterId: Int? = null
 )
 
 val List<Comic>.toComicEntityList: List<ComicEntity>

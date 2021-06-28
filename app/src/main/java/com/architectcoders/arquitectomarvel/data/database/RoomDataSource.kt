@@ -37,12 +37,14 @@ class RoomDataSource(db: MarvelDatabase) : LocalDataSource {
     override fun isLocalCharacterFavorite(characterId: Int): Flow<Int> =
         characterDao.isLocalCharacterFavorite(characterId)
 
-    override suspend fun insertLocalFavoriteComic(favoriteComic: Comic) =
-        characterDao.insertLocalFavoriteComic(favoriteComic.toComicEntity)
-
-    override suspend fun deleteLocalFavoriteComic(favoriteComic: Comic) =
-        characterDao.deleteLocalFavoriteComic(favoriteComic.toComicEntity)
-
     override fun getPagingSourceFromCharacterEntity(): PagingSource<Int, CharacterEntity> =
         characterDao.getPagingSourceFromCharacterEntity()
+
+    override suspend fun fetchComicsForCharacter(map: Map<String, Any>) {
+        characterDao.fetchComicsForCharacter(map)
+    }
+
+    override fun getComicsForCharacter(characterId: Int): Any {
+        return characterDao.selectComicsForCharacter(characterId)
+    }
 }

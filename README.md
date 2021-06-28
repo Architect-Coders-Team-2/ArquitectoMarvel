@@ -1,2 +1,2 @@
 # Arquitecto Marvel
-This app is going to list heroes who can rescue you of the bad guys!
+This app shows you a list of fictional characters who can rescue you from the bad guys!
