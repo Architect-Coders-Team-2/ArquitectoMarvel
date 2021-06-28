@@ -7,17 +7,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.architectcoders.arquitectomarvel.R
+import com.architectcoders.arquitectomarvel.data.database.toComicComicList
 import com.architectcoders.arquitectomarvel.databinding.ActivityCharacterDetailBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
-import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel.UiModelCharacter
-import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel.UiModelComic
+import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel.UiModel
 import com.architectcoders.domain.character.Character
-import com.architectcoders.domain.comic.Comic
 import com.architectcoders.usecases.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.shareIn
+import java.net.UnknownHostException
 
 class CharacterDetailActivity : AppCompatActivity() {
 
@@ -37,11 +37,13 @@ class CharacterDetailActivity : AppCompatActivity() {
                 intent.getIntExtra(EXTRA_SELECTED_CHARACTER, 0),
                 GetLocalCharacterById(characterRepository),
                 IsLocalCharacterFavorite(characterRepository),
-                GetRemoteComicsFromCharacterId(characterRepository),
                 InsertLocalFavoriteCharacter(characterRepository),
-                InsertLocalFavoriteComic(characterRepository),
                 DeleteLocalFavoriteCharacter(characterRepository),
-                DeleteLocalFavoriteComic(characterRepository)
+                GetComicsInteractor(
+                    GetRemoteComicsFromCharacterId(characterRepository),
+                    InsertComicsForCharacterLocal(characterRepository),
+                    GetComicsForCharacter(characterRepository)
+                )
             )
         }
     }
@@ -59,32 +61,37 @@ class CharacterDetailActivity : AppCompatActivity() {
 
     private fun updateUi() {
         lifecycleScope.launchWhenStarted {
-            characterDetailViewModel.uiModelCharacter.collect {
+            characterDetailViewModel.uiModel.collect {
                 updateCharacter(it)
             }
         }
-        lifecycleScope.launchWhenStarted {
-            characterDetailViewModel.uiModelComic.collect {
-                updateComic(it)
-            }
-        }
+        showComics()
     }
 
-    private fun updateCharacter(uiModelCharacter: UiModelCharacter) {
-        binding.contentCharacterDetail.progress.isVisible = uiModelCharacter is UiModelCharacter.Loading
-        if (uiModelCharacter is UiModelCharacter.SetUiDetailsCharacter) {
-            setCharacterDetails(uiModelCharacter.character)
+    private fun updateCharacter(uiModel: UiModel) {
+        binding.contentCharacterDetail.progress.isVisible =
+            uiModel is UiModel.Loading
+        if (uiModel is UiModel.SetUiDetails) {
+            setCharacterDetails(uiModel.character)
             updateFAB(
-                uiModelCharacter.isCharacterFavorite,
-                uiModelCharacter.listener
+                uiModel.isCharacterFavorite,
+                uiModel.listener
             )
         }
     }
 
-    private fun updateComic(uiModelComic: UiModelComic) {
-        binding.contentCharacterDetail.progress.isVisible = uiModelComic is UiModelComic.Loading
-        if (uiModelComic is UiModelComic.UpdateComics) {
-            updateComics(uiModelComic.comicList)
+    private fun showComics() {
+        binding.contentCharacterDetail.apply {
+            characterDetailViewModel.comicResurce.observe(this@CharacterDetailActivity) { comicEntity ->
+                adapter.submitList(comicEntity.data?.toComicComicList ?: emptyList())
+                progress.isVisible =
+                    comicEntity is Resource.Loading && comicEntity.data.isNullOrEmpty()
+                noComics.isVisible =
+                    comicEntity is Resource.Error && comicEntity.data.isNullOrEmpty()
+                if (comicEntity.error is UnknownHostException) {
+                    noComics.text = getString(R.string.no_cached_comics)
+                }
+            }
         }
     }
 
@@ -108,8 +115,7 @@ class CharacterDetailActivity : AppCompatActivity() {
         isCharacterFavorite: Flow<Int>,
         listener: (
             selectedCharacter: Character,
-            comicList: MutableList<Comic>,
-            isCharacterFavorite: Boolean,
+            isCharacterFavorite: Boolean
         ) -> Unit
     ) {
         lifecycleScope.launchWhenStarted {
@@ -124,14 +130,13 @@ class CharacterDetailActivity : AppCompatActivity() {
     private fun listenToFab(
         listener: (
             selectedCharacter: Character,
-            comicList: MutableList<Comic>,
-            isCharacterFavorite: Boolean,
+            isCharacterFavorite: Boolean
         ) -> Unit
     ) {
         binding.fab.setOnClickListener {
             selectedCharacter?.let { character ->
                 setCharacterFavorite(isCharacterFavorite.not())
-                listener(character, adapter.currentList, isCharacterFavorite)
+                listener(character, isCharacterFavorite)
             }
         }
     }
@@ -143,13 +148,6 @@ class CharacterDetailActivity : AppCompatActivity() {
             android.R.drawable.star_off,
             this.isCharacterFavorite
         )
-    }
-
-    private fun updateComics(comicList: List<Comic>) {
-        if (comicList.isEmpty()) {
-            binding.contentCharacterDetail.noComics.isVisible = true
-        }
-        adapter.submitList(comicList)
     }
 
     private fun manageNetworkManager() {
