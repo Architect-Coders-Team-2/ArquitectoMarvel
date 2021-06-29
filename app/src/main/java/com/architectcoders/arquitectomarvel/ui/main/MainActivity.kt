@@ -104,6 +104,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * If the visibility suddenly changes when we had already changed it a few seconds ago,
+     * we need to wait to avoid race conditions.
+     */
+    private fun shouldShowOfflineIcon(internetAvailable: Boolean) {
+        lifecycleScope.launchWhenStarted {
+            delay(TIME_MILLIS_DELAY_TO_AVOID_TOOLBAR_RACE_CONDITION)
+            menuItem?.isVisible = !internetAvailable
+        }
+    }
+
+    private fun setBiometricLogic() {
+        checkAuthenticationState.invoke()
+        binding.favoriteFab.setOnClickListener {
+            setBiometricAuthentication.invoke(::navigateToFavorites)
+        }
+    }
+
+    private fun navigateToFavorites() {
+        val intent = Intent(this, FavoriteCharacterActivity::class.java)
+        startActivity(intent)
+    }
+
     private fun navigateTo(character: Character, view: View) {
         Event(character).getContentIfNotHandled()?.let { resultValue ->
             val options =
@@ -132,28 +155,5 @@ class MainActivity : AppCompatActivity() {
             menuItem?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
         }
         return true
-    }
-
-    /**
-     * If the visibility suddenly changes when we had already changed it a few seconds ago,
-     * we need to wait to avoid race conditions.
-     */
-    private fun shouldShowOfflineIcon(internetAvailable: Boolean) {
-        lifecycleScope.launchWhenStarted {
-            delay(200)
-            menuItem?.isVisible = !internetAvailable
-        }
-    }
-
-    private fun setBiometricLogic() {
-        checkAuthenticationState.invoke()
-        binding.favoriteFab.setOnClickListener {
-            setBiometricAuthentication.invoke(::navigateToFavorites)
-        }
-    }
-
-    private fun navigateToFavorites() {
-        val intent = Intent(this, FavoriteCharacterActivity::class.java)
-        startActivity(intent)
     }
 }
