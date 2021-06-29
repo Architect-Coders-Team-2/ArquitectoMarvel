@@ -15,7 +15,7 @@ import dagger.hilt.android.qualifiers.ActivityContext
 
 @Module
 @InstallIn(ActivityComponent::class)
-class MainActivityDi {
+class MainActivityModule {
 
     @Provides
     fun biometricDataSourceProvider(@ActivityContext context: Context): BiometricDataSourceImpl =
@@ -24,10 +24,6 @@ class MainActivityDi {
     @Provides
     fun biometricRepositoryProvider(biometricDataSourceImpl: BiometricDataSourceImpl): BiometricRepository =
         BiometricRepository(biometricDataSourceImpl)
-
-    @Provides
-    fun manageNetworkManagerProvider(networkRepository: NetworkRepository): ManageNetworkManager =
-        ManageNetworkManager(networkRepository)
 
     @Provides
     fun checkAuthenticationStateProvider(biometricRepository: BiometricRepository): CheckAuthenticationState =
