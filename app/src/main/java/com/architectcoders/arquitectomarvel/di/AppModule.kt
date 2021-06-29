@@ -2,10 +2,12 @@ package com.architectcoders.arquitectomarvel.di
 
 import android.app.Application
 import androidx.room.Room
+import com.architectcoders.arquitectomarvel.biometric.BiometricDataSourceImpl
 import com.architectcoders.arquitectomarvel.data.database.MarvelDatabase
 import com.architectcoders.arquitectomarvel.data.database.RoomDataSource
 import com.architectcoders.arquitectomarvel.data.server.MarvelCredentialDataSource
 import com.architectcoders.arquitectomarvel.data.server.RetrofitDataSource
+import com.architectcoders.arquitectomarvel.network.NetworkDataSourceImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,4 +35,9 @@ class AppModule {
     @Provides
     fun retrofitDataSourceProvider(): RetrofitDataSource =
         RetrofitDataSource(MarvelCredentialDataSource())
+
+    @Singleton
+    @Provides
+    fun networkDataSourceProvider(app: Application): NetworkDataSourceImpl =
+        NetworkDataSourceImpl(app)
 }
