@@ -7,8 +7,11 @@ import com.architectcoders.arquitectomarvel.data.database.CharacterEntity
 import com.architectcoders.arquitectomarvel.ui.common.REQUEST_LIMIT
 import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterRemoteMediator
 import com.architectcoders.usecases.*
+import dagger.hilt.android.scopes.ViewModelScoped
+import javax.inject.Inject
 
-class MainViewModel(
+@ViewModelScoped
+class MainViewModel @Inject constructor(
     getRemoteCharacters: GetRemoteCharacters,
     deleteAllLocalCharacters: DeleteAllLocalCharacters,
     insertAllLocalCharacters: InsertAllLocalCharacters,
