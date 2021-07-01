@@ -23,20 +23,19 @@ import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailActivity
 import com.architectcoders.arquitectomarvel.ui.favorite.FavoriteCharacterActivity
+import com.architectcoders.arquitectomarvel.ui.main.MainViewModel.*
 import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterAdapter
 import com.architectcoders.arquitectomarvel.ui.main.pagination.LoadStateAdapter
 import com.architectcoders.domain.character.Character
 import com.architectcoders.usecases.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    @Inject
-    lateinit var manageNetworkManager: ManageNetworkManager
-
     @Inject
     lateinit var checkAuthenticationState: CheckAuthenticationState
 
@@ -58,7 +57,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setUpViews()
         collectLatestPager()
-        manageNetworkManager()
         setBiometricLogic()
     }
 
@@ -87,20 +85,17 @@ class MainActivity : AppCompatActivity() {
                 footerAdapter.loadState = it.refresh
             }
         }
-    }
-
-    @ExperimentalPagingApi
-    private fun collectLatestPager() {
         lifecycleScope.launchWhenStarted {
-            viewModel.pager.collectLatest {
-                characterAdapter.submitData(lifecycle, it)
+            viewModel.uiModel.collect {
+                updateUi(it)
             }
         }
     }
 
-    private fun manageNetworkManager() {
-        lifecycleScope.launchWhenStarted {
-            manageNetworkManager.invoke(lifecycle, ::shouldShowOfflineIcon)
+    private fun updateUi(uiModel: UiModel) {
+        when (uiModel) {
+            is UiModel.InitNetworkManager -> uiModel.listener(lifecycle)
+            is UiModel.SetNetworkAvailability -> shouldShowOfflineIcon(uiModel.isAvailable)
         }
     }
 
@@ -112,6 +107,15 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launchWhenStarted {
             delay(TIME_MILLIS_DELAY_TO_AVOID_TOOLBAR_RACE_CONDITION)
             menuItem?.isVisible = !internetAvailable
+        }
+    }
+
+    @ExperimentalPagingApi
+    private fun collectLatestPager() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.pager.collectLatest {
+                characterAdapter.submitData(lifecycle, it)
+            }
         }
     }
 
