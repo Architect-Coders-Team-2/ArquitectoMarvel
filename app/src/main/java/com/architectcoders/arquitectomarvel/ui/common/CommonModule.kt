@@ -1,7 +1,7 @@
 package com.architectcoders.arquitectomarvel.ui.common
 
 import com.architectcoders.data.repository.NetworkRepository
-import com.architectcoders.usecases.ManageNetworkManager
+import com.architectcoders.usecases.HandleNetworkManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,6 +12,6 @@ import dagger.hilt.android.components.ViewModelComponent
 class CommonModule {
 
     @Provides
-    fun manageNetworkManagerProvider(networkRepository: NetworkRepository): ManageNetworkManager =
-        ManageNetworkManager(networkRepository)
+    fun handleNetworkManagerProvider(networkRepository: NetworkRepository): HandleNetworkManager =
+        HandleNetworkManager(networkRepository)
 }

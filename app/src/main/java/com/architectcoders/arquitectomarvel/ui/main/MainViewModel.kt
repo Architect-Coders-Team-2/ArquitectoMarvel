@@ -20,7 +20,7 @@ class MainViewModel
 @Inject constructor(
     private val characterRemoteMediator: CharacterRemoteMediator,
     private val getPagingSourceFromCharacterEntity: GetPagingSourceFromCharacterEntity,
-    private val manageNetworkManager: ManageNetworkManager
+    private val handleNetworkManager: HandleNetworkManager
 ) : ViewModel() {
     @ExperimentalPagingApi
     val pager = Pager(
@@ -49,7 +49,7 @@ class MainViewModel
 
     private fun manageNetworkManager(lifecycle: Lifecycle) {
         viewModelScope.launch {
-            manageNetworkManager.invoke(lifecycle, ::isNetworkAvailable)
+            handleNetworkManager.invoke(lifecycle, ::isNetworkAvailable)
         }
     }
 

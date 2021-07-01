@@ -23,7 +23,7 @@ class CharacterDetailViewModel @Inject constructor(
     private val insertLocalFavoriteCharacter: InsertLocalFavoriteCharacter,
     private val deleteLocalFavoriteCharacter: DeleteLocalFavoriteCharacter,
     private val getComicsInteractor: GetComicsInteractor,
-    private val manageNetworkManager: ManageNetworkManager
+    private val handleNetworkManager: HandleNetworkManager
 ) : ViewModel() {
 
     val comicResurce = getComicsInteractor.networkBoundResourceResult(characterId)
@@ -70,7 +70,7 @@ class CharacterDetailViewModel @Inject constructor(
 
     private fun manageNetworkManager(lifecycle: Lifecycle) {
         viewModelScope.launch {
-            manageNetworkManager.invoke(lifecycle, ::isNetworkAvailable)
+            handleNetworkManager.invoke(lifecycle, ::isNetworkAvailable)
         }
     }
 

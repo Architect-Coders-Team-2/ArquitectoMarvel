@@ -3,9 +3,7 @@ package com.architectcoders.arquitectomarvel.ui.main.di
 import android.content.Context
 import com.architectcoders.arquitectomarvel.biometric.BiometricDataSourceImpl
 import com.architectcoders.data.repository.BiometricRepository
-import com.architectcoders.data.repository.NetworkRepository
 import com.architectcoders.usecases.CheckAuthenticationState
-import com.architectcoders.usecases.ManageNetworkManager
 import com.architectcoders.usecases.SetBiometricAuthentication
 import dagger.Module
 import dagger.Provides
