@@ -1,12 +1,13 @@
 package com.architectcoders.arquitectomarvel.ui.main.di
 
+import androidx.paging.ExperimentalPagingApi
+import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterRemoteMediator
 import com.architectcoders.data.repository.MarvelRepository
 import com.architectcoders.usecases.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
-import javax.inject.Singleton
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -25,14 +26,35 @@ class MainViewModelModule {
         InsertAllLocalCharacters(marvelRepository)
 
     @Provides
-    fun getLastTimeStampFromCharacterEntityProvider(marvelRepository: MarvelRepository): GetLastTimeStampFromCharacterEntity =
+    fun getLastTimeStampFromCharacterEntityProvider(
+        marvelRepository: MarvelRepository
+    ): GetLastTimeStampFromCharacterEntity =
         GetLastTimeStampFromCharacterEntity(marvelRepository)
-
-    @Provides
-    fun getPagingSourceFromCharacterEntityProvider(marvelRepository: MarvelRepository): GetPagingSourceFromCharacterEntity =
-        GetPagingSourceFromCharacterEntity(marvelRepository)
 
     @Provides
     fun getLocalCharactersCountProvider(marvelRepository: MarvelRepository): GetLocalCharactersCount =
         GetLocalCharactersCount(marvelRepository)
+
+    @ExperimentalPagingApi
+    @Provides
+    fun getCharacterRemoteMediatorProvider(
+        getRemoteCharacters: GetRemoteCharacters,
+        deleteAllLocalCharacters: DeleteAllLocalCharacters,
+        insertAllLocalCharacters: InsertAllLocalCharacters,
+        getLastTimeStampFromCharacterEntity: GetLastTimeStampFromCharacterEntity,
+        getLocalCharactersCount: GetLocalCharactersCount
+    ): CharacterRemoteMediator =
+        CharacterRemoteMediator(
+            getRemoteCharacters,
+            deleteAllLocalCharacters,
+            insertAllLocalCharacters,
+            getLastTimeStampFromCharacterEntity,
+            getLocalCharactersCount
+        )
+
+    @Provides
+    fun getPagingSourceFromCharacterEntityProvider(
+        marvelRepository: MarvelRepository
+    ): GetPagingSourceFromCharacterEntity =
+        GetPagingSourceFromCharacterEntity(marvelRepository)
 }
