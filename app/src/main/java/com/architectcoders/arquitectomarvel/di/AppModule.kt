@@ -1,6 +1,7 @@
 package com.architectcoders.arquitectomarvel.di
 
 import android.app.Application
+import android.content.Context
 import androidx.room.Room
 import com.architectcoders.arquitectomarvel.data.database.MarvelDatabase
 import com.architectcoders.arquitectomarvel.data.database.RoomDataSource
@@ -10,6 +11,7 @@ import com.architectcoders.arquitectomarvel.network.NetworkDataSourceImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -19,9 +21,9 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun databaseProvider(app: Application): MarvelDatabase =
+    fun databaseProvider(@ApplicationContext appContext: Context): MarvelDatabase =
         Room.databaseBuilder(
-            app,
+            appContext,
             MarvelDatabase::class.java,
             "marvelDb"
         ).build()
