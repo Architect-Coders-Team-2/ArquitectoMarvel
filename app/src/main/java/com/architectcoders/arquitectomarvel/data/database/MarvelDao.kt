@@ -2,7 +2,8 @@ package com.architectcoders.arquitectomarvel.data.database
 
 import androidx.paging.PagingSource
 import androidx.room.*
-import com.architectcoders.arquitectomarvel.ui.detail.GetComicsInteractor
+import com.architectcoders.arquitectomarvel.ui.common.CHARACTER_ID
+import com.architectcoders.arquitectomarvel.ui.common.COMICS
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -29,8 +30,11 @@ interface MarvelDao {
     @Delete
     suspend fun deleteLocalFavoriteCharacter(favoriteCharacterEntity: FavoriteCharacterEntity)
 
-    @Query("SELECT id FROM favoritecharacterentity WHERE id = :id")
-    suspend fun isLocalCharacterFavorite(id: Int): Int?
+    @Delete
+    suspend fun deleteLocalFavoriteComic(comicEntity: ComicEntity)
+
+    @Query("SELECT COUNT(id) FROM favoritecharacterentity WHERE id = :id")
+    fun isLocalCharacterFavorite(id: Int): Flow<Int>
 
     @Query("DELETE FROM characterentity")
     suspend fun deleteAllLocalCharacters()
@@ -38,19 +42,19 @@ interface MarvelDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertComics(comicEntity: List<ComicEntity>)
 
-    @Query("DELETE FROM COMICENTITY WHERE idHero = :idHero")
-    suspend fun deleteComicsForHero(idHero: Int)
+    @Query("DELETE FROM COMICENTITY WHERE characterId = :idCharacter")
+    suspend fun deleteComicsForCharacter(idCharacter: Int)
 
-    @Query("SELECT * FROM ComicEntity WHERE idHero = :idHero")
-    fun selecetComicsForHero(idHero: Int): Flow<List<ComicEntity>>
+    @Query("SELECT * FROM ComicEntity WHERE characterId = :idCharacter")
+    fun selectComicsForCharacter(idCharacter: Int): Flow<List<ComicEntity>>
 
     @Transaction
-    suspend fun fetchComicsForHero(map: Map<String, Any>) {
-        val idHero = map[GetComicsInteractor.ID_HERO] as Int
-        val comics = map[GetComicsInteractor.COMICS] as List<ComicEntity>
-        deleteComicsForHero(idHero)
+    suspend fun fetchComicsForCharacter(map: Map<String, Any>) {
+        val idCharacter = map[CHARACTER_ID] as Int
+        val comics = map[COMICS] as List<ComicEntity>
+        deleteComicsForCharacter(idCharacter)
         comics.map {
-            it.idHero = idHero
+            it.characterId = idCharacter
         }
         insertComics(comics)
     }

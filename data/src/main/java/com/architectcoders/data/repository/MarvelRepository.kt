@@ -19,7 +19,7 @@ class MarvelRepository(
     suspend fun getLocalCharacterById(characterId: Int): Character =
         localDataSource.getLocalCharacterById(characterId)
 
-    suspend fun isLocalCharacterFavorite(characterId: Int): Boolean =
+    fun isLocalCharacterFavorite(characterId: Int): Any =
         localDataSource.isLocalCharacterFavorite(characterId)
 
     suspend fun getRemoteComicsFromCharacterId(characterId: Int): ComicsPayload? =
@@ -43,9 +43,9 @@ class MarvelRepository(
     fun getPagingSourceFromCharacterEntity(): Any? =
         localDataSource.getPagingSourceFromCharacterEntity()
 
-    suspend fun fetchComicsForHero(map: Map<String, Any>) =
-        localDataSource.fetchComicsForHero(map)
+    suspend fun fetchComicsForCharacter(map: Map<String, Any>) =
+        localDataSource.fetchComicsForCharacter(map)
 
-    fun getComicsForHero(idHero: Int): Any =
-        localDataSource.getComicsForHero(idHero)
+    fun getComicsForCharacter(characterId: Int): Any =
+        localDataSource.getComicsForCharacter(characterId)
 }

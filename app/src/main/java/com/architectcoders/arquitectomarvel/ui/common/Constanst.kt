@@ -7,11 +7,15 @@ const val EMPTY_RESPONSE = "Empty response"
 // COMMON
 const val EMPTY_TEXT = "--"
 
+// COMICS INTERACTOR
+const val CHARACTER_ID = "characterId"
+const val COMICS = "comics"
+
 // EXCEPTIONS
 const val SOCKET_NULL = "Socket is null"
 
 // EXTRA
-const val EXTRA_SELECTED_CHARACTER = "extraSelectedHero"
+const val EXTRA_SELECTED_CHARACTER = "extraSelectedCharacter"
 
 // LIMIT OF CHARACTERS TO REQUEST
 const val REQUEST_LIMIT = 36

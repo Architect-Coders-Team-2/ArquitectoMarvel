@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.data.database.toComicComicList
@@ -13,8 +12,11 @@ import com.architectcoders.arquitectomarvel.databinding.ActivityCharacterDetailB
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel.UiModel
 import com.architectcoders.domain.character.Character
-import com.architectcoders.domain.comic.Comic
 import com.architectcoders.usecases.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.shareIn
 import java.net.UnknownHostException
 
 class CharacterDetailActivity : AppCompatActivity() {
@@ -35,13 +37,12 @@ class CharacterDetailActivity : AppCompatActivity() {
                 intent.getIntExtra(EXTRA_SELECTED_CHARACTER, 0),
                 GetLocalCharacterById(characterRepository),
                 IsLocalCharacterFavorite(characterRepository),
-                GetRemoteComicsFromCharacterId(characterRepository),
                 InsertLocalFavoriteCharacter(characterRepository),
                 DeleteLocalFavoriteCharacter(characterRepository),
                 GetComicsInteractor(
                     GetRemoteComicsFromCharacterId(characterRepository),
                     InsertComicsForCharacterLocal(characterRepository),
-                    GetComicsForHero(characterRepository)
+                    GetComicsForCharacter(characterRepository)
                 )
             )
         }
@@ -53,55 +54,56 @@ class CharacterDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        binding.contentHeroDetail.comicList.adapter = adapter
-        characterDetailViewModel.model.observe(this, Observer(::updateUi))
+        binding.contentCharacterDetail.comicList.adapter = adapter
+        updateUi()
         manageNetworkManager()
+    }
+
+    private fun updateUi() {
+        lifecycleScope.launchWhenStarted {
+            characterDetailViewModel.uiModel.collect {
+                updateCharacter(it)
+            }
+        }
         showComics()
     }
 
+    private fun updateCharacter(uiModel: UiModel) {
+        binding.contentCharacterDetail.progress.isVisible =
+            uiModel is UiModel.Loading
+        if (uiModel is UiModel.SetUiDetails) {
+            setCharacterDetails(uiModel.character)
+            updateFAB(
+                uiModel.isCharacterFavorite,
+                uiModel.listener
+            )
+        }
+    }
 
     private fun showComics() {
-        binding.contentHeroDetail.apply {
-            characterDetailViewModel.comics.observe(this@CharacterDetailActivity) { comicEntity ->
+        binding.contentCharacterDetail.apply {
+            characterDetailViewModel.comicResurce.observe(this@CharacterDetailActivity) { comicEntity ->
                 adapter.submitList(comicEntity.data?.toComicComicList ?: emptyList())
-                progress.isVisible = comicEntity is Resource.Loading && comicEntity.data.isNullOrEmpty()
-                noComics.isVisible = comicEntity is Resource.Error && comicEntity.data.isNullOrEmpty()
+                progress.isVisible =
+                    comicEntity is Resource.Loading && comicEntity.data.isNullOrEmpty()
+                noComics.isVisible =
+                    comicEntity is Resource.Error && comicEntity.data.isNullOrEmpty()
                 if (comicEntity.error is UnknownHostException) {
-                    noComics.text = getString(R.string.no_chached_comics)
+                    noComics.text = getString(R.string.no_cached_comics)
                 }
             }
-        }
-
-    }
-
-    private fun manageNetworkManager() {
-        lifecycleScope.launchWhenStarted {
-            ManageNetworkManager(networkRepository).invoke(lifecycle, ::shouldShowOfflineMessage)
-        }
-    }
-
-    private fun shouldShowOfflineMessage(internetAvailable: Boolean) {
-        binding.contentHeroDetail.offlineStatus.isVisible = !internetAvailable
-    }
-
-    private fun updateUi(model: UiModel) {
-        binding.contentHeroDetail.progress.isVisible = model is UiModel.Loading
-        when (model) {
-            is UiModel.SetCharacterDetails -> setCharacterDetails(model.character)
-            is UiModel.UpdateFAB -> updateFAB(model.isCharacterFavorite, model.listener)
-            is UiModel.UpdateComics -> updateComics(model.comicList)
         }
     }
 
     private fun setCharacterDetails(character: Character) {
         this.selectedCharacter = character
-        binding.headerHeroImage.loadUrl(
+        binding.headerCharacterImage.loadUrl(
             character.thumbnail?.path,
             character.thumbnail?.extension
         )
         binding.toolbar.title = character.name ?: EMPTY_TEXT
         binding.toolbarLayout.title = character.name ?: EMPTY_TEXT
-        binding.contentHeroDetail.heroContent.text =
+        binding.contentCharacterDetail.characterContent.text =
             if (character.description.isNullOrBlank()) {
                 getString(R.string.content_not_available)
             } else {
@@ -110,28 +112,31 @@ class CharacterDetailActivity : AppCompatActivity() {
     }
 
     private fun updateFAB(
-        isCharacterFavorite: Boolean,
+        isCharacterFavorite: Flow<Int>,
         listener: (
-            selectedHero: Character,
-            comicList: MutableList<Comic>,
-            isCharacterFavorite: Boolean,
+            selectedCharacter: Character,
+            isCharacterFavorite: Boolean
         ) -> Unit
     ) {
-        setCharacterFavorite(isCharacterFavorite)
+        lifecycleScope.launchWhenStarted {
+            isCharacterFavorite.shareIn(lifecycleScope, SharingStarted.WhileSubscribed(), 1)
+                .collect {
+                    setCharacterFavorite(it > 0)
+                }
+        }
         listenToFab(listener)
     }
 
     private fun listenToFab(
         listener: (
-            selectedHero: Character,
-            comicList: MutableList<Comic>,
-            isCharacterFavorite: Boolean,
+            selectedCharacter: Character,
+            isCharacterFavorite: Boolean
         ) -> Unit
     ) {
         binding.fab.setOnClickListener {
             selectedCharacter?.let { character ->
                 setCharacterFavorite(this.isCharacterFavorite.not())
-                listener(character, adapter.currentList, this.isCharacterFavorite)
+                listener(character, this.isCharacterFavorite)
             }
         }
     }
@@ -145,11 +150,14 @@ class CharacterDetailActivity : AppCompatActivity() {
         )
     }
 
-    private fun updateComics(comicList: List<Comic>) {
-        if (comicList.isEmpty()) {
-            binding.contentHeroDetail.noComics.isVisible = true
+    private fun manageNetworkManager() {
+        lifecycleScope.launchWhenStarted {
+            ManageNetworkManager(networkRepository).invoke(lifecycle, ::shouldShowOfflineMessage)
         }
-        adapter.submitList(comicList)
+    }
+
+    private fun shouldShowOfflineMessage(internetAvailable: Boolean) {
+        binding.contentCharacterDetail.offlineStatus.isVisible = !internetAvailable
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

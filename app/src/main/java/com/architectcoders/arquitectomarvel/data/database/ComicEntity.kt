@@ -12,7 +12,7 @@ data class ComicEntity(
     val thumbnail: String?,
     val title: String?,
     val insertDate: Long?,
-    var idHero: Int? = null
+    var characterId: Int? = null
 )
 
 val List<Comic>.toComicEntityList: List<ComicEntity>
