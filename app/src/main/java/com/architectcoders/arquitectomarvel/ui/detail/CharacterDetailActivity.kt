@@ -11,6 +11,7 @@ import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.data.database.toComicComicList
 import com.architectcoders.arquitectomarvel.databinding.ActivityCharacterDetailBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
+import com.architectcoders.arquitectomarvel.ui.common.NetworkLogicViewModel.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel.*
 import com.architectcoders.domain.character.Character
 import com.architectcoders.usecases.*
@@ -28,6 +29,7 @@ class CharacterDetailActivity : AppCompatActivity() {
     private var selectedCharacter: Character? = null
     private var isCharacterFavorite = false
     private val characterDetailViewModel: CharacterDetailViewModel by viewModels()
+    private val networkLogicViewModel: NetworkLogicViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +43,7 @@ class CharacterDetailActivity : AppCompatActivity() {
 
     private fun updateUi() {
         lifecycleScope.launchWhenStarted {
-            characterDetailViewModel.uiNetworkModel.collect {
+            networkLogicViewModel.uiNetworkModel.collect {
                 updateNetwork(it)
             }
         }
@@ -132,7 +134,7 @@ class CharacterDetailActivity : AppCompatActivity() {
 
     private fun showComics() {
         binding.contentCharacterDetail.apply {
-            characterDetailViewModel.comicResurce.observe(this@CharacterDetailActivity) { comicEntity ->
+            characterDetailViewModel.comicResource.observe(this@CharacterDetailActivity) { comicEntity ->
                 adapter.submitList(comicEntity.data?.toComicComicList ?: emptyList())
                 progress.isVisible =
                     comicEntity is Resource.Loading && comicEntity.data.isNullOrEmpty()
