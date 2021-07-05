@@ -1,10 +1,10 @@
 package com.architectcoders.arquitectomarvel.ui.main
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager.Authenticators.*
 import androidx.core.app.ActivityOptionsCompat
@@ -156,14 +156,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setBiometricLogic() {
-        CheckAuthenticationState(biometricRepository).invoke()
         binding.favoriteFab.setOnClickListener {
-            SetBiometricAuthentication(biometricRepository).invoke(::navigateToFavorites)
+            SetBiometricAuthentication(biometricRepository).invoke(
+                onFail = {
+                    Toast.makeText(
+                        this, getString(R.string.something_wrong),
+                        Toast.LENGTH_LONG
+                    ).show()
+                },
+                onSuccess = {
+                    startActivity<FavoriteCharacterActivity> {}
+                }
+            )
         }
-    }
-
-    private fun navigateToFavorites() {
-        val intent = Intent(this, FavoriteCharacterActivity::class.java)
-        startActivity(intent)
     }
 }
