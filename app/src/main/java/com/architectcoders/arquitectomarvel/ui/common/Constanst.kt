@@ -4,6 +4,11 @@ package com.architectcoders.arquitectomarvel.ui.common
 const val BASE_URL = "https://gateway.marvel.com"
 const val EMPTY_RESPONSE = "Empty response"
 
+// BIOMETRIC
+const val BIOMETRIC_PREFERENCES = "biometricPreferences"
+const val AUTHENTICATION_TIMESTAMP = "authenticationTimestamp"
+const val IS_AUTHENTICATED = "isAuthenticated"
+
 // COMMON
 const val EMPTY_TEXT = "--"
 

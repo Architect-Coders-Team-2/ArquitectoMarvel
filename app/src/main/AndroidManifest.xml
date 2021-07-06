@@ -19,7 +19,6 @@
         tools:targetApi="n">
         <activity
             android:name=".ui.main.MainActivity"
-            android:theme="@style/MainActivityOnly"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,6 +30,9 @@
             android:name=".ui.detail.CharacterDetailActivity"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.ArquitectoMarvel.NoActionBar" />
+        <activity
+            android:name=".ui.favorite.FavoriteCharacterActivity"
+            android:parentActivityName=".ui.main.MainActivity" />
     </application>
 
 </manifest>

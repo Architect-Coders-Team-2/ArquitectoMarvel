@@ -24,6 +24,9 @@ interface MarvelDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllLocalCharacters(characterList: List<CharacterEntity>)
 
+    @Query("SELECT * FROM favoritecharacterentity ORDER BY name")
+    fun getLocalFavoriteCharacters(): Flow<List<FavoriteCharacterEntity>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLocalFavoriteCharacter(favoriteCharacterEntity: FavoriteCharacterEntity)
 

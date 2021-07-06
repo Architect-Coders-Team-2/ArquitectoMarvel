@@ -78,6 +78,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
 
     // test Default
     testImplementation 'junit:junit:4.13.2'
@@ -115,4 +116,7 @@ dependencies {
 
     // Paging 3
     implementation "androidx.paging:paging-runtime-ktx:3.0.0"
+
+    // Biometric
+    implementation "androidx.biometric:biometric-ktx:1.2.0-alpha03"
 }
