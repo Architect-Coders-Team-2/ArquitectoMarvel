@@ -3,7 +3,6 @@ package com.architectcoders.arquitectomarvel.ui.main.di
 import android.content.Context
 import com.architectcoders.arquitectomarvel.biometric.BiometricDataSourceImpl
 import com.architectcoders.data.repository.BiometricRepository
-import com.architectcoders.usecases.CheckAuthenticationState
 import com.architectcoders.usecases.SetBiometricAuthentication
 import dagger.Module
 import dagger.Provides
@@ -22,10 +21,6 @@ class MainActivityModule {
     @Provides
     fun biometricRepositoryProvider(biometricDataSourceImpl: BiometricDataSourceImpl): BiometricRepository =
         BiometricRepository(biometricDataSourceImpl)
-
-    @Provides
-    fun checkAuthenticationStateProvider(biometricRepository: BiometricRepository): CheckAuthenticationState =
-        CheckAuthenticationState(biometricRepository)
 
     @Provides
     fun setBiometricAuthenticationProvider(biometricRepository: BiometricRepository): SetBiometricAuthentication =
