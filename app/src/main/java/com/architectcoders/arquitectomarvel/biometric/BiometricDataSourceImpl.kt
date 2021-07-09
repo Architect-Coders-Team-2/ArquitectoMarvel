@@ -1,7 +1,6 @@
 package com.architectcoders.arquitectomarvel.biometric
 
 import android.content.Context
-import android.widget.Toast
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
@@ -32,9 +31,9 @@ class BiometricDataSourceImpl(
         }
     }
 
-    override fun setBiometricAuthentication(listener: () -> Unit) {
+    override fun setBiometricAuthentication(onFail: () -> Unit, onSuccess: () -> Unit) {
         if (sharedPreferences.getBoolean(IS_AUTHENTICATED, false) || !userCanAuthenticate()) {
-            listener()
+            onSuccess()
             return
         }
         executor = ContextCompat.getMainExecutor(context)
@@ -47,16 +46,12 @@ class BiometricDataSourceImpl(
                     override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                         super.onAuthenticationSucceeded(result)
                         saveAuthenticationState(true)
-                        listener()
+                        onSuccess()
                     }
 
                     override fun onAuthenticationFailed() {
                         super.onAuthenticationFailed()
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.something_wrong),
-                            Toast.LENGTH_LONG
-                        ).show()
+                        onFail()
                     }
                 })
         promptInfo = BiometricPrompt.PromptInfo.Builder()
