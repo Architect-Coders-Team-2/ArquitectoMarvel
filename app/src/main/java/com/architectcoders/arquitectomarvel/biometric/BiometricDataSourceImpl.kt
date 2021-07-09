@@ -23,7 +23,11 @@ class BiometricDataSourceImpl(
     private val sharedPreferences =
         context.getSharedPreferences(BIOMETRIC_PREFERENCES, Context.MODE_PRIVATE)
 
-    override fun checkAuthenticationState() {
+    init {
+        checkAuthenticationState()
+    }
+
+    private fun checkAuthenticationState() {
         val cacheTimeOut = TimeUnit.DAYS.toMillis(1)
         val lastTimeStamp = sharedPreferences.getLong(AUTHENTICATION_TIMESTAMP, -1L)
         if (lastTimeStamp != -1L && System.currentTimeMillis() - lastTimeStamp >= cacheTimeOut) {
