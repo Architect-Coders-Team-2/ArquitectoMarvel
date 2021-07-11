@@ -6,8 +6,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.architectcoders.arquitectomarvel.databinding.ComicItemBinding
 import com.architectcoders.domain.comic.Comic
+import javax.inject.Inject
 
-class ComicAdapter : ListAdapter<Comic, ComicViewHolder>(DiffUtilCallback) {
+class ComicAdapter @Inject constructor() : ListAdapter<Comic, ComicViewHolder>(DiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ComicViewHolder {
         val binding =

@@ -27,12 +27,15 @@ import javax.inject.Inject
 class CharacterDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCharacterDetailBinding
-    private val adapter by lazy { ComicAdapter() }
+
     private var selectedCharacter: Character? = null
     private var isCharacterFavorite = false
 
     @Inject
     lateinit var networkRepository: NetworkRepository
+
+    @Inject
+    lateinit var adapter: ComicAdapter
 
     private val characterDetailViewModel: CharacterDetailViewModel by viewModels()
 

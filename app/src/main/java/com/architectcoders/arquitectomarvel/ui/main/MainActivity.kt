@@ -48,15 +48,15 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
-    private val characterAdapter: CharacterAdapter by lazy {
-        CharacterAdapter(::navigateTo)
-    }
+    @Inject
+    lateinit var characterAdapter: CharacterAdapter
 
     @ExperimentalPagingApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        characterAdapter.listener = ::navigateTo
         setUpViews()
         collectLatestPager()
         manageNetworkManager()

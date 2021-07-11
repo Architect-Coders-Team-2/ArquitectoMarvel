@@ -39,9 +39,8 @@ class FavoriteCharacterActivity : AppCompatActivity() {
 
     private val favoriteCharacterViewModel: FavoriteCharacterViewModel by viewModels()
 
-    private val favoriteCharacterAdapter: FavoriteCharacterAdapter by lazy {
-        FavoriteCharacterAdapter(::navigateTo)
-    }
+    @Inject
+    lateinit var favoriteCharacterAdapter: FavoriteCharacterAdapter
 
     private fun navigateTo(character: Character, view: View) {
         Event(character).getContentIfNotHandled()?.let { resultValue ->
@@ -62,6 +61,7 @@ class FavoriteCharacterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityFavoriteCharacterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        favoriteCharacterAdapter.listener = ::navigateTo
         title = getString(R.string.favorite_characters)
         initFavoriteList()
         manageNetworkManager()

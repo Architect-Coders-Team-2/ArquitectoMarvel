@@ -9,9 +9,12 @@ import com.architectcoders.arquitectomarvel.data.database.CharacterEntity
 import com.architectcoders.arquitectomarvel.data.database.toDomainCharacter
 import com.architectcoders.arquitectomarvel.databinding.CharacterItemBinding
 import com.architectcoders.domain.character.Character
+import javax.inject.Inject
 
-class CharacterAdapter(private val listener: (Character, View) -> Unit) :
+class CharacterAdapter @Inject constructor() :
     PagingDataAdapter<CharacterEntity, CharacterViewHolder>(DiffCallback) {
+
+    lateinit var listener: (Character, View) -> Unit
 
     companion object DiffCallback : DiffUtil.ItemCallback<CharacterEntity>() {
         override fun areItemsTheSame(oldItem: CharacterEntity, newItem: CharacterEntity) =
