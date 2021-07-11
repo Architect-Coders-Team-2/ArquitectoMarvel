@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager.Authenticators.*
 import androidx.core.app.ActivityOptionsCompat
@@ -24,38 +25,28 @@ import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailActivity
 import com.architectcoders.arquitectomarvel.ui.favorite.FavoriteCharacterActivity
 import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterAdapter
 import com.architectcoders.arquitectomarvel.ui.main.pagination.LoadStateAdapter
+import com.architectcoders.data.repository.BiometricRepository
+import com.architectcoders.data.repository.NetworkRepository
 import com.architectcoders.domain.character.Character
 import com.architectcoders.usecases.*
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private var menuItem: MenuItem? = null
-    private val networkRepository by lazy {
-        ServiceLocator.provideNetworkRepository(
-            applicationContext
-        )
-    }
-    private val biometricRepository by lazy {
-        ServiceLocator.provideBiometricRepository(
-            this
-        )
-    }
-    private val viewModel by lazy {
-        val marvelRepository = ServiceLocator.provideMarvelRepository(this)
-        getViewModel {
-            MainViewModel(
-                GetRemoteCharacters(marvelRepository),
-                DeleteAllLocalCharacters(marvelRepository),
-                InsertAllLocalCharacters(marvelRepository),
-                GetLastTimeStampFromCharacterEntity(marvelRepository),
-                GetPagingSourceFromCharacterEntity(marvelRepository),
-                GetLocalCharactersCount(marvelRepository)
-            )
-        }
-    }
+
+    @Inject
+    lateinit var networkRepository: NetworkRepository
+
+    @Inject
+    lateinit var biometricRepository: BiometricRepository
+
+    private val viewModel: MainViewModel by viewModels()
 
     private val characterAdapter: CharacterAdapter by lazy {
         CharacterAdapter(::navigateTo)

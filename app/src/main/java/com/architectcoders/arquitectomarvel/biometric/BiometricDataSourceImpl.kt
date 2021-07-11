@@ -13,8 +13,9 @@ import com.architectcoders.arquitectomarvel.ui.common.IS_AUTHENTICATED
 import com.architectcoders.data.source.BiometricDataSource
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class BiometricDataSourceImpl(
+class BiometricDataSourceImpl @Inject constructor(
     private val context: Context
 ) : BiometricDataSource {
 

@@ -3,8 +3,9 @@ package com.architectcoders.arquitectomarvel.data.server
 import com.architectcoders.arquitectomarvel.BuildConfig
 import com.architectcoders.arquitectomarvel.ui.common.md5
 import com.architectcoders.data.source.CredentialsDataSource
+import javax.inject.Inject
 
-class MarvelCredentialDataSource : CredentialsDataSource {
+class MarvelCredentialDataSource @Inject constructor() : CredentialsDataSource {
     override val timeStamp: Long
         get() = System.currentTimeMillis()
     override val publicKey: String

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
@@ -14,31 +15,30 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.recyclerview.widget.GridLayoutManager
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityFavoriteCharacterBinding
-import com.architectcoders.arquitectomarvel.ui.common.*
+import com.architectcoders.arquitectomarvel.ui.common.EXTRA_SELECTED_CHARACTER
+import com.architectcoders.arquitectomarvel.ui.common.Event
+import com.architectcoders.arquitectomarvel.ui.common.calculateColumnsForGridLayout
+import com.architectcoders.arquitectomarvel.ui.common.startActivity
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailActivity
+import com.architectcoders.data.repository.NetworkRepository
 import com.architectcoders.domain.character.Character
-import com.architectcoders.usecases.GetLocalFavoriteCharacters
 import com.architectcoders.usecases.ManageNetworkManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class FavoriteCharacterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFavoriteCharacterBinding
     private var menuItem: MenuItem? = null
-    private val networkRepository by lazy {
-        ServiceLocator.provideNetworkRepository(
-            applicationContext
-        )
-    }
-    private val favoriteCharacterViewModel by lazy {
-        val marvelRepository = ServiceLocator.provideMarvelRepository(this)
-        getViewModel {
-            FavoriteCharacterViewModel(
-                GetLocalFavoriteCharacters(marvelRepository)
-            )
-        }
-    }
+
+    @Inject
+    lateinit var networkRepository: NetworkRepository
+
+    private val favoriteCharacterViewModel: FavoriteCharacterViewModel by viewModels()
+
     private val favoriteCharacterAdapter: FavoriteCharacterAdapter by lazy {
         FavoriteCharacterAdapter(::navigateTo)
     }

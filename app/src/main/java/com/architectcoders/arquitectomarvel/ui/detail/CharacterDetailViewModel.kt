@@ -7,18 +7,24 @@ import com.architectcoders.usecases.DeleteLocalFavoriteCharacter
 import com.architectcoders.usecases.GetLocalCharacterById
 import com.architectcoders.usecases.InsertLocalFavoriteCharacter
 import com.architectcoders.usecases.IsLocalCharacterFavorite
-import kotlinx.coroutines.flow.*
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.net.UnknownHostException
+import javax.inject.Inject
+import javax.inject.Named
 
-class CharacterDetailViewModel(
-    private val characterId: Int,
+@HiltViewModel
+class CharacterDetailViewModel @Inject constructor(
+    @Named("characterId") private val characterId: Int,
     private val getLocalCharacterById: GetLocalCharacterById,
     private val isLocalCharacterFavorite: IsLocalCharacterFavorite,
     private val insertLocalFavoriteCharacter: InsertLocalFavoriteCharacter,
     private val deleteLocalFavoriteCharacter: DeleteLocalFavoriteCharacter,
-    private val getComicsInteractor: GetComicsInteractor
+    getComicsInteractor: GetComicsInteractor
 ) : ViewModel() {
 
     val comicResurce = getComicsInteractor.networkBoundResourceResult(characterId)
