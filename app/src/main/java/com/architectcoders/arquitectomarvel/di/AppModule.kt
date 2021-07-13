@@ -1,6 +1,5 @@
 package com.architectcoders.arquitectomarvel.di
 
-import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.architectcoders.arquitectomarvel.data.database.MarvelDatabase
@@ -8,6 +7,11 @@ import com.architectcoders.arquitectomarvel.data.database.RoomDataSource
 import com.architectcoders.arquitectomarvel.data.server.MarvelCredentialDataSource
 import com.architectcoders.arquitectomarvel.data.server.RetrofitDataSource
 import com.architectcoders.arquitectomarvel.network.NetworkDataSourceImpl
+import com.architectcoders.data.source.CredentialsDataSource
+import com.architectcoders.data.source.LocalDataSource
+import com.architectcoders.data.source.NetworkDataSource
+import com.architectcoders.data.source.RemoteDataSource
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,7 +21,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class AppModule {
+class AppModuleProvider {
 
     @Singleton
     @Provides
@@ -27,18 +31,25 @@ class AppModule {
             MarvelDatabase::class.java,
             "marvelDb"
         ).build()
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class AppModuleBinder {
 
     @Singleton
-    @Provides
-    fun roomDataSourceProvider(db: MarvelDatabase): RoomDataSource = RoomDataSource(db)
+    @Binds
+    abstract fun bindsRoomDataSource(roomDataSource: RoomDataSource): LocalDataSource
 
     @Singleton
-    @Provides
-    fun retrofitDataSourceProvider(): RetrofitDataSource =
-        RetrofitDataSource(MarvelCredentialDataSource())
+    @Binds
+    abstract fun bindsCredentialDataSource(marvelCredentialDataSource: MarvelCredentialDataSource): CredentialsDataSource
 
     @Singleton
-    @Provides
-    fun networkDataSourceProvider(app: Application): NetworkDataSourceImpl =
-        NetworkDataSourceImpl(app)
+    @Binds
+    abstract fun bindsRetrofitDataSource(retrofitDataSource: RetrofitDataSource): RemoteDataSource
+
+    @Singleton
+    @Binds
+    abstract fun bindsNetworkDataSourceProvider(networkDataSourceImpl: NetworkDataSourceImpl): NetworkDataSource
 }
