@@ -8,34 +8,41 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
 @InstallIn(ViewModelComponent::class)
 class MainViewModelModule {
 
+    @ViewModelScoped
     @Provides
     fun getRemoteCharactersProvider(marvelRepository: MarvelRepository): GetRemoteCharacters =
         GetRemoteCharacters(marvelRepository)
 
+    @ViewModelScoped
     @Provides
     fun deleteAllLocalCharactersProvider(marvelRepository: MarvelRepository): DeleteAllLocalCharacters =
         DeleteAllLocalCharacters(marvelRepository)
 
+    @ViewModelScoped
     @Provides
     fun insertAllLocalCharactersProvider(marvelRepository: MarvelRepository): InsertAllLocalCharacters =
         InsertAllLocalCharacters(marvelRepository)
 
+    @ViewModelScoped
     @Provides
     fun getLastTimeStampFromCharacterEntityProvider(
         marvelRepository: MarvelRepository
     ): GetLastTimeStampFromCharacterEntity =
         GetLastTimeStampFromCharacterEntity(marvelRepository)
 
+    @ViewModelScoped
     @Provides
     fun getLocalCharactersCountProvider(marvelRepository: MarvelRepository): GetLocalCharactersCount =
         GetLocalCharactersCount(marvelRepository)
 
     @ExperimentalPagingApi
+    @ViewModelScoped
     @Provides
     fun getCharacterRemoteMediatorProvider(
         getRemoteCharacters: GetRemoteCharacters,
@@ -52,6 +59,7 @@ class MainViewModelModule {
             getLocalCharactersCount
         )
 
+    @ViewModelScoped
     @Provides
     fun getPagingSourceFromCharacterEntityProvider(
         marvelRepository: MarvelRepository
