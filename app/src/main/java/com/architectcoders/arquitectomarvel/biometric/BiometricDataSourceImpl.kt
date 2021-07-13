@@ -10,11 +10,13 @@ import com.architectcoders.arquitectomarvel.ui.common.AUTHENTICATION_TIMESTAMP
 import com.architectcoders.arquitectomarvel.ui.common.BIOMETRIC_PREFERENCES
 import com.architectcoders.arquitectomarvel.ui.common.IS_AUTHENTICATED
 import com.architectcoders.data.source.BiometricDataSource
+import dagger.hilt.android.qualifiers.ActivityContext
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class BiometricDataSourceImpl(
-    private val context: Context
+class BiometricDataSourceImpl @Inject constructor(
+    @ActivityContext private val context: Context
 ) : BiometricDataSource {
 
     private lateinit var executor: Executor
