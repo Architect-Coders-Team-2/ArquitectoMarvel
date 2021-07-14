@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager.Authenticators.*
 import androidx.core.app.ActivityOptionsCompat
@@ -26,9 +27,11 @@ import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterAdapter
 import com.architectcoders.arquitectomarvel.ui.main.pagination.LoadStateAdapter
 import com.architectcoders.domain.character.Character
 import com.architectcoders.usecases.*
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -43,19 +46,8 @@ class MainActivity : AppCompatActivity() {
             this
         )
     }
-    private val viewModel by lazy {
-        val marvelRepository = ServiceLocator.provideMarvelRepository(this)
-        getViewModel {
-            MainViewModel(
-                GetRemoteCharacters(marvelRepository),
-                DeleteAllLocalCharacters(marvelRepository),
-                InsertAllLocalCharacters(marvelRepository),
-                GetLastTimeStampFromCharacterEntity(marvelRepository),
-                GetPagingSourceFromCharacterEntity(marvelRepository),
-                GetLocalCharactersCount(marvelRepository)
-            )
-        }
-    }
+
+    private val viewModel: MainViewModel by viewModels()
 
     private val characterAdapter: CharacterAdapter by lazy {
         CharacterAdapter(::navigateTo)

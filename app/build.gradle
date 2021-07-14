@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
+    id 'dagger.hilt.android.plugin'
 }
 
 def secretProperties() {
@@ -29,8 +30,8 @@ android {
     def MARVEL_API_KEY = 'MARVEL_API_KEY'
     def MARVEL_PRIVATE_KEY = 'MARVEL_PRIVATE_KEY'
 
-    def apikey = "default-apikey"
-    def privatekey = "default-privatekey"
+    def apikey = "35f1d0573cb2d1dc92ab533528b8d53e"
+    def privatekey = "cb10389acb90a43ccf2450703f77663fcde568af"
     try {
         apikey = secretProperties()[MARVEL_API_KEY]
         privatekey = secretProperties()[MARVEL_PRIVATE_KEY]
@@ -119,4 +120,12 @@ dependencies {
 
     // Biometric
     implementation "androidx.biometric:biometric-ktx:1.2.0-alpha03"
+
+    // Hilt
+    implementation 'com.google.dagger:hilt-android:2.37'
+    kapt 'com.google.dagger:hilt-android-compiler:2.37'
+}
+
+kapt {
+    correctErrorTypes = true
 }

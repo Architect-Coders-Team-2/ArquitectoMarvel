@@ -7,13 +7,17 @@ import com.architectcoders.usecases.DeleteLocalFavoriteCharacter
 import com.architectcoders.usecases.GetLocalCharacterById
 import com.architectcoders.usecases.InsertLocalFavoriteCharacter
 import com.architectcoders.usecases.IsLocalCharacterFavorite
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.net.UnknownHostException
+import javax.inject.Inject
+import javax.inject.Named
 
-class CharacterDetailViewModel(
-    private val characterId: Int,
+@HiltViewModel
+class CharacterDetailViewModel @Inject constructor(
+    @Named("characterId") private val characterId: Int,
     private val getLocalCharacterById: GetLocalCharacterById,
     private val isLocalCharacterFavorite: IsLocalCharacterFavorite,
     private val insertLocalFavoriteCharacter: InsertLocalFavoriteCharacter,

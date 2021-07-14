@@ -3,6 +3,7 @@ package com.architectcoders.arquitectomarvel.ui.detail
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -13,12 +14,14 @@ import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel.UiModel
 import com.architectcoders.domain.character.Character
 import com.architectcoders.usecases.*
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.shareIn
 import java.net.UnknownHostException
 
+@AndroidEntryPoint
 class CharacterDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCharacterDetailBinding
@@ -30,23 +33,8 @@ class CharacterDetailActivity : AppCompatActivity() {
             applicationContext
         )
     }
-    private val characterDetailViewModel by lazy {
-        getViewModel {
-            val characterRepository = ServiceLocator.provideMarvelRepository(this)
-            CharacterDetailViewModel(
-                intent.getIntExtra(EXTRA_SELECTED_CHARACTER, 0),
-                GetLocalCharacterById(characterRepository),
-                IsLocalCharacterFavorite(characterRepository),
-                InsertLocalFavoriteCharacter(characterRepository),
-                DeleteLocalFavoriteCharacter(characterRepository),
-                GetComicsInteractor(
-                    GetRemoteComicsFromCharacterId(characterRepository),
-                    InsertComicsForCharacterLocal(characterRepository),
-                    GetComicsForCharacter(characterRepository)
-                )
-            )
-        }
-    }
+
+    private val characterDetailViewModel: CharacterDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

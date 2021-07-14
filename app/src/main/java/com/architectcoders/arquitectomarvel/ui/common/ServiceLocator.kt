@@ -31,9 +31,4 @@ object ServiceLocator {
             )
         )
 
-    fun provideMarvelRepository(context: Context): MarvelRepository =
-        MarvelRepository(
-            RetrofitDataSource(MarvelCredentialDataSource()),
-            RoomDataSource(MarvelDatabase.getInstance(context))
-        )
 }

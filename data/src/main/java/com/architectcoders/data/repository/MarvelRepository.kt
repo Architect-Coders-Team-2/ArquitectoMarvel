@@ -6,7 +6,7 @@ import com.architectcoders.domain.character.Character
 import com.architectcoders.domain.character.CharactersPayload
 import com.architectcoders.domain.comic.ComicsPayload
 
-class MarvelRepository(
+class MarvelRepository (
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource
 ) {

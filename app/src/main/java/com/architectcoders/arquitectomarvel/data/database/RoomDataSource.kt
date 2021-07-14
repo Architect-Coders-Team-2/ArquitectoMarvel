@@ -5,10 +5,10 @@ import com.architectcoders.data.source.LocalDataSource
 import com.architectcoders.domain.character.Character
 import com.architectcoders.domain.comic.Comic
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class RoomDataSource(db: MarvelDatabase) : LocalDataSource {
+class RoomDataSource @Inject constructor(private val characterDao: MarvelDao) : LocalDataSource {
 
-    private val characterDao = db.marvelDao
 
     override suspend fun getLocalCharacterById(characterId: Int): Character =
         characterDao.getLocalCharacterById(characterId).toDomainCharacter

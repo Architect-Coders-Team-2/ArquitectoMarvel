@@ -5,8 +5,9 @@ import androidx.lifecycle.Lifecycle
 import com.architectcoders.arquitectomarvel.ui.common.NetworkManager
 import com.architectcoders.data.source.NetworkDataSource
 import kotlinx.coroutines.flow.collect
+import javax.inject.Inject
 
-class NetworkDataSourceImpl(
+class NetworkDataSourceImpl @Inject constructor(
     private val context: Context
 ) : NetworkDataSource {
 

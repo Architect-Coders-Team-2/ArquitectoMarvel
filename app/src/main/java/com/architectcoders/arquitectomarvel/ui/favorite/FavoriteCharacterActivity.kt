@@ -31,14 +31,14 @@ class FavoriteCharacterActivity : AppCompatActivity() {
             applicationContext
         )
     }
-    private val favoriteCharacterViewModel by lazy {
+   /* private val favoriteCharacterViewModel by lazy {
         val marvelRepository = ServiceLocator.provideMarvelRepository(this)
         getViewModel {
             FavoriteCharacterViewModel(
                 GetLocalFavoriteCharacters(marvelRepository)
             )
         }
-    }
+    }*/
     private val favoriteCharacterAdapter: FavoriteCharacterAdapter by lazy {
         FavoriteCharacterAdapter(::navigateTo)
     }
@@ -95,11 +95,11 @@ class FavoriteCharacterActivity : AppCompatActivity() {
     }
 
     private fun updateUi() {
-        lifecycleScope.launchWhenStarted {
+      /*  lifecycleScope.launchWhenStarted {
             favoriteCharacterViewModel.uiModel.collect {
                 updateFavoriteCharacterList(it)
             }
-        }
+        }*/
     }
 
     private suspend fun updateFavoriteCharacterList(uiModel: FavoriteCharacterViewModel.UiModel) {

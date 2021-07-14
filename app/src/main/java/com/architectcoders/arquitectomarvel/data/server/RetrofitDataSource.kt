@@ -6,15 +6,16 @@ import com.architectcoders.data.source.CredentialsDataSource
 import com.architectcoders.data.source.RemoteDataSource
 import com.architectcoders.domain.character.CharactersPayload
 import com.architectcoders.domain.comic.ComicsPayload
+import javax.inject.Inject
 
-class RetrofitDataSource(
+class RetrofitDataSource @Inject constructor(
     override val credentialsDataSource: CredentialsDataSource,
+    private val apiService: ApiService
 ) : RemoteDataSource {
 
-    private val marvelApi = MarvelApiRest.service
 
     override suspend fun getRemoteCharacters(offset: Int): CharactersPayload =
-        marvelApi.getCharacters(
+        apiService.getCharacters(
             credentialsDataSource.timeStamp,
             credentialsDataSource.publicKey,
             credentialsDataSource.hash,
@@ -22,7 +23,7 @@ class RetrofitDataSource(
         ).toLocalCharactersPayload
 
     override suspend fun getRemoteCharacterById(characterId: Int): CharactersPayload =
-        marvelApi.getCharacterById(
+        apiService.getCharacterById(
             characterId,
             credentialsDataSource.timeStamp,
             credentialsDataSource.publicKey,
@@ -30,7 +31,7 @@ class RetrofitDataSource(
         ).toLocalCharactersPayload
 
     override suspend fun getRemoteComics(characterId: Int): ComicsPayload? =
-        marvelApi.getComics(
+        apiService.getComics(
             characterId,
             credentialsDataSource.timeStamp,
             credentialsDataSource.publicKey,
