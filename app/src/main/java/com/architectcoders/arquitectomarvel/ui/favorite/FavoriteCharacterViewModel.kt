@@ -4,12 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.architectcoders.arquitectomarvel.data.database.FavoriteCharacterEntity
 import com.architectcoders.usecases.GetLocalFavoriteCharacters
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FavoriteCharacterViewModel(
+@HiltViewModel
+class FavoriteCharacterViewModel @Inject constructor(
     private val getLocalFavoriteCharacters: GetLocalFavoriteCharacters
 ) : ViewModel() {
 

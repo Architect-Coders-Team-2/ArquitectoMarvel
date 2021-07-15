@@ -4,11 +4,12 @@ import android.content.Context
 import androidx.lifecycle.Lifecycle
 import com.architectcoders.arquitectomarvel.ui.common.NetworkManager
 import com.architectcoders.data.source.NetworkDataSource
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 class NetworkDataSourceImpl @Inject constructor(
-    private val context: Context
+    @ApplicationContext private val context: Context
 ) : NetworkDataSource {
 
     override suspend fun manageNetworkManager(lifecycle: Any, listener: (Boolean) -> Unit) {

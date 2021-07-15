@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
@@ -19,9 +20,10 @@ import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailActivity
 import com.architectcoders.domain.character.Character
 import com.architectcoders.usecases.GetLocalFavoriteCharacters
 import com.architectcoders.usecases.ManageNetworkManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
-
+@AndroidEntryPoint
 class FavoriteCharacterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFavoriteCharacterBinding
@@ -31,20 +33,15 @@ class FavoriteCharacterActivity : AppCompatActivity() {
             applicationContext
         )
     }
-   /* private val favoriteCharacterViewModel by lazy {
-        val marvelRepository = ServiceLocator.provideMarvelRepository(this)
-        getViewModel {
-            FavoriteCharacterViewModel(
-                GetLocalFavoriteCharacters(marvelRepository)
-            )
-        }
-    }*/
+
+    private val favoriteCharacterViewModel: FavoriteCharacterViewModel by viewModels()
+
     private val favoriteCharacterAdapter: FavoriteCharacterAdapter by lazy {
         FavoriteCharacterAdapter(::navigateTo)
     }
 
     private fun navigateTo(character: Character, view: View) {
-        Event(character).getContentIfNotHandled()?.let { resultValue ->
+        Event(character).getContentIfNotHandled()?.let {resultValue  ->
             val options =
                 ActivityOptionsCompat.makeSceneTransitionAnimation(
                     this,
@@ -95,11 +92,11 @@ class FavoriteCharacterActivity : AppCompatActivity() {
     }
 
     private fun updateUi() {
-      /*  lifecycleScope.launchWhenStarted {
+        lifecycleScope.launchWhenStarted {
             favoriteCharacterViewModel.uiModel.collect {
                 updateFavoriteCharacterList(it)
             }
-        }*/
+        }
     }
 
     private suspend fun updateFavoriteCharacterList(uiModel: FavoriteCharacterViewModel.UiModel) {
