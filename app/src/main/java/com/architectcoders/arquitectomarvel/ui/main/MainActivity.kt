@@ -1,10 +1,11 @@
 package com.architectcoders.arquitectomarvel.ui.main
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager.Authenticators.*
 import androidx.core.app.ActivityOptionsCompat
@@ -22,40 +23,25 @@ import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailActivity
 import com.architectcoders.arquitectomarvel.ui.favorite.FavoriteCharacterActivity
+import com.architectcoders.arquitectomarvel.ui.main.MainViewModel.*
 import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterAdapter
 import com.architectcoders.arquitectomarvel.ui.main.pagination.LoadStateAdapter
 import com.architectcoders.domain.character.Character
 import com.architectcoders.usecases.*
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    @Inject
+    lateinit var setBiometricAuthentication: SetBiometricAuthentication
 
     private lateinit var binding: ActivityMainBinding
     private var menuItem: MenuItem? = null
-    private val networkRepository by lazy {
-        ServiceLocator.provideNetworkRepository(
-            applicationContext
-        )
-    }
-    private val biometricRepository by lazy {
-        ServiceLocator.provideBiometricRepository(
-            this
-        )
-    }
-    private val viewModel by lazy {
-        val marvelRepository = ServiceLocator.provideMarvelRepository(this)
-        getViewModel {
-            MainViewModel(
-                GetRemoteCharacters(marvelRepository),
-                DeleteAllLocalCharacters(marvelRepository),
-                InsertAllLocalCharacters(marvelRepository),
-                GetLastTimeStampFromCharacterEntity(marvelRepository),
-                GetPagingSourceFromCharacterEntity(marvelRepository),
-                GetLocalCharactersCount(marvelRepository)
-            )
-        }
-    }
+    private val viewModel: MainViewModel by viewModels()
 
     private val characterAdapter: CharacterAdapter by lazy {
         CharacterAdapter(::navigateTo)
@@ -68,7 +54,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setUpViews()
         collectLatestPager()
-        manageNetworkManager()
         setBiometricLogic()
     }
 
@@ -97,6 +82,29 @@ class MainActivity : AppCompatActivity() {
                 footerAdapter.loadState = it.refresh
             }
         }
+        lifecycleScope.launchWhenStarted {
+            viewModel.uiModel.collect {
+                updateUi(it)
+            }
+        }
+    }
+
+    private fun updateUi(uiModel: UiModel) {
+        when (uiModel) {
+            is UiModel.InitNetworkManager -> uiModel.listener(lifecycle)
+            is UiModel.SetNetworkAvailability -> shouldShowOfflineIcon(uiModel.isAvailable)
+        }
+    }
+
+    /**
+     * If the visibility suddenly changes when we had already changed it a few seconds ago,
+     * we need to wait to avoid race conditions.
+     */
+    private fun shouldShowOfflineIcon(internetAvailable: Boolean) {
+        lifecycleScope.launchWhenStarted {
+            delay(TIME_MILLIS_DELAY_TO_AVOID_TOOLBAR_RACE_CONDITION)
+            menuItem?.isVisible = !internetAvailable
+        }
     }
 
     @ExperimentalPagingApi
@@ -108,9 +116,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun manageNetworkManager() {
-        lifecycleScope.launchWhenStarted {
-            ManageNetworkManager(networkRepository).invoke(lifecycle, ::shouldShowOfflineIcon)
+    private fun setBiometricLogic() {
+        binding.favoriteFab.setOnClickListener {
+            setBiometricAuthentication.invoke(
+                onFail = {
+                    Toast.makeText(
+                        this, getString(R.string.something_wrong),
+                        Toast.LENGTH_LONG
+                    ).show()
+                },
+                onSuccess = {
+                    startActivity<FavoriteCharacterActivity> {}
+                }
+            )
         }
     }
 
@@ -142,28 +160,5 @@ class MainActivity : AppCompatActivity() {
             menuItem?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
         }
         return true
-    }
-
-    /**
-     * If the visibility suddenly changes when we had already changed it a few seconds ago,
-     * we need to wait to avoid race conditions.
-     */
-    private fun shouldShowOfflineIcon(internetAvailable: Boolean) {
-        lifecycleScope.launchWhenStarted {
-            delay(200)
-            menuItem?.isVisible = !internetAvailable
-        }
-    }
-
-    private fun setBiometricLogic() {
-        CheckAuthenticationState(biometricRepository).invoke()
-        binding.favoriteFab.setOnClickListener {
-            SetBiometricAuthentication(biometricRepository).invoke(::navigateToFavorites)
-        }
-    }
-
-    private fun navigateToFavorites() {
-        val intent = Intent(this, FavoriteCharacterActivity::class.java)
-        startActivity(intent)
     }
 }

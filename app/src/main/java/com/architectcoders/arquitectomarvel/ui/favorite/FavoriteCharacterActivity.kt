@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
@@ -16,29 +17,17 @@ import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityFavoriteCharacterBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailActivity
+import com.architectcoders.arquitectomarvel.ui.favorite.FavoriteCharacterViewModel.*
 import com.architectcoders.domain.character.Character
-import com.architectcoders.usecases.GetLocalFavoriteCharacters
-import com.architectcoders.usecases.ManageNetworkManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 
+@AndroidEntryPoint
 class FavoriteCharacterActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityFavoriteCharacterBinding
     private var menuItem: MenuItem? = null
-    private val networkRepository by lazy {
-        ServiceLocator.provideNetworkRepository(
-            applicationContext
-        )
-    }
-    private val favoriteCharacterViewModel by lazy {
-        val marvelRepository = ServiceLocator.provideMarvelRepository(this)
-        getViewModel {
-            FavoriteCharacterViewModel(
-                GetLocalFavoriteCharacters(marvelRepository)
-            )
-        }
-    }
+    private val favoriteCharacterViewModel: FavoriteCharacterViewModel by viewModels()
     private val favoriteCharacterAdapter: FavoriteCharacterAdapter by lazy {
         FavoriteCharacterAdapter(::navigateTo)
     }
@@ -64,7 +53,6 @@ class FavoriteCharacterActivity : AppCompatActivity() {
         setContentView(binding.root)
         title = getString(R.string.favorite_characters)
         initFavoriteList()
-        manageNetworkManager()
         updateUi()
     }
 
@@ -77,9 +65,23 @@ class FavoriteCharacterActivity : AppCompatActivity() {
         }
     }
 
-    private fun manageNetworkManager() {
+    private fun updateUi() {
         lifecycleScope.launchWhenStarted {
-            ManageNetworkManager(networkRepository).invoke(lifecycle, ::shouldShowOfflineIcon)
+            favoriteCharacterViewModel.uiNetworkModel.collect {
+                updateNetworkUi(it)
+            }
+        }
+        lifecycleScope.launchWhenStarted {
+            favoriteCharacterViewModel.uiModel.collect {
+                updateFavoriteCharacterList(it)
+            }
+        }
+    }
+
+    private fun updateNetworkUi(uiNetworkModel: UiNetworkModel) {
+        when (uiNetworkModel) {
+            is UiNetworkModel.InitNetworkManager -> uiNetworkModel.listener(lifecycle)
+            is UiNetworkModel.SetNetworkAvailability -> shouldShowOfflineIcon(uiNetworkModel.isAvailable)
         }
     }
 
@@ -94,17 +96,9 @@ class FavoriteCharacterActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateUi() {
-        lifecycleScope.launchWhenStarted {
-            favoriteCharacterViewModel.uiModel.collect {
-                updateFavoriteCharacterList(it)
-            }
-        }
-    }
-
-    private suspend fun updateFavoriteCharacterList(uiModel: FavoriteCharacterViewModel.UiModel) {
-        binding.progress.isVisible = uiModel is FavoriteCharacterViewModel.UiModel.Loading
-        if (uiModel is FavoriteCharacterViewModel.UiModel.RetrieveFavoriteCharacters) {
+    private suspend fun updateFavoriteCharacterList(uiModel: UiModel) {
+        binding.progress.isVisible = uiModel is UiModel.Loading
+        if (uiModel is UiModel.RetrieveFavoriteCharacters) {
             uiModel.favoriteCharacterList.collect {
                 binding.noFavorites.isVisible = it.isEmpty()
                 favoriteCharacterAdapter.submitList(it)
