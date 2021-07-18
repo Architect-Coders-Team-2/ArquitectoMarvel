@@ -21,6 +21,7 @@ import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.data.*
 import com.architectcoders.arquitectomarvel.databinding.ActivityMainBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
+import com.architectcoders.arquitectomarvel.ui.common.NetworkLogicViewModel.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailActivity
 import com.architectcoders.arquitectomarvel.ui.favorite.FavoriteCharacterActivity
 import com.architectcoders.arquitectomarvel.ui.main.MainViewModel.*
@@ -41,7 +42,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private var menuItem: MenuItem? = null
-    private val viewModel: MainViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels()
+    private val networkLogicViewModel: NetworkLogicViewModel by viewModels()
 
     private val characterAdapter: CharacterAdapter by lazy {
         CharacterAdapter(::navigateTo)
@@ -83,16 +85,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
         lifecycleScope.launchWhenStarted {
-            viewModel.uiModel.collect {
+            networkLogicViewModel.uiNetworkModel.collect {
                 updateUi(it)
             }
         }
     }
 
-    private fun updateUi(uiModel: UiModel) {
-        when (uiModel) {
-            is UiModel.InitNetworkManager -> uiModel.listener(lifecycle)
-            is UiModel.SetNetworkAvailability -> shouldShowOfflineIcon(uiModel.isAvailable)
+    private fun updateUi(uiNetworkModel: UiNetworkModel) {
+        when (uiNetworkModel) {
+            is UiNetworkModel.InitNetworkManager -> uiNetworkModel.listener(lifecycle)
+            is UiNetworkModel.SetNetworkAvailability -> shouldShowOfflineIcon(uiNetworkModel.isAvailable)
         }
     }
 
@@ -110,7 +112,7 @@ class MainActivity : AppCompatActivity() {
     @ExperimentalPagingApi
     private fun collectLatestPager() {
         lifecycleScope.launchWhenStarted {
-            viewModel.pager.collectLatest {
+            mainViewModel.pager.collectLatest {
                 characterAdapter.submitData(lifecycle, it)
             }
         }

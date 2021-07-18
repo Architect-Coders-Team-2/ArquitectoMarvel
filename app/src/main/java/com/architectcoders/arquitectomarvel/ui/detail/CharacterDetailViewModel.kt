@@ -1,10 +1,12 @@
 package com.architectcoders.arquitectomarvel.ui.detail
 
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.architectcoders.domain.character.Character
-import com.architectcoders.usecases.*
+import com.architectcoders.usecases.DeleteLocalFavoriteCharacter
+import com.architectcoders.usecases.GetLocalCharacterById
+import com.architectcoders.usecases.InsertLocalFavoriteCharacter
+import com.architectcoders.usecases.IsLocalCharacterFavorite
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,18 +24,10 @@ class CharacterDetailViewModel @Inject constructor(
     private val isLocalCharacterFavorite: IsLocalCharacterFavorite,
     private val insertLocalFavoriteCharacter: InsertLocalFavoriteCharacter,
     private val deleteLocalFavoriteCharacter: DeleteLocalFavoriteCharacter,
-    private val getComicsInteractor: GetComicsInteractor,
-    private val handleNetworkManager: HandleNetworkManager
+    private val getComicsInteractor: GetComicsInteractor
 ) : ViewModel() {
 
-    val comicResurce = getComicsInteractor.networkBoundResourceResult(characterId)
-    private val _uiNetworkModel: MutableStateFlow<UiNetworkModel> =
-        MutableStateFlow(UiNetworkModel.Refresh)
-    val uiNetworkModel: StateFlow<UiNetworkModel>
-        get() {
-            initNetworkManager()
-            return _uiNetworkModel
-        }
+    val comicResource = getComicsInteractor.networkBoundResourceResult(characterId)
 
     private val _uiModel: MutableStateFlow<UiModel> =
         MutableStateFlow(UiModel.Refresh)
@@ -44,12 +38,6 @@ class CharacterDetailViewModel @Inject constructor(
             }
             return _uiModel
         }
-
-    sealed class UiNetworkModel {
-        object Refresh : UiNetworkModel()
-        class InitNetworkManager(val listener: (Lifecycle) -> Unit) : UiNetworkModel()
-        class SetNetworkAvailability(val isAvailable: Boolean) : UiNetworkModel()
-    }
 
     sealed class UiModel {
         object Refresh : UiModel()
@@ -62,20 +50,6 @@ class CharacterDetailViewModel @Inject constructor(
                 isCharacterFavorite: Boolean
             ) -> Unit
         ) : UiModel()
-    }
-
-    private fun initNetworkManager() {
-        _uiNetworkModel.value = UiNetworkModel.InitNetworkManager(::manageNetworkManager)
-    }
-
-    private fun manageNetworkManager(lifecycle: Lifecycle) {
-        viewModelScope.launch {
-            handleNetworkManager.invoke(lifecycle, ::isNetworkAvailable)
-        }
-    }
-
-    private fun isNetworkAvailable(isAvailable: Boolean) {
-        _uiNetworkModel.value = UiNetworkModel.SetNetworkAvailability(isAvailable)
     }
 
     private fun refresh() {

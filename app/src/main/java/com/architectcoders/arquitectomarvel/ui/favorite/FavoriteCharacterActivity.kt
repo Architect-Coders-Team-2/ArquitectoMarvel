@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityFavoriteCharacterBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
+import com.architectcoders.arquitectomarvel.ui.common.NetworkLogicViewModel.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailActivity
 import com.architectcoders.arquitectomarvel.ui.favorite.FavoriteCharacterViewModel.*
 import com.architectcoders.domain.character.Character
@@ -28,6 +29,7 @@ class FavoriteCharacterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFavoriteCharacterBinding
     private var menuItem: MenuItem? = null
     private val favoriteCharacterViewModel: FavoriteCharacterViewModel by viewModels()
+    private val networkLogicViewModel: NetworkLogicViewModel by viewModels()
     private val favoriteCharacterAdapter: FavoriteCharacterAdapter by lazy {
         FavoriteCharacterAdapter(::navigateTo)
     }
@@ -67,7 +69,7 @@ class FavoriteCharacterActivity : AppCompatActivity() {
 
     private fun updateUi() {
         lifecycleScope.launchWhenStarted {
-            favoriteCharacterViewModel.uiNetworkModel.collect {
+            networkLogicViewModel.uiNetworkModel.collect {
                 updateNetworkUi(it)
             }
         }
