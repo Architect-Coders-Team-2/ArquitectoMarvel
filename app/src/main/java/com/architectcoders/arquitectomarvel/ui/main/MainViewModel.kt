@@ -11,25 +11,17 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
-    getRemoteCharacters: GetRemoteCharacters,
-    deleteAllLocalCharacters: DeleteAllLocalCharacters,
-    insertAllLocalCharacters: InsertAllLocalCharacters,
-    getLastTimeStampFromCharacterEntity: GetLastTimeStampFromCharacterEntity,
+class MainViewModel @ExperimentalPagingApi
+@Inject constructor(
     getPagingSourceFromCharacterEntity: GetPagingSourceFromCharacterEntity,
-    getLocalCharactersCount: GetLocalCharactersCount
+    characterRemoteMediator: CharacterRemoteMediator
 ) : ViewModel() {
+
     @ExperimentalPagingApi
+    @Suppress("UNCHECKED_CAST")
     val pager = Pager(
         config = PagingConfig(pageSize = REQUEST_LIMIT / 2),
-        remoteMediator =
-        CharacterRemoteMediator(
-            getRemoteCharacters,
-            deleteAllLocalCharacters,
-            insertAllLocalCharacters,
-            getLastTimeStampFromCharacterEntity,
-            getLocalCharactersCount
-        )
+        remoteMediator = characterRemoteMediator
     ) {
         getPagingSourceFromCharacterEntity.invoke() as PagingSource<Int, CharacterEntity>
     }.flow.cachedIn(viewModelScope)

@@ -13,9 +13,8 @@ import javax.inject.Named
 
 @Module
 @InstallIn(ViewModelComponent::class)
-object CharacterDetailViewModel {
+object CharacterDetailViewModelModule {
 
-    // For CharacterDetailViewModel
     @Provides
     @Named("characterId")
     fun characterIdProvider(stateHandle: SavedStateHandle): Int =

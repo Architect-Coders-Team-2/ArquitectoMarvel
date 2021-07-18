@@ -147,7 +147,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setBiometricLogic() {
-        CheckAuthenticationState(biometricRepository).invoke()
+        CheckAuthenticationState(biometricRepository)
         binding.favoriteFab.setOnClickListener {
             SetBiometricAuthentication(biometricRepository).invoke(::navigateToFavorites)
         }

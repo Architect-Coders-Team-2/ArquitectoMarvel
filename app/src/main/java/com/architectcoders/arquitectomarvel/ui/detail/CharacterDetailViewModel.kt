@@ -54,10 +54,11 @@ class CharacterDetailViewModel @Inject constructor(
         loadCharacterById(characterId)
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun loadCharacterById(characterId: Int) {
         viewModelScope.launch {
             try {
-                val character = getLocalCharacterById.invoke(characterId)
+                val character = getLocalCharacterById(characterId)
                 val isCharacterFavorite = isLocalCharacterFavorite.invoke(characterId) as Flow<Int>
                 _uiModel.value =
                     UiModel.SetUiDetails(character, isCharacterFavorite, ::onFabClick)
@@ -73,9 +74,9 @@ class CharacterDetailViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             if (isCharacterFavorite) {
-                insertLocalFavoriteCharacter.invoke(selectedCharacter)
+                insertLocalFavoriteCharacter(selectedCharacter)
             } else {
-                deleteLocalFavoriteCharacter.invoke(selectedCharacter)
+                deleteLocalFavoriteCharacter(selectedCharacter)
             }
         }
     }
