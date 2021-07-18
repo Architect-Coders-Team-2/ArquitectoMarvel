@@ -3,10 +3,10 @@ package com.architectcoders.arquitectomarvel.data.database
 import androidx.paging.PagingSource
 import com.architectcoders.data.source.LocalDataSource
 import com.architectcoders.domain.character.Character
-import com.architectcoders.domain.comic.Comic
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class RoomDataSource(db: MarvelDatabase) : LocalDataSource {
+class RoomDataSource @Inject constructor(db: MarvelDatabase) : LocalDataSource {
 
     private val characterDao = db.marvelDao
 

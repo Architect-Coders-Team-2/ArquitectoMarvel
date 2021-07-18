@@ -6,8 +6,9 @@ import com.architectcoders.data.source.CredentialsDataSource
 import com.architectcoders.data.source.RemoteDataSource
 import com.architectcoders.domain.character.CharactersPayload
 import com.architectcoders.domain.comic.ComicsPayload
+import javax.inject.Inject
 
-class RetrofitDataSource(
+class RetrofitDataSource @Inject constructor(
     override val credentialsDataSource: CredentialsDataSource,
 ) : RemoteDataSource {
 
