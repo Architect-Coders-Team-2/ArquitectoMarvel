@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.ui.main.di
+package com.architectcoders.arquitectomarvel.di
 
 import com.architectcoders.arquitectomarvel.biometric.BiometricDataSourceImpl
 import com.architectcoders.data.repository.BiometricRepository
@@ -13,16 +13,7 @@ import dagger.hilt.android.scopes.ActivityScoped
 
 @Module
 @InstallIn(ActivityComponent::class)
-abstract class MainActivityModuleBinder {
-
-    @ActivityScoped
-    @Binds
-    abstract fun bindsBiometricDataSource(biometricDataSourceImpl: BiometricDataSourceImpl): BiometricDataSource
-}
-
-@Module
-@InstallIn(ActivityComponent::class)
-class MainActivityModuleProvider {
+class MainActivityModule {
     @ActivityScoped
     @Provides
     fun biometricRepositoryProvider(biometricDataSourceImpl: BiometricDataSourceImpl): BiometricRepository =
