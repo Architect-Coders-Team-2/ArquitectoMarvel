@@ -6,45 +6,43 @@ import com.architectcoders.domain.character.Character
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class RoomDataSource @Inject constructor(db: MarvelDatabase) : LocalDataSource {
-
-    private val characterDao = db.marvelDao
+class RoomDataSource @Inject constructor(private val marvelDao: MarvelDao) : LocalDataSource {
 
     override suspend fun getLocalCharacterById(characterId: Int): Character =
-        characterDao.getLocalCharacterById(characterId).toDomainCharacter
+        marvelDao.getLocalCharacterById(characterId).toDomainCharacter
 
     override suspend fun getLastTimeStampFromCharacterEntity(): Long? =
-        characterDao.getLastTimeStampFromCharacterEntity()
+        marvelDao.getLastTimeStampFromCharacterEntity()
 
     override suspend fun getLocalCharactersCount(): Int =
-        characterDao.getLocalCharactersCount()
+        marvelDao.getLocalCharactersCount()
 
     override suspend fun insertAllLocalCharacters(characterList: List<Character>) =
-        characterDao.insertAllLocalCharacters(characterList.toCharacterEntityList)
+        marvelDao.insertAllLocalCharacters(characterList.toCharacterEntityList)
 
     override suspend fun deleteAllLocalCharacters() =
-        characterDao.deleteAllLocalCharacters()
+        marvelDao.deleteAllLocalCharacters()
 
     override suspend fun getLocalFavoriteCharacters(): Flow<List<FavoriteCharacterEntity>> =
-        characterDao.getLocalFavoriteCharacters()
+        marvelDao.getLocalFavoriteCharacters()
 
     override suspend fun insertLocalFavoriteCharacter(favoriteCharacter: Character) =
-        characterDao.insertLocalFavoriteCharacter(favoriteCharacter.toFavoriteCharacterEntity)
+        marvelDao.insertLocalFavoriteCharacter(favoriteCharacter.toFavoriteCharacterEntity)
 
     override suspend fun deleteLocalFavoriteCharacter(favoriteCharacter: Character) =
-        characterDao.deleteLocalFavoriteCharacter(favoriteCharacter.toFavoriteCharacterEntity)
+        marvelDao.deleteLocalFavoriteCharacter(favoriteCharacter.toFavoriteCharacterEntity)
 
     override fun isLocalCharacterFavorite(characterId: Int): Flow<Int> =
-        characterDao.isLocalCharacterFavorite(characterId)
+        marvelDao.isLocalCharacterFavorite(characterId)
 
     override fun getPagingSourceFromCharacterEntity(): PagingSource<Int, CharacterEntity> =
-        characterDao.getPagingSourceFromCharacterEntity()
+        marvelDao.getPagingSourceFromCharacterEntity()
 
     override suspend fun fetchComicsForCharacter(map: Map<String, Any>) {
-        characterDao.fetchComicsForCharacter(map)
+        marvelDao.fetchComicsForCharacter(map)
     }
 
     override fun getComicsForCharacter(characterId: Int): Any {
-        return characterDao.selectComicsForCharacter(characterId)
+        return marvelDao.selectComicsForCharacter(characterId)
     }
 }
