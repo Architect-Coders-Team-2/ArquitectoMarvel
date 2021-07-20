@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.ui.favorite
+package com.architectcoders.arquitectomarvel.di
 
 import com.architectcoders.data.repository.MarvelRepository
 import com.architectcoders.usecases.GetLocalFavoriteCharacters

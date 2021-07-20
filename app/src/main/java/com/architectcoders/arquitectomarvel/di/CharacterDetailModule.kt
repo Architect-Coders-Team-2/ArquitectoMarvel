@@ -1,7 +1,8 @@
-package com.architectcoders.arquitectomarvel.ui.detail
+package com.architectcoders.arquitectomarvel.di
 
 import androidx.lifecycle.SavedStateHandle
 import com.architectcoders.arquitectomarvel.ui.common.EXTRA_SELECTED_CHARACTER
+import com.architectcoders.arquitectomarvel.ui.detail.GetComicsInteractor
 import com.architectcoders.data.repository.MarvelRepository
 import com.architectcoders.usecases.*
 import dagger.Module
@@ -41,6 +42,8 @@ class CharacterDetailModule {
     @Provides
     fun deleteLocalFavoriteCharacterProvider(marvelRepository: MarvelRepository): DeleteLocalFavoriteCharacter =
         DeleteLocalFavoriteCharacter(marvelRepository)
+
+    // Comic Interactor
 
     @ViewModelScoped
     @Provides
