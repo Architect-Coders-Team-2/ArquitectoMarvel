@@ -10,9 +10,12 @@ import com.architectcoders.arquitectomarvel.data.database.toDomainCharacter
 import com.architectcoders.arquitectomarvel.databinding.CharacterItemBinding
 import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterViewHolder
 import com.architectcoders.domain.character.Character
+import javax.inject.Inject
 
-class FavoriteCharacterAdapter(private val listener: (Character, View) -> Unit) :
+class FavoriteCharacterAdapter @Inject constructor() :
     ListAdapter<FavoriteCharacterEntity, CharacterViewHolder>(DiffCallback) {
+
+    lateinit var listener: (Character, View) -> Unit
 
     init {
         stateRestorationPolicy = StateRestorationPolicy.PREVENT_WHEN_EMPTY
