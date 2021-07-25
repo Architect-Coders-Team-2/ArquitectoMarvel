@@ -10,9 +10,8 @@ import javax.inject.Inject
 
 class RetrofitDataSource @Inject constructor(
     override val credentialsDataSource: CredentialsDataSource,
+    private val marvelApi: ApiService
 ) : RemoteDataSource {
-
-    private val marvelApi = MarvelApiRest.service
 
     override suspend fun getRemoteCharacters(offset: Int): CharactersPayload =
         marvelApi.getCharacters(

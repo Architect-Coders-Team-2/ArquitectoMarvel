@@ -2,26 +2,26 @@ package com.architectcoders.arquitectomarvel.di
 
 import android.content.Context
 import androidx.room.Room
+import com.architectcoders.arquitectomarvel.data.database.MarvelDao
 import com.architectcoders.arquitectomarvel.data.database.MarvelDatabase
-import com.architectcoders.arquitectomarvel.data.database.RoomDataSource
-import com.architectcoders.arquitectomarvel.data.server.MarvelCredentialDataSource
-import com.architectcoders.arquitectomarvel.data.server.RetrofitDataSource
-import com.architectcoders.arquitectomarvel.network.NetworkDataSourceImpl
-import com.architectcoders.data.source.CredentialsDataSource
-import com.architectcoders.data.source.LocalDataSource
-import com.architectcoders.data.source.NetworkDataSource
-import com.architectcoders.data.source.RemoteDataSource
-import dagger.Binds
+import com.architectcoders.arquitectomarvel.data.server.ApiService
+import com.architectcoders.arquitectomarvel.ui.common.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class AppModuleProvider {
+class AppModule {
+
+    // Room
 
     @Singleton
     @Provides
@@ -31,25 +31,35 @@ class AppModuleProvider {
             MarvelDatabase::class.java,
             "marvelDb"
         ).build()
-}
-
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class AppModuleBinder {
 
     @Singleton
-    @Binds
-    abstract fun bindsRoomDataSource(roomDataSource: RoomDataSource): LocalDataSource
+    @Provides
+    fun marvelDaoProvider(marvelDatabase: MarvelDatabase): MarvelDao = marvelDatabase.marvelDao
+
+    // Retrofit
 
     @Singleton
-    @Binds
-    abstract fun bindsCredentialDataSource(marvelCredentialDataSource: MarvelCredentialDataSource): CredentialsDataSource
+    @Provides
+    fun httpLoggingInterceptorProvider(): HttpLoggingInterceptor =
+        HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
     @Singleton
-    @Binds
-    abstract fun bindsRetrofitDataSource(retrofitDataSource: RetrofitDataSource): RemoteDataSource
+    @Provides
+    fun okHttpClientProvider(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient =
+        OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor).build()
 
     @Singleton
-    @Binds
-    abstract fun bindsNetworkDataSourceProvider(networkDataSourceImpl: NetworkDataSourceImpl): NetworkDataSource
+    @Provides
+    fun retrofitProvider(okHttpClient: OkHttpClient): Retrofit.Builder =
+        Retrofit.Builder()
+            .client(okHttpClient)
+            .addConverterFactory(MoshiConverterFactory.create())
+
+    @Singleton
+    @Provides
+    fun marvelApiServiceProvider(retrofitBuilder: Retrofit.Builder): ApiService =
+        retrofitBuilder
+            .baseUrl(BASE_URL)
+            .build()
+            .create(ApiService::class.java)
 }

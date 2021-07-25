@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.ui.main.di
+package com.architectcoders.arquitectomarvel.di
 
 import androidx.paging.ExperimentalPagingApi
 import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterRemoteMediator
@@ -13,6 +13,15 @@ import dagger.hilt.android.scopes.ViewModelScoped
 @Module
 @InstallIn(ViewModelComponent::class)
 class MainViewModelModule {
+
+    @ViewModelScoped
+    @Provides
+    fun getPagingSourceFromCharacterEntityProvider(
+        marvelRepository: MarvelRepository
+    ): GetPagingSourceFromCharacterEntity =
+        GetPagingSourceFromCharacterEntity(marvelRepository)
+
+    // CharacterRemoteMediator
 
     @ViewModelScoped
     @Provides
@@ -58,11 +67,4 @@ class MainViewModelModule {
             getLastTimeStampFromCharacterEntity,
             getLocalCharactersCount
         )
-
-    @ViewModelScoped
-    @Provides
-    fun getPagingSourceFromCharacterEntityProvider(
-        marvelRepository: MarvelRepository
-    ): GetPagingSourceFromCharacterEntity =
-        GetPagingSourceFromCharacterEntity(marvelRepository)
 }

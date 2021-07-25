@@ -40,14 +40,13 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var setBiometricAuthentication: SetBiometricAuthentication
 
+    @Inject
+    lateinit var characterAdapter: CharacterAdapter
+
     private lateinit var binding: ActivityMainBinding
     private var menuItem: MenuItem? = null
     private val mainViewModel: MainViewModel by viewModels()
     private val networkLogicViewModel: NetworkLogicViewModel by viewModels()
-
-    private val characterAdapter: CharacterAdapter by lazy {
-        CharacterAdapter(::navigateTo)
-    }
 
     @ExperimentalPagingApi
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,6 +83,7 @@ class MainActivity : AppCompatActivity() {
                 footerAdapter.loadState = it.refresh
             }
         }
+        characterAdapter.listener = ::navigateTo
         lifecycleScope.launchWhenStarted {
             networkLogicViewModel.uiNetworkModel.collect {
                 updateUi(it)

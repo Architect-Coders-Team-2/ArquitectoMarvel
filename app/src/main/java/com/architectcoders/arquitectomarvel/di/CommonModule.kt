@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.ui.common
+package com.architectcoders.arquitectomarvel.di
 
 import com.architectcoders.data.repository.NetworkRepository
 import com.architectcoders.usecases.HandleNetworkManager

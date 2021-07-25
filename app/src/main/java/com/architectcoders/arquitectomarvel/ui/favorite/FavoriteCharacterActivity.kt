@@ -16,23 +16,25 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityFavoriteCharacterBinding
 import com.architectcoders.arquitectomarvel.ui.common.*
-import com.architectcoders.arquitectomarvel.ui.common.NetworkLogicViewModel.*
+import com.architectcoders.arquitectomarvel.ui.common.NetworkLogicViewModel.UiNetworkModel
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailActivity
-import com.architectcoders.arquitectomarvel.ui.favorite.FavoriteCharacterViewModel.*
+import com.architectcoders.arquitectomarvel.ui.favorite.FavoriteCharacterViewModel.UiModel
 import com.architectcoders.domain.character.Character
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class FavoriteCharacterActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var favoriteCharacterAdapter: FavoriteCharacterAdapter
+
     private lateinit var binding: ActivityFavoriteCharacterBinding
     private var menuItem: MenuItem? = null
     private val favoriteCharacterViewModel: FavoriteCharacterViewModel by viewModels()
     private val networkLogicViewModel: NetworkLogicViewModel by viewModels()
-    private val favoriteCharacterAdapter: FavoriteCharacterAdapter by lazy {
-        FavoriteCharacterAdapter(::navigateTo)
-    }
 
     private fun navigateTo(character: Character, view: View) {
         Event(character).getContentIfNotHandled()?.let { resultValue ->
@@ -61,6 +63,7 @@ class FavoriteCharacterActivity : AppCompatActivity() {
     private fun initFavoriteList() {
         val columns = calculateColumnsForGridLayout(resources.getDimension(R.dimen.avatar_width))
         val gridLayoutManager = GridLayoutManager(this, columns)
+        favoriteCharacterAdapter.listener = ::navigateTo
         binding.favoriteCharacterList.apply {
             layoutManager = gridLayoutManager
             adapter = favoriteCharacterAdapter
