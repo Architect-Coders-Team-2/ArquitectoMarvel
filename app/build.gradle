@@ -71,14 +71,14 @@ android {
 }
 
 dependencies {
-    implementation project(":usecases")
     implementation project(":data")
     implementation project(":domain")
+    implementation project(":usecases")
 
+    kapt androidKaptLibs.values()
     implementation androidLibs.values()
     implementation kotlinLibs.values()
     implementation libs.values()
-    kapt androidKaptLibs.values()
 
     testImplementation testLibs.values()
     androidTestImplementation androidTestLibs.values()

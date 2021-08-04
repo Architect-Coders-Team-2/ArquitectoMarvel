@@ -2,7 +2,6 @@ plugins {
     id 'java-library'
     id 'kotlin'
 }
-
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
@@ -10,6 +9,7 @@ java {
 
 dependencies {
     implementation project(":domain")
+
 
     implementation kotlinLibs.values()
     testImplementation testLibs.values()
