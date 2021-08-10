@@ -53,7 +53,6 @@ class MarvelRepositoryTest {
 
         whenever(remoteDataSource.getRemoteCharacters(10)).thenReturn(mockCharactersPayload)
         val result = marvelRepository.getRemoteCharacters(10)
-
         assertEquals(mockCharactersPayload, result)
 
     }

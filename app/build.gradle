@@ -5,32 +5,25 @@ plugins {
     id 'kotlin-parcelize'
     id 'dagger.hilt.android.plugin'
 }
-
 def secretProperties() {
     def file = file("secret.properties")
     def properties = new Properties()
     properties.load(new FileInputStream(file))
     return properties
 }
-
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
-
     defaultConfig {
         applicationId "com.architectcoders.arquitectomarvel"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
     }
-
     def MARVEL_API_KEY = 'MARVEL_API_KEY'
     def MARVEL_PRIVATE_KEY = 'MARVEL_PRIVATE_KEY'
-
     def apikey = "default-apikey"
     def privatekey = "default-privatekey"
     try {
@@ -40,7 +33,6 @@ android {
         println(exception.message)
         println("This exception is handled and intended to be thrown when github actions runs \"gradle build\" on the project.")
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -54,41 +46,29 @@ android {
             buildConfigField("String", MARVEL_PRIVATE_KEY, "\"" + privatekey + "\"")
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = '11'
+        jvmTarget = '1.8'
     }
-
     buildFeatures {
         viewBinding true
     }
 }
-
 dependencies {
+    implementation project(":usecases")
     implementation project(":data")
     implementation project(":domain")
-    implementation project(":usecases")
-
-    kapt androidKaptLibs.values()
     implementation androidLibs.values()
     implementation kotlinLibs.values()
     implementation libs.values()
-
+    kapt androidKaptLibs.values()
     testImplementation testLibs.values()
     androidTestImplementation androidTestLibs.values()
-
 }
-
 kapt {
     correctErrorTypes = true
-}
-
-repositories {
-    mavenCentral()
 }
