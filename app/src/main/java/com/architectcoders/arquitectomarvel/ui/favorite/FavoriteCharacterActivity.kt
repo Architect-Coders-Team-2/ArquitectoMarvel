@@ -84,9 +84,8 @@ class FavoriteCharacterActivity : AppCompatActivity() {
     }
 
     private fun updateNetworkUi(uiNetworkModel: UiNetworkModel) {
-        when (uiNetworkModel) {
-            is UiNetworkModel.InitNetworkManager -> uiNetworkModel.listener(lifecycle)
-            is UiNetworkModel.SetNetworkAvailability -> shouldShowOfflineIcon(uiNetworkModel.isAvailable)
+        if (uiNetworkModel is UiNetworkModel.SetNetworkAvailability) {
+            shouldShowOfflineIcon(uiNetworkModel.isAvailable)
         }
     }
 
@@ -96,7 +95,7 @@ class FavoriteCharacterActivity : AppCompatActivity() {
      */
     private fun shouldShowOfflineIcon(internetAvailable: Boolean) {
         lifecycleScope.launchWhenStarted {
-            delay(200)
+            delay(TIME_MILLIS_DELAY_TO_AVOID_TOOLBAR_RACE_CONDITION)
             menuItem?.isVisible = !internetAvailable
         }
     }
@@ -133,5 +132,10 @@ class FavoriteCharacterActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        networkLogicViewModel.unregisterNetworkManager()
     }
 }

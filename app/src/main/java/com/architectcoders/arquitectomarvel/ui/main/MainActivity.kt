@@ -92,9 +92,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateUi(uiNetworkModel: UiNetworkModel) {
-        when (uiNetworkModel) {
-            is UiNetworkModel.InitNetworkManager -> uiNetworkModel.listener(lifecycle)
-            is UiNetworkModel.SetNetworkAvailability -> shouldShowOfflineIcon(uiNetworkModel.isAvailable)
+        if (uiNetworkModel is UiNetworkModel.SetNetworkAvailability) {
+            shouldShowOfflineIcon(uiNetworkModel.isAvailable)
         }
     }
 
@@ -162,5 +161,10 @@ class MainActivity : AppCompatActivity() {
             menuItem?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
         }
         return true
+    }
+
+    override fun onStop() {
+        super.onStop()
+        networkLogicViewModel.unregisterNetworkManager()
     }
 }
