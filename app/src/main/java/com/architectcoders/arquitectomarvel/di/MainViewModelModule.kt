@@ -2,6 +2,7 @@ package com.architectcoders.arquitectomarvel.di
 
 import androidx.paging.ExperimentalPagingApi
 import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterRemoteMediator
+import com.architectcoders.data.repository.BiometricRepository
 import com.architectcoders.data.repository.MarvelRepository
 import com.architectcoders.usecases.*
 import dagger.Module
@@ -67,4 +68,33 @@ class MainViewModelModule {
             getLastTimeStampFromCharacterEntity,
             getLocalCharactersCount
         )
+
+    // Password management
+
+    @ViewModelScoped
+    @Provides
+    fun isPasswordAlreadyStoredProvider(marvelRepository: MarvelRepository): IsPasswordAlreadyStored =
+        IsPasswordAlreadyStored(marvelRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun saveCredentialsProvider(marvelRepository: MarvelRepository): SaveCredentials =
+        SaveCredentials(marvelRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun isPasswordCorrect(marvelRepository: MarvelRepository): IsPasswordCorrect =
+        IsPasswordCorrect(marvelRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun isHintCorrectProvider(marvelRepository: MarvelRepository): IsHintCorrect =
+        IsHintCorrect(marvelRepository)
+
+    // Favorites
+
+    @ViewModelScoped
+    @Provides
+    fun deleteAllLocalFavoriteCharacterProvider(marvelRepository: MarvelRepository):
+            DeleteAllLocalFavoriteCharacter = DeleteAllLocalFavoriteCharacter(marvelRepository)
 }
