@@ -1,5 +1,6 @@
 package com.architectcoders.data.source
 
-interface BiometricDataSource {
+interface BiometricPromptDataSource {
+    fun canUserUseBiometricAuthentication(): Boolean
     fun setBiometricAuthentication(onFail: () -> Unit, onSuccess: () -> Unit)
 }
