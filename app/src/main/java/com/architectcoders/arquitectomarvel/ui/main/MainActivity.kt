@@ -25,8 +25,6 @@ import com.architectcoders.arquitectomarvel.ui.common.NetworkLogicViewModel.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailActivity
 import com.architectcoders.arquitectomarvel.ui.favorite.FavoriteCharacterActivity
 import com.architectcoders.arquitectomarvel.ui.main.MainViewModel.*
-import com.architectcoders.arquitectomarvel.ui.main.MainViewModel.PasswordState.*
-import com.architectcoders.arquitectomarvel.ui.main.PasswordDialogFragment.*
 import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterAdapter
 import com.architectcoders.arquitectomarvel.ui.main.pagination.LoadStateAdapter
 import com.architectcoders.domain.character.Character
