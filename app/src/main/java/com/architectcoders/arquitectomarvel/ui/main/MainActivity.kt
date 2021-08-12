@@ -25,6 +25,8 @@ import com.architectcoders.arquitectomarvel.ui.common.NetworkLogicViewModel.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailActivity
 import com.architectcoders.arquitectomarvel.ui.favorite.FavoriteCharacterActivity
 import com.architectcoders.arquitectomarvel.ui.main.MainViewModel.*
+import com.architectcoders.arquitectomarvel.ui.main.MainViewModel.PasswordState.*
+import com.architectcoders.arquitectomarvel.ui.main.PasswordDialogFragment.*
 import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterAdapter
 import com.architectcoders.arquitectomarvel.ui.main.pagination.LoadStateAdapter
 import com.architectcoders.domain.character.Character
@@ -37,6 +39,19 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var checkAuthenticationState: CheckAuthenticationState
+
+    @Inject
+    lateinit var checkIfUserIsAlreadyAuthenticated: CheckIfUserIsAlreadyAuthenticated
+
+    @Inject
+    lateinit var saveAuthenticationState: SaveAuthenticationState
+
+    @Inject
+    lateinit var canUserUseBiometricAuthentication: CanUserUseBiometricAuthentication
+
     @Inject
     lateinit var setBiometricAuthentication: SetBiometricAuthentication
 
@@ -91,6 +106,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun navigateTo(character: Character, view: View) {
+        Event(character).getContentIfNotHandled()?.let { resultValue ->
+            val options =
+                ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    this,
+                    view,
+                    getString(R.string.character_image)
+                )
+            startActivity<CharacterDetailActivity>(options = options.toBundle()) {
+                putExtra(EXTRA_SELECTED_CHARACTER, resultValue.id)
+            }
+        }
+    }
+
     private fun updateUi(uiNetworkModel: UiNetworkModel) {
         if (uiNetworkModel is UiNetworkModel.SetNetworkAvailability) {
             shouldShowOfflineIcon(uiNetworkModel.isAvailable)
@@ -118,31 +147,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setBiometricLogic() {
+        checkAuthenticationState.invoke()
+
         binding.favoriteFab.setOnClickListener {
-            setBiometricAuthentication.invoke(
-                onFail = {
-                    Toast.makeText(
-                        this, getString(R.string.something_wrong),
-                        Toast.LENGTH_LONG
-                    ).show()
-                },
-                onSuccess = {
+            when {
+                checkIfUserIsAlreadyAuthenticated.invoke() -> startActivity<FavoriteCharacterActivity> {}
+                canUserUseBiometricAuthentication.invoke() -> {
+                    setBiometricAuthentication.invoke(
+                        onFail = {
+                            Toast.makeText(
+                                this, getString(R.string.something_wrong),
+                                Toast.LENGTH_LONG
+                            ).show()
+                        },
+                        onSuccess = {
+                            saveAuthenticationState.invoke(true)
+                            startActivity<FavoriteCharacterActivity> {}
+                        }
+                    )
+                }
+                else -> {
+                    saveAuthenticationState.invoke(true)
                     startActivity<FavoriteCharacterActivity> {}
                 }
-            )
-        }
-    }
-
-    private fun navigateTo(character: Character, view: View) {
-        Event(character).getContentIfNotHandled()?.let { resultValue ->
-            val options =
-                ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    this,
-                    view,
-                    getString(R.string.character_image)
-                )
-            startActivity<CharacterDetailActivity>(options = options.toBundle()) {
-                putExtra(EXTRA_SELECTED_CHARACTER, resultValue.id)
             }
         }
     }
