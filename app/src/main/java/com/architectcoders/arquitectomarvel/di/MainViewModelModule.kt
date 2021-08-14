@@ -68,4 +68,38 @@ class MainViewModelModule {
             getLastTimeStampFromCharacterEntity,
             getLocalCharactersCount
         )
+
+    // Password management
+
+    @ViewModelScoped
+    @Provides
+    fun isPasswordAlreadyStoredProvider(marvelRepository: MarvelRepository): IsPasswordAlreadyStored =
+        IsPasswordAlreadyStored(marvelRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun saveCredentialsProvider(marvelRepository: MarvelRepository): SaveCredentials =
+        SaveCredentials(marvelRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun deleteCredentialsProvider(marvelRepository: MarvelRepository): DeleteCredentials =
+        DeleteCredentials(marvelRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun isPasswordCorrect(marvelRepository: MarvelRepository): IsPasswordCorrect =
+        IsPasswordCorrect(marvelRepository)
+
+    @ViewModelScoped
+    @Provides
+    fun isHintCorrectProvider(marvelRepository: MarvelRepository): IsHintCorrect =
+        IsHintCorrect(marvelRepository)
+
+    // Favorites
+
+    @ViewModelScoped
+    @Provides
+    fun deleteAllLocalFavoriteCharacterProvider(marvelRepository: MarvelRepository):
+            DeleteAllLocalFavoriteCharacter = DeleteAllLocalFavoriteCharacter(marvelRepository)
 }
