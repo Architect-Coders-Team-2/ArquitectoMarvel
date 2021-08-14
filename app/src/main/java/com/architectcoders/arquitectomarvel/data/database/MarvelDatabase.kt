@@ -7,7 +7,8 @@ import androidx.room.RoomDatabase
     entities = [
         CharacterEntity::class,
         FavoriteCharacterEntity::class,
-        ComicEntity::class
+        ComicEntity::class,
+        CredentialsEntity::class
     ],
     version = 1,
     exportSchema = false
