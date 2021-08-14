@@ -51,4 +51,22 @@ class MarvelRepository(
 
     fun getComicsForCharacter(characterId: Int): Any =
         localDataSource.getComicsForCharacter(characterId)
+
+    suspend fun isPasswordAlreadyStored(): Boolean =
+        localDataSource.isPasswordAlreadyStored()
+
+    suspend fun saveCredentials(password: Int, recoveryHint: String): Unit =
+        localDataSource.saveCredentials(password, recoveryHint)
+
+    suspend fun deleteCredentials(): Unit =
+        localDataSource.deleteCredentials()
+
+    suspend fun isPasswordCorrect(password: Int): Boolean =
+        localDataSource.isPasswordCorrect(password)
+
+    suspend fun isRecoveryHintCorrect(recoveryHint: String): Boolean =
+        localDataSource.isRecoveryHintCorrect(recoveryHint)
+
+    suspend fun deleteAllLocalFavoriteCharacter() =
+        localDataSource.deleteAllLocalFavoriteCharacter()
 }
