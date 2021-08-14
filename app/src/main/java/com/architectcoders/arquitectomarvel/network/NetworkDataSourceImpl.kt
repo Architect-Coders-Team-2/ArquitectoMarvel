@@ -1,7 +1,6 @@
 package com.architectcoders.arquitectomarvel.network
 
 import android.content.Context
-import androidx.lifecycle.Lifecycle
 import com.architectcoders.arquitectomarvel.ui.common.NetworkManager
 import com.architectcoders.data.source.NetworkDataSource
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -12,12 +11,16 @@ class NetworkDataSourceImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : NetworkDataSource {
 
-    override suspend fun manageNetworkManager(lifecycle: Any, listener: (Boolean) -> Unit) {
-        NetworkManager(
-            context,
-            lifecycle as Lifecycle
-        ).isInternetAvailable.collect {
+    lateinit var networkManager: NetworkManager
+
+    override suspend fun handleNetworkManager(listener: (Boolean) -> Unit) {
+        networkManager = NetworkManager(context)
+        networkManager.isInternetAvailable.collect {
             listener(it)
         }
+    }
+
+    override fun unregisterNetworkCallback() {
+        networkManager.unregisterNetworkCallback()
     }
 }

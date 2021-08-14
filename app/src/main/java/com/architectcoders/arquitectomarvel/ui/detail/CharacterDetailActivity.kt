@@ -56,9 +56,8 @@ class CharacterDetailActivity : AppCompatActivity() {
     }
 
     private fun updateNetwork(uiNetworkModel: UiNetworkModel) {
-        when (uiNetworkModel) {
-            is UiNetworkModel.InitNetworkManager -> uiNetworkModel.listener(lifecycle)
-            is UiNetworkModel.SetNetworkAvailability -> shouldShowOfflineMessage(uiNetworkModel.isAvailable)
+        if (uiNetworkModel is UiNetworkModel.SetNetworkAvailability) {
+            shouldShowOfflineMessage(uiNetworkModel.isAvailable)
         }
     }
 
@@ -153,6 +152,11 @@ class CharacterDetailActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        networkLogicViewModel.unregisterNetworkManager()
     }
 
     override fun onBackPressed() {
