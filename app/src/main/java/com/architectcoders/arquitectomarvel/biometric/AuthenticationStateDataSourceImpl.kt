@@ -12,7 +12,7 @@ class AuthenticationStateDataSourceImpl @Inject constructor(
 ) : AuthenticationStateDataSource {
 
     override fun checkAuthenticationState() {
-        val cacheTimeOut = TimeUnit.SECONDS.toMillis(1)
+        val cacheTimeOut = TimeUnit.DAYS.toMillis(1)
         val lastTimeStamp = biometricSharedPreferences.getLong(AUTHENTICATION_TIMESTAMP, -1L)
         if (lastTimeStamp != -1L && System.currentTimeMillis() - lastTimeStamp >= cacheTimeOut) {
             saveAuthenticationState(false)
