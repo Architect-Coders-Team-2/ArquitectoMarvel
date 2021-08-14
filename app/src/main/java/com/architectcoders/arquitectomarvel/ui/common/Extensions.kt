@@ -4,19 +4,13 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.annotation.RawRes
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import com.architectcoders.arquitectomarvel.R
 import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import java.math.BigInteger
 import java.security.MessageDigest
 
@@ -58,14 +52,6 @@ fun <T> Context.toast(msgResource: T, length: Int = Toast.LENGTH_SHORT) {
     }
 }
 
-@Suppress("UNCHECKED_CAST")
-inline fun <reified T : ViewModel> FragmentActivity.getViewModel(crossinline factory: () -> T): T {
-    val vmFactory = object : ViewModelProvider.Factory {
-        override fun <U : ViewModel> create(modelClass: Class<U>): U = factory() as U
-    }
-    return ViewModelProvider(this, vmFactory).get()
-}
-
 inline fun <reified T : Activity> Context.intentFor(body: Intent.() -> Unit): Intent =
     Intent(this, T::class.java).apply(body)
 
@@ -74,4 +60,12 @@ inline fun <reified T : Activity> Context.startActivity(
     body: Intent.() -> Unit
 ) {
     startActivity(intentFor<T>(body), options)
+}
+
+fun Bundle.putEnum(key: String, enum: Enum<*>) {
+    putString(key, enum.name)
+}
+
+inline fun <reified T : Enum<T>> Intent.getEnumExtra(key: String): T {
+    return enumValueOf(getStringExtra(key) ?: "")
 }
