@@ -25,6 +25,8 @@ import com.architectcoders.arquitectomarvel.ui.common.NetworkLogicViewModel.*
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailActivity
 import com.architectcoders.arquitectomarvel.ui.favorite.FavoriteCharacterActivity
 import com.architectcoders.arquitectomarvel.ui.main.MainViewModel.*
+import com.architectcoders.arquitectomarvel.ui.main.MainViewModel.PasswordState.*
+import com.architectcoders.arquitectomarvel.ui.main.PasswordDialogFragment.*
 import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterAdapter
 import com.architectcoders.arquitectomarvel.ui.main.pagination.LoadStateAdapter
 import com.architectcoders.domain.character.Character
@@ -146,7 +148,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setBiometricLogic() {
         checkAuthenticationState.invoke()
-
+        initPasswordStateCollector()
         binding.favoriteFab.setOnClickListener {
             when {
                 checkIfUserIsAlreadyAuthenticated.invoke() -> startActivity<FavoriteCharacterActivity> {}
@@ -165,11 +167,41 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
                 else -> {
-                    saveAuthenticationState.invoke(true)
-                    startActivity<FavoriteCharacterActivity> {}
+                    mainViewModel.ifDeviceNeitherHaveBiometricLoginNorPassword(::showDialogWithPasswordState)
                 }
             }
         }
+    }
+
+    private fun initPasswordStateCollector() {
+        lifecycleScope.launchWhenCreated {
+            mainViewModel.passwordState.collect {
+                when (it) {
+                    INITIAL_STATE -> Unit
+                    SAVE_PASSWORD, REQUEST_PASSWORD, REQUEST_HINT -> showPasswordDialogFragment(it)
+                    SUCCESSFUL -> {
+                        saveAuthenticationState.invoke(true)
+                        startActivity<FavoriteCharacterActivity> {}
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showDialogWithPasswordState(isPasswordStored: Boolean) {
+        if (isPasswordStored) {
+            showPasswordDialogFragment(REQUEST_PASSWORD)
+        } else {
+            showPasswordDialogFragment(SAVE_PASSWORD)
+        }
+    }
+
+    private fun showPasswordDialogFragment(passwordState: PasswordState) {
+        val passwordDialogFragment = PasswordDialogFragment.getInstance(passwordState)
+        passwordDialogFragment.show(
+            supportFragmentManager,
+            PasswordDialogFragment::class.java.canonicalName
+        )
     }
 
     /**
