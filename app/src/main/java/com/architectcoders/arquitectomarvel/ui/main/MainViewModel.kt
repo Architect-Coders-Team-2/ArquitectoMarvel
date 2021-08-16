@@ -51,7 +51,7 @@ class MainViewModel
         }
     }
 
-    fun saveCredentials(password: Int, recoveryHint: String) {
+    fun saveCredentials(password: String, recoveryHint: String) {
         viewModelScope.launch {
             saveCredentials.invoke(password, recoveryHint)
         }
@@ -63,7 +63,7 @@ class MainViewModel
         }
     }
 
-    fun checkIfPasswordIsCorrect(password: Int, listener: (Boolean) -> Unit) {
+    fun checkIfPasswordIsCorrect(password: String, listener: (Boolean) -> Unit) {
         viewModelScope.launch {
             listener(isPasswordCorrect.invoke(password))
         }

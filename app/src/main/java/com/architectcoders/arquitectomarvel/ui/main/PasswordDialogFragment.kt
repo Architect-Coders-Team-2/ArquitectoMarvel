@@ -126,7 +126,7 @@ class PasswordDialogFragment : DialogFragment() {
 
             binding.password.text.toString() == binding.repeatPassword.text.toString() -> {
                 mainViewModel.saveCredentials(
-                    binding.password.text.toString().toInt(),
+                    binding.password.text.toString(),
                     binding.recoveryHint.text.toString()
                 )
                 mainViewModel.updatePasswordState(PasswordState.SUCCESSFUL)
@@ -158,10 +158,7 @@ class PasswordDialogFragment : DialogFragment() {
     }
 
     private fun verifyPassword() =
-        mainViewModel.checkIfPasswordIsCorrect(
-            binding.password.text.toString().let { if (it.isBlank()) 0 else it.toInt() },
-            ::isPasswordCorrect
-        )
+        mainViewModel.checkIfPasswordIsCorrect(binding.password.text.toString(), ::isPasswordCorrect)
 
     private fun isPasswordCorrect(isCorrect: Boolean) {
         if (isCorrect) {

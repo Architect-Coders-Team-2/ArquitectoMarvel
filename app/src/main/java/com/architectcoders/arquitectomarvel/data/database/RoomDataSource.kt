@@ -48,10 +48,10 @@ class RoomDataSource @Inject constructor(private val marvelDao: MarvelDao) : Loc
     override suspend fun isPasswordAlreadyStored(): Boolean =
         marvelDao.areCredentialsAlreadyStored() > 0
 
-    override suspend fun saveCredentials(password: Int, recoveryHint: String) {
+    override suspend fun saveCredentials(password: String, recoveryHint: String) {
         marvelDao.saveCredentials(
             CredentialsEntity(
-                password = password.toString().md5,
+                password = password.md5,
                 recoveryHint = recoveryHint.md5
             )
         )
@@ -59,9 +59,9 @@ class RoomDataSource @Inject constructor(private val marvelDao: MarvelDao) : Loc
 
     override suspend fun deleteCredentials() = marvelDao.deleteCredentials()
 
-    override suspend fun isPasswordCorrect(password: Int): Boolean {
+    override suspend fun isPasswordCorrect(password: String): Boolean {
         val credentials = marvelDao.getCredentials()
-        return credentials.password == password.toString().md5
+        return credentials.password == password.md5
     }
 
     override suspend fun isRecoveryHintCorrect(recoveryHint: String): Boolean {

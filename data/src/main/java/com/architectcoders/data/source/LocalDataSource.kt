@@ -16,9 +16,9 @@ interface LocalDataSource {
     fun getComicsForCharacter(characterId: Int): Any
     suspend fun fetchComicsForCharacter(map: Map<String, Any>)
     suspend fun isPasswordAlreadyStored(): Boolean
-    suspend fun saveCredentials(password: Int, recoveryHint: String)
+    suspend fun saveCredentials(password: String, recoveryHint: String)
     suspend fun deleteCredentials()
-    suspend fun isPasswordCorrect(password: Int): Boolean
+    suspend fun isPasswordCorrect(password: String): Boolean
     suspend fun isRecoveryHintCorrect(recoveryHint: String): Boolean
     suspend fun deleteAllLocalFavoriteCharacter()
 }
