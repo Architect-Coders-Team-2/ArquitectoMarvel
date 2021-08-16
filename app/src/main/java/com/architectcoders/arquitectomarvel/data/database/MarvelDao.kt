@@ -61,4 +61,19 @@ interface MarvelDao {
         }
         insertComics(comics)
     }
+
+    @Query("SELECT COUNT(id) FROM credentialsentity")
+    suspend fun areCredentialsAlreadyStored(): Int
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveCredentials(credentialsEntity: CredentialsEntity)
+
+    @Query("DELETE FROM credentialsentity")
+    suspend fun deleteCredentials()
+
+    @Query("SELECT * FROM credentialsentity")
+    suspend fun getCredentials(): CredentialsEntity
+
+    @Query("DELETE FROM favoritecharacterentity")
+    suspend fun deleteAllLocalFavoriteCharacter()
 }

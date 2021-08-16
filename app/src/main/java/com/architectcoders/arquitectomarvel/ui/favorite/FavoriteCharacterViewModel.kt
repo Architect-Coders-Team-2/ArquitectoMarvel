@@ -1,6 +1,5 @@
 package com.architectcoders.arquitectomarvel.ui.favorite
 
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.architectcoders.arquitectomarvel.data.database.FavoriteCharacterEntity

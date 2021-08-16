@@ -1,6 +1,7 @@
 package com.architectcoders.arquitectomarvel.data.database
 
 import androidx.paging.PagingSource
+import com.architectcoders.arquitectomarvel.ui.common.md5
 import com.architectcoders.data.source.LocalDataSource
 import com.architectcoders.domain.character.Character
 import kotlinx.coroutines.flow.Flow
@@ -38,11 +39,36 @@ class RoomDataSource @Inject constructor(private val marvelDao: MarvelDao) : Loc
     override fun getPagingSourceFromCharacterEntity(): PagingSource<Int, CharacterEntity> =
         marvelDao.getPagingSourceFromCharacterEntity()
 
-    override suspend fun fetchComicsForCharacter(map: Map<String, Any>) {
+    override suspend fun fetchComicsForCharacter(map: Map<String, Any>) =
         marvelDao.fetchComicsForCharacter(map)
+
+    override fun getComicsForCharacter(characterId: Int): Any =
+        marvelDao.selectComicsForCharacter(characterId)
+
+    override suspend fun isPasswordAlreadyStored(): Boolean =
+        marvelDao.areCredentialsAlreadyStored() > 0
+
+    override suspend fun saveCredentials(password: String, recoveryHint: String) {
+        marvelDao.saveCredentials(
+            CredentialsEntity(
+                password = password.md5,
+                recoveryHint = recoveryHint.md5
+            )
+        )
     }
 
-    override fun getComicsForCharacter(characterId: Int): Any {
-        return marvelDao.selectComicsForCharacter(characterId)
+    override suspend fun deleteCredentials() = marvelDao.deleteCredentials()
+
+    override suspend fun isPasswordCorrect(password: String): Boolean {
+        val credentials = marvelDao.getCredentials()
+        return credentials.password == password.md5
     }
+
+    override suspend fun isRecoveryHintCorrect(recoveryHint: String): Boolean {
+        val credentials = marvelDao.getCredentials()
+        return credentials.recoveryHint == recoveryHint.md5
+    }
+
+    override suspend fun deleteAllLocalFavoriteCharacter() =
+        marvelDao.deleteAllLocalFavoriteCharacter()
 }
