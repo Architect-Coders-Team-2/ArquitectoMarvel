@@ -6,42 +6,27 @@ import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.architectcoders.arquitectomarvel.R
-import com.architectcoders.arquitectomarvel.ui.common.AUTHENTICATION_TIMESTAMP
-import com.architectcoders.arquitectomarvel.ui.common.BIOMETRIC_PREFERENCES
-import com.architectcoders.arquitectomarvel.ui.common.IS_AUTHENTICATED
-import com.architectcoders.data.source.BiometricDataSource
+import com.architectcoders.data.source.BiometricPromptDataSource
 import dagger.hilt.android.qualifiers.ActivityContext
 import java.util.concurrent.Executor
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class BiometricDataSourceImpl @Inject constructor(
+class BiometricPromptDataSourceImpl @Inject constructor(
     @ActivityContext private val context: Context
-) : BiometricDataSource {
+) : BiometricPromptDataSource {
 
     private lateinit var executor: Executor
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
-    private val sharedPreferences =
-        context.getSharedPreferences(BIOMETRIC_PREFERENCES, Context.MODE_PRIVATE)
 
-    init {
-        checkAuthenticationState()
-    }
-
-    private fun checkAuthenticationState() {
-        val cacheTimeOut = TimeUnit.DAYS.toMillis(1)
-        val lastTimeStamp = sharedPreferences.getLong(AUTHENTICATION_TIMESTAMP, -1L)
-        if (lastTimeStamp != -1L && System.currentTimeMillis() - lastTimeStamp >= cacheTimeOut) {
-            saveAuthenticationState(false)
-        }
-    }
+    override fun canUserUseBiometricAuthentication(): Boolean =
+        BiometricManager.from(context).canAuthenticate(
+            BiometricManager.Authenticators.BIOMETRIC_STRONG
+                    or BiometricManager.Authenticators.BIOMETRIC_WEAK
+                    or BiometricManager.Authenticators.DEVICE_CREDENTIAL
+        ) == BiometricManager.BIOMETRIC_SUCCESS
 
     override fun setBiometricAuthentication(onFail: () -> Unit, onSuccess: () -> Unit) {
-        if (sharedPreferences.getBoolean(IS_AUTHENTICATED, false) || !userCanAuthenticate()) {
-            onSuccess()
-            return
-        }
         executor = ContextCompat.getMainExecutor(context)
         biometricPrompt =
             BiometricPrompt(
@@ -51,7 +36,6 @@ class BiometricDataSourceImpl @Inject constructor(
 
                     override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                         super.onAuthenticationSucceeded(result)
-                        saveAuthenticationState(true)
                         onSuccess()
                     }
 
@@ -72,18 +56,4 @@ class BiometricDataSourceImpl @Inject constructor(
 
         biometricPrompt.authenticate(promptInfo)
     }
-
-    private fun userCanAuthenticate(): Boolean =
-        BiometricManager.from(context).canAuthenticate(
-            BiometricManager.Authenticators.BIOMETRIC_STRONG
-                    or BiometricManager.Authenticators.BIOMETRIC_WEAK
-                    or BiometricManager.Authenticators.DEVICE_CREDENTIAL
-        ) == BiometricManager.BIOMETRIC_SUCCESS
-
-    private fun saveAuthenticationState(isAuthenticated: Boolean) =
-        with(sharedPreferences.edit()) {
-            putBoolean(IS_AUTHENTICATED, isAuthenticated)
-            putLong(AUTHENTICATION_TIMESTAMP, System.currentTimeMillis())
-            apply()
-        }
 }
