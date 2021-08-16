@@ -23,7 +23,7 @@ class MainViewModel
     private val saveCredentials: SaveCredentials,
     private val deleteCredentials: DeleteCredentials,
     private val isPasswordCorrect: IsPasswordCorrect,
-    private val isHintCorrect: IsHintCorrect,
+    private val isRecoveryHintCorrect: IsRecoveryHintCorrect,
     private val deleteAllLocalFavoriteCharacter: DeleteAllLocalFavoriteCharacter
 ) : ViewModel() {
     @ExperimentalPagingApi
@@ -71,7 +71,7 @@ class MainViewModel
 
     fun checkIfHintIsCorrect(hint: String, listener: (Boolean) -> Unit) {
         viewModelScope.launch {
-            listener(isHintCorrect.invoke(hint))
+            listener(isRecoveryHintCorrect.invoke(hint))
         }
     }
 

@@ -2,7 +2,6 @@ package com.architectcoders.arquitectomarvel.di
 
 import androidx.paging.ExperimentalPagingApi
 import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterRemoteMediator
-import com.architectcoders.data.repository.BiometricRepository
 import com.architectcoders.data.repository.MarvelRepository
 import com.architectcoders.usecases.*
 import dagger.Module
@@ -93,8 +92,8 @@ class MainViewModelModule {
 
     @ViewModelScoped
     @Provides
-    fun isHintCorrectProvider(marvelRepository: MarvelRepository): IsHintCorrect =
-        IsHintCorrect(marvelRepository)
+    fun isHintCorrectProvider(marvelRepository: MarvelRepository): IsRecoveryHintCorrect =
+        IsRecoveryHintCorrect(marvelRepository)
 
     // Favorites
 
