@@ -14,7 +14,7 @@ interface LocalDataSource {
     suspend fun deleteLocalFavoriteCharacter(favoriteCharacter: Character)
     fun getPagingSourceFromCharacterEntity(): Any?
     fun getComicsForCharacter(characterId: Int): Any
-    suspend fun fetchComicsForCharacter(map: Map<String, Any>)
+    suspend fun insertRemoteComicsForLocalCharacter(map: Map<String, Any>)
     suspend fun isPasswordAlreadyStored(): Boolean
     suspend fun saveCredentials(password: String, recoveryHint: String)
     suspend fun deleteCredentials()

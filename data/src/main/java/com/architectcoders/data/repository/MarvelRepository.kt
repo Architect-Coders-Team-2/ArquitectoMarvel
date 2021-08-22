@@ -46,8 +46,8 @@ class MarvelRepository(
     fun getPagingSourceFromCharacterEntity(): Any? =
         localDataSource.getPagingSourceFromCharacterEntity()
 
-    suspend fun fetchComicsForCharacter(map: Map<String, Any>) =
-        localDataSource.fetchComicsForCharacter(map)
+    suspend fun insertRemoteComicsForLocalCharacter(map: Map<String, Any>) =
+        localDataSource.insertRemoteComicsForLocalCharacter(map)
 
     fun getComicsForCharacter(characterId: Int): Any =
         localDataSource.getComicsForCharacter(characterId)
