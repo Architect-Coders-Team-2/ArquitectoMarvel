@@ -1,10 +1,11 @@
 package com.architectcoders.arquitectomarvel.ui.common
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.architectcoders.usecases.HandleNetworkManager
 import com.architectcoders.usecases.UnregisterNetworkCallback
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -12,9 +13,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NetworkLogicViewModel @Inject constructor(
+    private val coroutineDispatcher: CoroutineDispatcher,
     private val handleNetworkManager: HandleNetworkManager,
     private val unregisterNetworkCallback: UnregisterNetworkCallback
-) : ViewModel() {
+) : ScopeViewModel(coroutineDispatcher) {
 
     private val _uiNetworkModel: MutableStateFlow<UiNetworkModel> =
         MutableStateFlow(UiNetworkModel.Refresh)
@@ -30,13 +32,11 @@ class NetworkLogicViewModel @Inject constructor(
     }
 
     private fun handleNetworkManager() {
-        viewModelScope.launch {
-            handleNetworkManager.invoke(::isNetworkAvailable)
+        launch {
+            handleNetworkManager.invoke {
+                _uiNetworkModel.value = UiNetworkModel.SetNetworkAvailability(it)
+            }
         }
-    }
-
-    private fun isNetworkAvailable(isAvailable: Boolean) {
-        _uiNetworkModel.value = UiNetworkModel.SetNetworkAvailability(isAvailable)
     }
 
     fun unregisterNetworkManager() {

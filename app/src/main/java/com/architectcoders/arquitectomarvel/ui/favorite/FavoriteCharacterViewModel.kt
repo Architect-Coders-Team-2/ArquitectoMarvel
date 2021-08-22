@@ -1,10 +1,10 @@
 package com.architectcoders.arquitectomarvel.ui.favorite
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.architectcoders.arquitectomarvel.data.database.FavoriteCharacterEntity
+import com.architectcoders.arquitectomarvel.ui.common.ScopeViewModel
 import com.architectcoders.usecases.GetLocalFavoriteCharacters
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,8 +13,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FavoriteCharacterViewModel @Inject constructor(
+    coroutineDispatcher: CoroutineDispatcher,
     private val getLocalFavoriteCharacters: GetLocalFavoriteCharacters
-) : ViewModel() {
+) : ScopeViewModel(coroutineDispatcher) {
 
     private val _uiModel: MutableStateFlow<UiModel> = MutableStateFlow(UiModel.Refresh)
     val uiModel: StateFlow<UiModel>
@@ -38,7 +39,7 @@ class FavoriteCharacterViewModel @Inject constructor(
     }
 
     private fun loadFavoriteCharacters() {
-        viewModelScope.launch {
+        launch {
             val localFavoriteCharacters =
                 getLocalFavoriteCharacters.invoke(Unit) as Flow<List<FavoriteCharacterEntity>>
             _uiModel.value = UiModel.RetrieveFavoriteCharacters(localFavoriteCharacters)

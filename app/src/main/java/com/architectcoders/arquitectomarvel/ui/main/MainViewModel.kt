@@ -1,13 +1,13 @@
 package com.architectcoders.arquitectomarvel.ui.main
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import com.architectcoders.arquitectomarvel.data.database.CharacterEntity
 import com.architectcoders.arquitectomarvel.ui.common.REQUEST_LIMIT
+import com.architectcoders.arquitectomarvel.ui.common.ScopeViewModel
 import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterRemoteMediator
 import com.architectcoders.usecases.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -17,7 +17,8 @@ import javax.inject.Inject
 class MainViewModel
 @ExperimentalPagingApi
 @Inject constructor(
-    private val characterRemoteMediator: CharacterRemoteMediator,
+    coroutineDispatcher: CoroutineDispatcher,
+    characterRemoteMediator: CharacterRemoteMediator,
     private val getPagingSourceFromCharacterEntity: GetPagingSourceFromCharacterEntity,
     private val isPasswordAlreadyStored: IsPasswordAlreadyStored,
     private val saveCredentials: SaveCredentials,
@@ -25,14 +26,14 @@ class MainViewModel
     private val isPasswordCorrect: IsPasswordCorrect,
     private val isRecoveryHintCorrect: IsRecoveryHintCorrect,
     private val deleteAllLocalFavoriteCharacter: DeleteAllLocalFavoriteCharacter
-) : ViewModel() {
+) : ScopeViewModel(coroutineDispatcher) {
     @ExperimentalPagingApi
     val pager = Pager(
         config = PagingConfig(pageSize = REQUEST_LIMIT / 2),
         remoteMediator = characterRemoteMediator
     ) {
         getPagingSourceFromCharacterEntity.invoke() as PagingSource<Int, CharacterEntity>
-    }.flow.cachedIn(viewModelScope)
+    }.flow.cachedIn(this)
 
     private val _passwordState = MutableStateFlow(PasswordState.INITIAL_STATE)
     val passwordState = _passwordState.asStateFlow()
@@ -46,37 +47,37 @@ class MainViewModel
     }
 
     fun ifDeviceNeitherHaveBiometricLoginNorPassword(listener: (Boolean) -> Unit) {
-        viewModelScope.launch {
+        launch {
             listener(isPasswordAlreadyStored.invoke(Unit))
         }
     }
 
     fun saveCredentials(password: String, recoveryHint: String) {
-        viewModelScope.launch {
+        launch {
             saveCredentials.invoke(password, recoveryHint)
         }
     }
 
     fun deleteCredentials() {
-        viewModelScope.launch {
+        launch {
             deleteCredentials.invoke(Unit)
         }
     }
 
     fun checkIfPasswordIsCorrect(password: String, listener: (Boolean) -> Unit) {
-        viewModelScope.launch {
+        launch {
             listener(isPasswordCorrect.invoke(password))
         }
     }
 
     fun checkIfHintIsCorrect(hint: String, listener: (Boolean) -> Unit) {
-        viewModelScope.launch {
+        launch {
             listener(isRecoveryHintCorrect.invoke(hint))
         }
     }
 
     fun resetLocalFavoriteCharacters() {
-        viewModelScope.launch {
+        launch {
             deleteAllLocalFavoriteCharacter.invoke(Unit)
         }
     }

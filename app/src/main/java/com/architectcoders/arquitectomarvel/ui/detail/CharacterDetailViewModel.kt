@@ -1,13 +1,13 @@
 package com.architectcoders.arquitectomarvel.ui.detail
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import com.architectcoders.arquitectomarvel.ui.common.ScopeViewModel
 import com.architectcoders.domain.character.Character
 import com.architectcoders.usecases.DeleteLocalFavoriteCharacter
 import com.architectcoders.usecases.GetLocalCharacterById
 import com.architectcoders.usecases.InsertLocalFavoriteCharacter
 import com.architectcoders.usecases.IsLocalCharacterFavorite
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,13 +19,14 @@ import javax.inject.Named
 
 @HiltViewModel
 class CharacterDetailViewModel @Inject constructor(
+    coroutineDispatcher: CoroutineDispatcher,
     @Named("characterId") private val characterId: Int,
     private val getLocalCharacterById: GetLocalCharacterById,
     private val isLocalCharacterFavorite: IsLocalCharacterFavorite,
     private val insertLocalFavoriteCharacter: InsertLocalFavoriteCharacter,
     private val deleteLocalFavoriteCharacter: DeleteLocalFavoriteCharacter,
-    private val getComicsInteractor: GetComicsInteractor
-) : ViewModel() {
+    getComicsInteractor: GetComicsInteractor
+) : ScopeViewModel(coroutineDispatcher) {
 
     val comicResource = getComicsInteractor.networkBoundResourceResult(characterId)
 
@@ -58,7 +59,7 @@ class CharacterDetailViewModel @Inject constructor(
     }
 
     private fun loadCharacterById(characterId: Int) {
-        viewModelScope.launch {
+        launch {
             try {
                 val character = getLocalCharacterById.invoke(characterId)
                 val isCharacterFavorite = isLocalCharacterFavorite.invoke(characterId) as Flow<Int>
@@ -74,7 +75,7 @@ class CharacterDetailViewModel @Inject constructor(
         selectedCharacter: Character,
         isCharacterFavorite: Boolean,
     ) {
-        viewModelScope.launch {
+        launch {
             if (isCharacterFavorite) {
                 insertLocalFavoriteCharacter.invoke(selectedCharacter)
             } else {
