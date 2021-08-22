@@ -52,7 +52,7 @@ interface MarvelDao {
     fun selectComicsForCharacter(idCharacter: Int): Flow<List<ComicEntity>>
 
     @Transaction
-    suspend fun fetchComicsForCharacter(map: Map<String, Any>) {
+    suspend fun insertRemoteComicsForLocalCharacter(map: Map<String, Any>) {
         val idCharacter = map[CHARACTER_ID] as Int
         val comics = map[COMICS] as List<ComicEntity>
         deleteComicsForCharacter(idCharacter)

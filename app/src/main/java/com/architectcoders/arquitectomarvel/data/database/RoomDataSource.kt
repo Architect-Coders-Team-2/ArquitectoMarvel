@@ -39,8 +39,8 @@ class RoomDataSource @Inject constructor(private val marvelDao: MarvelDao) : Loc
     override fun getPagingSourceFromCharacterEntity(): PagingSource<Int, CharacterEntity> =
         marvelDao.getPagingSourceFromCharacterEntity()
 
-    override suspend fun fetchComicsForCharacter(map: Map<String, Any>) =
-        marvelDao.fetchComicsForCharacter(map)
+    override suspend fun insertRemoteComicsForLocalCharacter(map: Map<String, Any>) =
+        marvelDao.insertRemoteComicsForLocalCharacter(map)
 
     override fun getComicsForCharacter(characterId: Int): Any =
         marvelDao.selectComicsForCharacter(characterId)

@@ -7,12 +7,12 @@ import com.architectcoders.arquitectomarvel.ui.common.CHARACTER_ID
 import com.architectcoders.arquitectomarvel.ui.common.COMICS
 import com.architectcoders.usecases.GetComicsForCharacter
 import com.architectcoders.usecases.GetRemoteComicsFromCharacterId
-import com.architectcoders.usecases.InsertComicsForCharacterLocal
+import com.architectcoders.usecases.InsertRemoteComicsForLocalCharacter
 import kotlinx.coroutines.flow.Flow
 
 class GetComicsInteractor(
     private val getRemoteComicsFromCharacterId: GetRemoteComicsFromCharacterId,
-    private val insertComicsForCharacterLocal: InsertComicsForCharacterLocal,
+    private val insertRemoteComicsForLocalCharacter: InsertRemoteComicsForLocalCharacter,
     private val getComicsForCharacter: GetComicsForCharacter,
 ) {
     fun networkBoundResourceResult(characterId: Int) = networkBoundResource(
@@ -28,7 +28,7 @@ class GetComicsInteractor(
                 CHARACTER_ID to characterId,
                 COMICS to comics
             )
-            insertComicsForCharacterLocal.invoke(map)
+            insertRemoteComicsForLocalCharacter.invoke(map)
         }
     ).asLiveData()
 }
