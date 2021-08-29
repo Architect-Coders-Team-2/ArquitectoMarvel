@@ -6,7 +6,7 @@ import com.architectcoders.domain.comic.Comic
 import com.architectcoders.domain.comic.ComicData
 import com.architectcoders.domain.comic.ComicsPayload
 
-internal val mockedCharacter = Character(
+val mockedCharacter = Character(
     id = 1011334,
     name = "3-D Man",
     description = "He loves 3-D movies!",
@@ -20,7 +20,7 @@ internal val mockedCharacter = Character(
     insertDate = null
 )
 
-internal val mockedCharacterData = CharacterData(
+val mockedCharacterData = CharacterData(
     offset = 0,
     limit = 20,
     total = 20,
@@ -28,13 +28,13 @@ internal val mockedCharacterData = CharacterData(
     characters = listOf(mockedCharacter)
 )
 
-internal val mockedCharactersPayload = CharactersPayload(
+val mockedCharactersPayload = CharactersPayload(
     code = 200,
     status = "Ok",
     characterData = mockedCharacterData
 )
 
-internal val mockedComic = Comic(
+val mockedComic = Comic(
     id = 22506,
     title = "Avengers: The Initiative (2007) #19",
     description = "Join 3-D MAN, CLOUD 9, KOMODO, HARDBALL, and heroes around America in " +
@@ -52,7 +52,7 @@ internal val mockedComic = Comic(
     insertDate = null
 )
 
-internal val mockedComicData = ComicData(
+val mockedComicData = ComicData(
     count = 1,
     total = 1,
     limit = 20,
@@ -60,7 +60,7 @@ internal val mockedComicData = ComicData(
     comics = listOf(mockedComic)
 )
 
-internal val mockedComicsPayload = ComicsPayload(
+val mockedComicsPayload = ComicsPayload(
     code = 200,
     comicData = mockedComicData
 )

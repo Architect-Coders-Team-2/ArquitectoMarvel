@@ -42,8 +42,7 @@ allprojects {
                 biometric         : 'androidx.biometric:biometric-ktx:1.2.0-alpha03',
                 lifecycleRuntime  : 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1',
                 testRunner        : 'androidx.test:runner:1.4.0',
-                hiltAndroidTesting: 'com.google.dagger:hilt-android-testing:2.38.1',
-                coreTesting       : 'androidx.arch.core:core-testing:2.1.0'
+                hiltAndroidTesting: 'com.google.dagger:hilt-android-testing:2.38.1'
         ]
 
         androidKaptLibs = [
@@ -70,10 +69,13 @@ allprojects {
         ]
 
         testLibs = [
-                junit             : 'junit:junit:4.13.2',
-                mockitoKotlin     : 'org.mockito.kotlin:mockito-kotlin:3.2.0',
-                mockitoInline     : 'org.mockito:mockito-inline:3.11.2',
-                turbine           : 'app.cash.turbine:turbine:0.6.0'
+                junit              : 'junit:junit:4.13.2',
+                mockitoKotlin      : 'org.mockito.kotlin:mockito-kotlin:3.2.0',
+                mockitoInline      : 'org.mockito:mockito-inline:3.11.2',
+                turbine            : 'app.cash.turbine:turbine:0.6.0',
+                kotlinCoroutineTest: 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1',
+                coreTesting       : 'androidx.arch.core:core-testing:2.1.0',
+                testShared         : project(':testShared')
         ]
 
         androidTestLibs = [
