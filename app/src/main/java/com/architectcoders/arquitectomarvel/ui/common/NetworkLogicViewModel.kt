@@ -1,11 +1,9 @@
 package com.architectcoders.arquitectomarvel.ui.common
 
-import androidx.lifecycle.viewModelScope
 import com.architectcoders.usecases.HandleNetworkManager
 import com.architectcoders.usecases.UnregisterNetworkCallback
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -13,7 +11,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NetworkLogicViewModel @Inject constructor(
-    private val coroutineDispatcher: CoroutineDispatcher,
+    coroutineDispatcher: CoroutineDispatcher,
     private val handleNetworkManager: HandleNetworkManager,
     private val unregisterNetworkCallback: UnregisterNetworkCallback
 ) : ScopeViewModel(coroutineDispatcher) {
