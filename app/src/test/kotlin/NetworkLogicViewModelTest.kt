@@ -10,6 +10,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.stub
 import kotlin.time.ExperimentalTime
 
 @RunWith(MockitoJUnitRunner::class)
@@ -35,9 +38,29 @@ class NetworkLogicViewModelTest {
 
     @ExperimentalTime
     @Test
-    fun `confirm if the first UiNetworkModel has the Refresh value`() = runBlocking {
+    fun `confirm if the first uiNetworkModel state is the Refresh value`() = runBlocking {
         networkLogicViewModel.uiNetworkModel.test {
             assertEquals(awaitItem(), NetworkLogicViewModel.UiNetworkModel.Refresh)
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @ExperimentalTime
+    @Test
+    fun `Confirm with success response from service`() = runBlocking {
+
+        val lambdaCaptor = argumentCaptor<(Boolean) -> Unit>()
+
+        handleNetworkManager.stub {
+            onBlocking { invoke(lambdaCaptor.capture()) }.doReturn(Unit)
+        }
+
+        networkLogicViewModel.uiNetworkModel.test {
+            lambdaCaptor.firstValue.invoke(true)
+            assertEquals(
+                (networkLogicViewModel.uiNetworkModel.value as NetworkLogicViewModel.UiNetworkModel.SetNetworkAvailability).isAvailable,
+                NetworkLogicViewModel.UiNetworkModel.SetNetworkAvailability(true).isAvailable
+            )
             cancelAndConsumeRemainingEvents()
         }
     }
