@@ -1,7 +1,5 @@
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
 import app.cash.turbine.test
-import com.architectcoders.arquitectomarvel.data.database.ComicEntity
 import com.architectcoders.arquitectomarvel.data.database.toComicEntity
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel
 import com.architectcoders.arquitectomarvel.ui.detail.GetComicsInteractor
@@ -22,7 +20,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -34,9 +31,6 @@ class CharacterDetailViewModelTest {
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
-
-    @Mock
-    lateinit var observer: Observer<Resource<List<ComicEntity>>>
 
     @Mock
     private lateinit var getRemoteComicsFromCharacterId: GetRemoteComicsFromCharacterId
@@ -94,15 +88,29 @@ class CharacterDetailViewModelTest {
     fun `observing comicResource retrieves comics`(): Unit = runBlocking {
         val mockComicEntity = listOf(mockedComic.toComicEntity)
         whenever(getComicsForCharacter.invoke(mockedCharacter.id)).thenReturn(flowOf(mockComicEntity))
-        characterDetailViewModel.comicResource.observeForever(observer)
-        verify(observer, times(2)).onChanged(any())
+        val result = characterDetailViewModel.comicResource.getOrAwaitValue()
+        assert(result is Resource.Loading)
+        val result2 = characterDetailViewModel.comicResource.getOrAwaitValue()
+        assert(result2 is Resource.Success)
+        verify(getComicsForCharacter, times(2)).invoke(mockedCharacter.id)
     }
 
     @ExperimentalTime
     @Test
-    fun `confirm if UiModel state is Loading`(): Unit = runBlocking {
+    fun `confirm if uiModel state is Loading`(): Unit = runBlocking {
         characterDetailViewModel.uiModel.test {
             assertEquals(awaitItem(), CharacterDetailViewModel.UiModel.Loading)
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @ExperimentalTime
+    @Test
+    fun `confirm if uiModel state is SetUiDetails`(): Unit = runBlocking {
+        whenever(getLocalCharacterById.invoke(mockedCharacter.id)).thenReturn(mockedCharacter)
+        whenever(isLocalCharacterFavorite.invoke(mockedCharacter.id)).thenReturn(flowOf(1))
+        characterDetailViewModel.uiModel.test {
+            assert(awaitItem() is CharacterDetailViewModel.UiModel.SetUiDetails)
             cancelAndConsumeRemainingEvents()
         }
     }
