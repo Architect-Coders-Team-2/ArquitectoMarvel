@@ -13,5 +13,5 @@ dependencies {
     implementation project(":domain")
 
     implementation kotlinLibs.values()
-    testImplementation testLibs.values()
+    testImplementation testLibsForAllModules.values()
 }

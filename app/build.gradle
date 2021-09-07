@@ -79,8 +79,11 @@ dependencies {
     implementation libs.values()
     kapt androidKaptLibs.values()
 
-    testImplementation testLibs.values()
+    testImplementation testLibsForAllModules.values()
+    testImplementation testLibsForApp.values()
     androidTestImplementation androidTestLibs.values()
+    kaptTest kaptTestLibs.values()
+    kaptAndroidTest kaptAndroidTestLibs.values()
 }
 
 kapt {
