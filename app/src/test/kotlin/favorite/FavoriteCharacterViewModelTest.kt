@@ -1,3 +1,5 @@
+package favorite
+
 import app.cash.turbine.test
 import com.architectcoders.arquitectomarvel.data.database.FavoriteCharacterEntity
 import com.architectcoders.arquitectomarvel.data.database.toFavoriteCharacterEntityList
@@ -7,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
+import mockedCharacter
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test

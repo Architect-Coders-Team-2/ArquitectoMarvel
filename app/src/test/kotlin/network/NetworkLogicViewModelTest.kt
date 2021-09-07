@@ -1,3 +1,5 @@
+package network
+
 import app.cash.turbine.test
 import com.architectcoders.arquitectomarvel.ui.common.NetworkLogicViewModel
 import com.architectcoders.usecases.HandleNetworkManager

@@ -1,3 +1,5 @@
+package detail
+
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.architectcoders.arquitectomarvel.data.database.toComicEntity
@@ -5,6 +7,7 @@ import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel
 import com.architectcoders.arquitectomarvel.ui.detail.GetComicsInteractor
 import com.architectcoders.arquitectomarvel.ui.detail.Resource
 import com.architectcoders.usecases.*
+import getOrAwaitValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -12,6 +15,8 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
+import mockedCharacter
+import mockedComic
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before

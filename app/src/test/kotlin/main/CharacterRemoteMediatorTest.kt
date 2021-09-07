@@ -1,9 +1,13 @@
+package main
+
 import androidx.paging.*
 import com.architectcoders.arquitectomarvel.data.database.CharacterEntity
 import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterRemoteMediator
 import com.architectcoders.domain.character.CharacterData
 import com.architectcoders.usecases.*
 import kotlinx.coroutines.runBlocking
+import mockedCharacter
+import mockedCharactersPayload
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
