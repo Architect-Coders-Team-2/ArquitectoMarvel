@@ -1,3 +1,5 @@
+package main
+
 import androidx.paging.ExperimentalPagingApi
 import app.cash.turbine.test
 import com.architectcoders.arquitectomarvel.ui.main.MainViewModel
@@ -93,6 +95,7 @@ class MainViewModelTest {
             verify(listener).invoke(capture())
             assertEquals(true, firstValue)
         }
+        verify(isPasswordAlreadyStored).invoke(Unit)
     }
 
     @Test
@@ -103,6 +106,7 @@ class MainViewModelTest {
             verify(listener).invoke(capture())
             assertEquals(true, firstValue)
         }
+        verify(isPasswordCorrect).invoke("password")
     }
 
     @Test
@@ -113,5 +117,13 @@ class MainViewModelTest {
             verify(listener).invoke(capture())
             assertEquals(true, firstValue)
         }
+        verify(isRecoveryHintCorrect).invoke("hint")
+    }
+
+    @Test
+    fun `verify if deleteAllLocalFavoriteCharacter is invoked`(): Unit = runBlocking {
+        whenever(deleteAllLocalFavoriteCharacter.invoke(Unit)).thenReturn(Unit)
+        mainViewModel.resetLocalFavoriteCharacters()
+        verify(deleteAllLocalFavoriteCharacter).invoke(Unit)
     }
 }
