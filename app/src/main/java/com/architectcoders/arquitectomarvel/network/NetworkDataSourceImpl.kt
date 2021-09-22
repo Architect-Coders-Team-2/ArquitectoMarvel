@@ -10,17 +10,14 @@ import javax.inject.Inject
 class NetworkDataSourceImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : NetworkDataSource {
+    private var networkManager: NetworkManager = NetworkManager(context)
 
-    lateinit var networkManager: NetworkManager
-
-    override suspend fun handleNetworkManager(listener: (Boolean) -> Unit) {
-        networkManager = NetworkManager(context)
+    override suspend fun handleNetworkManager(listener: (Boolean) -> Unit) =
         networkManager.isInternetAvailable.collect {
             listener(it)
         }
-    }
 
-    override fun unregisterNetworkCallback() {
-        networkManager.unregisterNetworkCallback()
+    override fun clearNetworks() {
+        networkManager.clearNetworks()
     }
 }
