@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.favorite
+package com.architectcoders.arquitectomarvel.integration
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.architectcoders.arquitectomarvel.ui.favorite.FavoriteCharacterViewModel

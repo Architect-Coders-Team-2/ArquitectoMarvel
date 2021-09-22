@@ -1,8 +1,8 @@
-package com.architectcoders.arquitectomarvel.detail
+package com.architectcoders.arquitectomarvel.integration
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.architectcoders.arquitectomarvel.getOrAwaitValue
+import com.architectcoders.arquitectomarvel.utils.getOrAwaitValue
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel
 import com.architectcoders.arquitectomarvel.ui.detail.GetComicsInteractor
 import com.architectcoders.arquitectomarvel.ui.detail.Resource

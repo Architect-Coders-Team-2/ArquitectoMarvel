@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.main
+package com.architectcoders.arquitectomarvel.integration
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.test.ext.junit.runners.AndroidJUnit4
