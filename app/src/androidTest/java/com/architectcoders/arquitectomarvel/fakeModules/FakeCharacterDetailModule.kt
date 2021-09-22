@@ -1,11 +1,13 @@
 package com.architectcoders.arquitectomarvel.fakeModules
 
 import com.architectcoders.arquitectomarvel.di.CharacterDetailModule
+import com.architectcoders.arquitectomarvel.di.CharacterDetailModuleForComicInteractor
 import com.architectcoders.arquitectomarvel.ui.detail.GetComicsInteractor
 import com.architectcoders.data.repository.MarvelRepository
 import com.architectcoders.usecases.*
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import mockedCharacter
@@ -18,11 +20,6 @@ import javax.inject.Singleton
     replaces = [CharacterDetailModule::class]
 )
 class FakeCharacterDetailModule {
-
-    @Singleton
-    @Provides
-    @Named("characterId")
-    fun characterIdProvider(): Int = mockedCharacter.id
 
     @Singleton
     @Provides
@@ -43,8 +40,14 @@ class FakeCharacterDetailModule {
     @Provides
     fun deleteLocalFavoriteCharacterProvider(marvelRepository: MarvelRepository): DeleteLocalFavoriteCharacter =
         DeleteLocalFavoriteCharacter(marvelRepository)
+}
 
-    // Comic Interactor
+@Module
+@TestInstallIn(
+    components = [SingletonComponent::class],
+    replaces = [CharacterDetailModuleForComicInteractor::class]
+)
+class FakeCharacterDetailModuleForComicInteractor {
 
     @Singleton
     @Provides
@@ -73,4 +76,14 @@ class FakeCharacterDetailModule {
             insertRemoteComicsForLocalCharacter,
             getComicsForCharacter
         )
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+class FakeCharacterDetailModuleForCharacterId {
+
+    @Singleton
+    @Provides
+    @Named("characterId")
+    fun characterIdProvider(): Int = mockedCharacter.id
 }
