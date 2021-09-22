@@ -15,13 +15,12 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class AppModule {
-
-    // Room
+class AppModuleForRoom {
 
     @Singleton
     @Provides
@@ -35,8 +34,11 @@ class AppModule {
     @Singleton
     @Provides
     fun marvelDaoProvider(marvelDatabase: MarvelDatabase): MarvelDao = marvelDatabase.marvelDao
+}
 
-    // Retrofit
+@Module
+@InstallIn(SingletonComponent::class)
+class AppModuleForRetrofit {
 
     @Singleton
     @Provides
@@ -57,9 +59,19 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun marvelApiServiceProvider(retrofitBuilder: Retrofit.Builder): ApiService =
+    fun marvelApiServiceProvider(retrofitBuilder: Retrofit.Builder, @Named("baseUrl") baseUrl: String): ApiService =
         retrofitBuilder
-            .baseUrl(BASE_URL)
+            .baseUrl(baseUrl)
             .build()
             .create(ApiService::class.java)
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+class AppModuleForEndPointBaseUrl {
+
+    @Singleton
+    @Provides
+    @Named("baseUrl")
+    fun baseUrlProvider(): String = BASE_URL
 }

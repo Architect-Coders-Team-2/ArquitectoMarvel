@@ -12,7 +12,7 @@ import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
 @InstallIn(ViewModelComponent::class)
-class MainViewModelModule {
+class MainViewModelModuleForPagingSource {
 
     @ViewModelScoped
     @Provides
@@ -20,8 +20,11 @@ class MainViewModelModule {
         marvelRepository: MarvelRepository
     ): GetPagingSourceFromCharacterEntity =
         GetPagingSourceFromCharacterEntity(marvelRepository)
+}
 
-    // CharacterRemoteMediator
+@Module
+@InstallIn(ViewModelComponent::class)
+class MainViewModelModuleForCharacterRemoteMediator {
 
     @ViewModelScoped
     @Provides
@@ -67,8 +70,11 @@ class MainViewModelModule {
             getLastTimeStampFromCharacterEntity,
             getLocalCharactersCount
         )
+}
 
-    // Password management
+@Module
+@InstallIn(ViewModelComponent::class)
+class MainViewModelModuleForPasswordManagement {
 
     @ViewModelScoped
     @Provides
@@ -94,8 +100,11 @@ class MainViewModelModule {
     @Provides
     fun isHintCorrectProvider(marvelRepository: MarvelRepository): IsRecoveryHintCorrect =
         IsRecoveryHintCorrect(marvelRepository)
+}
 
-    // Favorites
+@Module
+@InstallIn(ViewModelComponent::class)
+class MainViewModelModuleForFavorites {
 
     @ViewModelScoped
     @Provides

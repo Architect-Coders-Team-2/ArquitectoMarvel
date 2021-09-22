@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.architectcoders.arquitectomarvel.biometric.AuthenticationStateDataSourceImpl
 import com.architectcoders.arquitectomarvel.biometric.BiometricPromptDataSourceImpl
-import com.architectcoders.arquitectomarvel.data.database.RoomDataSource
 import com.architectcoders.arquitectomarvel.ui.common.BIOMETRIC_PREFERENCES
 import com.architectcoders.data.repository.BiometricRepository
 import com.architectcoders.data.source.AuthenticationStateDataSource
