@@ -1,20 +1,14 @@
 package com.architectcoders.arquitectomarvel.fakeModules
 
-import com.architectcoders.arquitectomarvel.di.DataModuleBinder
-import com.architectcoders.arquitectomarvel.di.DataModuleProvider
-import com.architectcoders.arquitectomarvel.fakeDataSources.FakeCredentialsDataSource
+import com.architectcoders.arquitectomarvel.di.DataModuleBinderForRetrofit
+import com.architectcoders.arquitectomarvel.di.DataModuleBinderForRoom
 import com.architectcoders.arquitectomarvel.fakeDataSources.FakeLocalDataSource
-import com.architectcoders.arquitectomarvel.fakeDataSources.FakeNetworkDataSource
 import com.architectcoders.arquitectomarvel.fakeDataSources.FakeRemoteDataSource
-import com.architectcoders.data.repository.MarvelRepository
-import com.architectcoders.data.repository.NetworkRepository
-import com.architectcoders.data.source.CredentialsDataSource
 import com.architectcoders.data.source.LocalDataSource
-import com.architectcoders.data.source.NetworkDataSource
 import com.architectcoders.data.source.RemoteDataSource
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
+import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import javax.inject.Singleton
@@ -22,42 +16,31 @@ import javax.inject.Singleton
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
-    replaces = [DataModuleBinder::class]
+    replaces = [DataModuleBinderForRoom::class]
 )
-abstract class FakeDataModuleBinder {
-    @Singleton
-    @Binds
-    abstract fun bindsFakeLocationDataSource(fakeLocalDataSource: FakeLocalDataSource): LocalDataSource
+abstract class RemovesDataModuleBinderForRoom
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class FakeDataModuleBinderForRoom {
 
     @Singleton
     @Binds
-    abstract fun bindsFakeCredentialsDatSrc(fakeCredentialsDataSource: FakeCredentialsDataSource): CredentialsDataSource
-
-    @Singleton
-    @Binds
-    abstract fun bindsFakeRemoteDataSource(fakeRemoteDataSource: FakeRemoteDataSource): RemoteDataSource
-
-    @Singleton
-    @Binds
-    abstract fun bindsFakeNetworkDataSource(fakeNetworkDataSource: FakeNetworkDataSource): NetworkDataSource
+    abstract fun bindsFakeLocalDataSource(fakeLocalDataSource: FakeLocalDataSource): LocalDataSource
 }
 
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
-    replaces = [DataModuleProvider::class]
+    replaces = [DataModuleBinderForRetrofit::class]
 )
-class FakeDataModuleProvider {
+abstract class RemovesDataModuleBinderForRetrofit
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class FakeDataModuleBinderForRetrofit {
 
     @Singleton
-    @Provides
-    fun fakeMarvelRepositoryProvider(
-        fakeRemoteDataSource: FakeRemoteDataSource,
-        fakeLocalDataSource: FakeLocalDataSource
-    ): MarvelRepository = MarvelRepository(fakeRemoteDataSource, fakeLocalDataSource)
-
-    @Singleton
-    @Provides
-    fun fakeNetworkRepositoryProvider(fakeNetworkDataSource: FakeNetworkDataSource): NetworkRepository =
-        NetworkRepository(fakeNetworkDataSource)
+    @Binds
+    abstract fun bindsFakeRemoteDataSource(fakeRemoteDataSource: FakeRemoteDataSource): RemoteDataSource
 }
