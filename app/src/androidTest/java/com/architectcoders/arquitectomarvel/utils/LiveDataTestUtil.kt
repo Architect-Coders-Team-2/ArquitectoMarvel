@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel
+package com.architectcoders.arquitectomarvel.utils
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
