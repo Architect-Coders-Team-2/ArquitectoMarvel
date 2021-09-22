@@ -2,8 +2,8 @@ package network
 
 import app.cash.turbine.test
 import com.architectcoders.arquitectomarvel.ui.common.NetworkLogicViewModel
+import com.architectcoders.usecases.ClearNetworks
 import com.architectcoders.usecases.HandleNetworkManager
-import com.architectcoders.usecases.UnregisterNetworkCallback
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -24,7 +24,7 @@ class NetworkLogicViewModelTest {
     private lateinit var handleNetworkManager: HandleNetworkManager
 
     @Mock
-    private lateinit var unregisterNetworkCallback: UnregisterNetworkCallback
+    private lateinit var clearNetworks: ClearNetworks
 
     private lateinit var networkLogicViewModel: NetworkLogicViewModel
 
@@ -34,7 +34,7 @@ class NetworkLogicViewModelTest {
             NetworkLogicViewModel(
                 Dispatchers.Unconfined,
                 handleNetworkManager,
-                unregisterNetworkCallback
+                clearNetworks
             )
     }
 
@@ -49,7 +49,7 @@ class NetworkLogicViewModelTest {
 
     @ExperimentalTime
     @Test
-    fun `Confirm with success response from service`() = runBlocking {
+    fun `confirm with success response from service`() = runBlocking {
 
         val lambdaCaptor = argumentCaptor<(Boolean) -> Unit>()
 
@@ -60,7 +60,8 @@ class NetworkLogicViewModelTest {
         networkLogicViewModel.uiNetworkModel.test {
             lambdaCaptor.firstValue.invoke(true)
             assertEquals(
-                (networkLogicViewModel.uiNetworkModel.value as NetworkLogicViewModel.UiNetworkModel.SetNetworkAvailability).isAvailable,
+                (networkLogicViewModel.uiNetworkModel.value
+                        as NetworkLogicViewModel.UiNetworkModel.SetNetworkAvailability).isAvailable,
                 NetworkLogicViewModel.UiNetworkModel.SetNetworkAvailability(true).isAvailable
             )
             cancelAndConsumeRemainingEvents()

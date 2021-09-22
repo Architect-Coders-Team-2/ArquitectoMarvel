@@ -1,5 +1,5 @@
 import com.architectcoders.data.repository.NetworkRepository
-import com.architectcoders.usecases.UnregisterNetworkCallback
+import com.architectcoders.usecases.ClearNetworks
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -9,21 +9,21 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 
 @RunWith(MockitoJUnitRunner::class)
-class UnregisterNetworkCallbackTest {
+class ClearNetworksTest {
 
     @Mock
     lateinit var networkRepository: NetworkRepository
 
-    lateinit var unregisterNetworkCallback: UnregisterNetworkCallback
+    lateinit var clearNetworks: ClearNetworks
 
     @Before
     fun setUp() {
-        unregisterNetworkCallback = UnregisterNetworkCallback(networkRepository)
+        clearNetworks = ClearNetworks(networkRepository)
     }
 
     @Test
-    fun `verify if unregisterNetworkCallback is invoked`() {
-        unregisterNetworkCallback.invoke()
-        verify(networkRepository, times(1)).unregisterNetworkCallback()
+    fun `verify if clearNetworks is invoked`() {
+        clearNetworks.invoke()
+        verify(networkRepository, times(1)).clearNetworks()
     }
 }
