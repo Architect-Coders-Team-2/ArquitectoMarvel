@@ -18,7 +18,7 @@ import javax.inject.Singleton
     components = [SingletonComponent::class],
     replaces = [DataModuleBinderForRoom::class]
 )
-abstract class RemovesDataModuleBinderForRoom
+object RemovesDataModuleBinderForRoom
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -34,7 +34,7 @@ abstract class FakeDataModuleBinderForRoom {
     components = [SingletonComponent::class],
     replaces = [DataModuleBinderForRetrofit::class]
 )
-abstract class RemovesDataModuleBinderForRetrofit
+object RemovesDataModuleBinderForRetrofit
 
 @Module
 @InstallIn(SingletonComponent::class)
