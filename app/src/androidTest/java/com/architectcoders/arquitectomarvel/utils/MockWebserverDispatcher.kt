@@ -14,24 +14,26 @@ class MockWebserverDispatcher {
             return when {
                 request.path.isNullOrBlank() -> MockResponse().setResponseCode(400)
                 request.path?.contains("/v1/public/characters?") == true ->
-                    MockResponse().setResponseCode(200)
-                        .setBody(readJsonFile("marvelCharacters.json"))
+                    retrieveMockResponse(200, "marvelCharacters.json")
                 request.path?.contains("/v1/public/characters/1011334?") == true ->
-                    MockResponse().setResponseCode(200).setBody(readJsonFile("3DMan.json"))
+                    retrieveMockResponse(200, "3DMan.json")
                 request.path?.contains("/v1/public/characters/1017100?") == true ->
-                    MockResponse().setResponseCode(200).setBody(readJsonFile("aBombHas.json"))
+                    retrieveMockResponse(200, "aBombHas.json")
                 request.path?.contains("/v1/public/characters/1009144?") == true ->
-                    MockResponse().setResponseCode(200).setBody(readJsonFile("aim.json"))
+                    retrieveMockResponse(200, "aim.json")
                 request.path?.contains("/v1/public/characters/1011334/comics?") == true ->
-                    MockResponse().setResponseCode(200).setBody(readJsonFile("3DManComics.json"))
+                    retrieveMockResponse(200, "3DManComics.json")
                 request.path?.contains("/v1/public/characters/1017100/comics?") == true ->
-                    MockResponse().setResponseCode(200).setBody(readJsonFile("aBombHasComics.json"))
+                    retrieveMockResponse(200, "aBombHasComics.json")
                 request.path?.contains("/v1/public/characters/1009144/comics?") == true ->
-                    MockResponse().setResponseCode(200).setBody(readJsonFile("aimComics.json"))
+                    retrieveMockResponse(200, "aimComics.json")
                 else -> MockResponse().setResponseCode(400)
             }
         }
     }
+
+    fun retrieveMockResponse(code: Int, json: String): MockResponse =
+        MockResponse().setResponseCode(code).setBody(readJsonFile(json))
 
     internal inner class ErrorDispatcher : Dispatcher() {
         override fun dispatch(request: RecordedRequest): MockResponse =
