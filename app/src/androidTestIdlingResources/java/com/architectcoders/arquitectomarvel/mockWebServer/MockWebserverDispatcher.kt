@@ -1,4 +1,4 @@
-package com.architectcoders.arquitectomarvel.utils
+package com.architectcoders.arquitectomarvel.mockWebServer
 
 import androidx.test.platform.app.InstrumentationRegistry
 import okhttp3.mockwebserver.Dispatcher

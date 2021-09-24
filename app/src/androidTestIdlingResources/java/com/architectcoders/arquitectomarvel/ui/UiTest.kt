@@ -22,7 +22,7 @@ import com.architectcoders.arquitectomarvel.fakeModules.FakeDataModuleBinderForR
 import com.architectcoders.arquitectomarvel.fakeModules.FakeDataModuleBinderForRoom
 import com.architectcoders.arquitectomarvel.ui.common.EspressoIdlingResource
 import com.architectcoders.arquitectomarvel.ui.main.MainActivity
-import com.architectcoders.arquitectomarvel.utils.MockWebserverDispatcher
+import com.architectcoders.arquitectomarvel.mockWebServer.MockWebserverDispatcher
 import com.architectcoders.data.source.LocalDataSource
 import com.architectcoders.data.source.RemoteDataSource
 import com.jakewharton.espresso.OkHttp3IdlingResource
