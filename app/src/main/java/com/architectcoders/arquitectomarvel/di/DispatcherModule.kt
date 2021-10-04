@@ -1,16 +1,18 @@
 package com.architectcoders.arquitectomarvel.di
 
+import com.architectcoders.arquitectomarvel.ui.common.CoroutineDispatchersImpl
+import com.architectcoders.arquitectomarvel.ui.common.CoroutineDispatchers
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 
 @Module
 @InstallIn(ViewModelComponent::class)
-class DispatcherModule {
+abstract class DispatcherModule {
 
-    @Provides
-    fun coroutineDispatcherProvider(): CoroutineDispatcher = Dispatchers.Main
+    @Binds
+    abstract fun coroutineDispatcherBinder(
+        coroutineDispatchersImpl: CoroutineDispatchersImpl
+    ): CoroutineDispatchers
 }
