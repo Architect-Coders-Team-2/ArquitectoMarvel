@@ -1,13 +1,14 @@
 package com.architectcoders.arquitectomarvel.ui.main
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import com.architectcoders.arquitectomarvel.data.database.CharacterEntity
+import com.architectcoders.arquitectomarvel.ui.common.CoroutineDispatchers
 import com.architectcoders.arquitectomarvel.ui.common.REQUEST_LIMIT
-import com.architectcoders.arquitectomarvel.ui.common.ScopeViewModel
 import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterRemoteMediator
 import com.architectcoders.usecases.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -17,8 +18,8 @@ import javax.inject.Inject
 class MainViewModel
 @ExperimentalPagingApi
 @Inject constructor(
-    coroutineDispatcher: CoroutineDispatcher,
-    characterRemoteMediator: CharacterRemoteMediator,
+    private val coroutineDispatchers: CoroutineDispatchers,
+    private val characterRemoteMediator: CharacterRemoteMediator,
     private val getPagingSourceFromCharacterEntity: GetPagingSourceFromCharacterEntity,
     private val isPasswordAlreadyStored: IsPasswordAlreadyStored,
     private val saveCredentials: SaveCredentials,
@@ -26,14 +27,14 @@ class MainViewModel
     private val isPasswordCorrect: IsPasswordCorrect,
     private val isRecoveryHintCorrect: IsRecoveryHintCorrect,
     private val deleteAllLocalFavoriteCharacter: DeleteAllLocalFavoriteCharacter
-) : ScopeViewModel(coroutineDispatcher) {
+) : ViewModel() {
     @ExperimentalPagingApi
     val pager = Pager(
         config = PagingConfig(pageSize = REQUEST_LIMIT / 2),
         remoteMediator = characterRemoteMediator
     ) {
         getPagingSourceFromCharacterEntity.invoke() as PagingSource<Int, CharacterEntity>
-    }.flow.cachedIn(this)
+    }.flow.cachedIn(viewModelScope)
 
     private val _passwordState = MutableStateFlow(PasswordState.INITIAL_STATE)
     val passwordState = _passwordState.asStateFlow()
@@ -47,37 +48,37 @@ class MainViewModel
     }
 
     fun ifDeviceNeitherHaveBiometricLoginNorPassword(listener: (Boolean) -> Unit) {
-        launch {
+        viewModelScope.launch(coroutineDispatchers.main) {
             listener(isPasswordAlreadyStored.invoke(Unit))
         }
     }
 
     fun saveCredentials(password: String, recoveryHint: String) {
-        launch {
+        viewModelScope.launch(coroutineDispatchers.main) {
             saveCredentials.invoke(password, recoveryHint)
         }
     }
 
     fun deleteCredentials() {
-        launch {
+        viewModelScope.launch(coroutineDispatchers.main) {
             deleteCredentials.invoke(Unit)
         }
     }
 
     fun checkIfPasswordIsCorrect(password: String, listener: (Boolean) -> Unit) {
-        launch {
+        viewModelScope.launch(coroutineDispatchers.main) {
             listener(isPasswordCorrect.invoke(password))
         }
     }
 
     fun checkIfHintIsCorrect(hint: String, listener: (Boolean) -> Unit) {
-        launch {
+        viewModelScope.launch(coroutineDispatchers.main) {
             listener(isRecoveryHintCorrect.invoke(hint))
         }
     }
 
     fun resetLocalFavoriteCharacters() {
-        launch {
+        viewModelScope.launch(coroutineDispatchers.main) {
             deleteAllLocalFavoriteCharacter.invoke(Unit)
         }
     }

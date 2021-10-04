@@ -1,13 +1,14 @@
 package com.architectcoders.arquitectomarvel.ui.detail
 
-import com.architectcoders.arquitectomarvel.ui.common.ScopeViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.architectcoders.arquitectomarvel.ui.common.CoroutineDispatchers
 import com.architectcoders.domain.character.Character
 import com.architectcoders.usecases.DeleteLocalFavoriteCharacter
 import com.architectcoders.usecases.GetLocalCharacterById
 import com.architectcoders.usecases.InsertLocalFavoriteCharacter
 import com.architectcoders.usecases.IsLocalCharacterFavorite
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,14 +20,14 @@ import javax.inject.Named
 
 @HiltViewModel
 class CharacterDetailViewModel @Inject constructor(
-    coroutineDispatcher: CoroutineDispatcher,
+    private val coroutineDispatchers: CoroutineDispatchers,
     @Named("characterId") private val characterId: Int,
     private val getLocalCharacterById: GetLocalCharacterById,
     private val isLocalCharacterFavorite: IsLocalCharacterFavorite,
     private val insertLocalFavoriteCharacter: InsertLocalFavoriteCharacter,
     private val deleteLocalFavoriteCharacter: DeleteLocalFavoriteCharacter,
     getComicsInteractor: GetComicsInteractor
-) : ScopeViewModel(coroutineDispatcher) {
+) : ViewModel() {
 
     val comicResource = getComicsInteractor.networkBoundResourceResult(characterId)
 
@@ -59,7 +60,7 @@ class CharacterDetailViewModel @Inject constructor(
     }
 
     private fun loadCharacterById(characterId: Int) {
-        launch {
+        viewModelScope.launch(coroutineDispatchers.main) {
             try {
                 val character = getLocalCharacterById.invoke(characterId)
                 val isCharacterFavorite = isLocalCharacterFavorite.invoke(characterId) as Flow<Int>
@@ -75,7 +76,7 @@ class CharacterDetailViewModel @Inject constructor(
         selectedCharacter: Character,
         isCharacterFavorite: Boolean,
     ) {
-        launch {
+        viewModelScope.launch(coroutineDispatchers.main) {
             if (isCharacterFavorite) {
                 insertLocalFavoriteCharacter.invoke(selectedCharacter)
             } else {
