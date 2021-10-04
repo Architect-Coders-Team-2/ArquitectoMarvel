@@ -1,5 +1,6 @@
 package detail
 
+import CoroutineDispatchersTestImpl
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.architectcoders.arquitectomarvel.data.database.toComicEntity
@@ -18,7 +19,6 @@ import kotlinx.coroutines.test.setMain
 import mockedCharacter
 import mockedComic
 import org.junit.After
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -73,7 +73,7 @@ class CharacterDetailViewModelTest {
             getComicsForCharacter
         )
         characterDetailViewModel = CharacterDetailViewModel(
-            Dispatchers.Unconfined,
+            CoroutineDispatchersTestImpl(),
             mockedCharacter.id,
             getLocalCharacterById,
             isLocalCharacterFavorite,
@@ -98,15 +98,6 @@ class CharacterDetailViewModelTest {
         val result2 = characterDetailViewModel.comicResource.getOrAwaitValue()
         assert(result2 is Resource.Success)
         verify(getComicsForCharacter, times(2)).invoke(mockedCharacter.id)
-    }
-
-    @ExperimentalTime
-    @Test
-    fun `confirm if uiModel state is Loading`(): Unit = runBlocking {
-        characterDetailViewModel.uiModel.test {
-            assertEquals(awaitItem(), CharacterDetailViewModel.UiModel.Loading)
-            cancelAndConsumeRemainingEvents()
-        }
     }
 
     @ExperimentalTime

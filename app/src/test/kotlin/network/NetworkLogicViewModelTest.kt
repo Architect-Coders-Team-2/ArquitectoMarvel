@@ -1,10 +1,11 @@
 package network
 
+import CoroutineDispatchersTestImpl
 import app.cash.turbine.test
 import com.architectcoders.arquitectomarvel.ui.common.NetworkLogicViewModel
 import com.architectcoders.usecases.HandleNetworkManager
 import com.architectcoders.usecases.UnregisterNetworkCallback
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -28,11 +29,12 @@ class NetworkLogicViewModelTest {
 
     private lateinit var networkLogicViewModel: NetworkLogicViewModel
 
+    @ExperimentalCoroutinesApi
     @Before
     fun setup() {
         networkLogicViewModel =
             NetworkLogicViewModel(
-                Dispatchers.Unconfined,
+                CoroutineDispatchersTestImpl(),
                 handleNetworkManager,
                 unregisterNetworkCallback
             )
