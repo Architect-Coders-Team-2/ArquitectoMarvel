@@ -1,7 +1,10 @@
 package com.architectcoders.arquitectomarvel.fakeModules
 
 import androidx.paging.ExperimentalPagingApi
-import com.architectcoders.arquitectomarvel.di.MainViewModelModule
+import com.architectcoders.arquitectomarvel.di.MainViewModelModuleForCharacterRemoteMediator
+import com.architectcoders.arquitectomarvel.di.MainViewModelModuleForFavorites
+import com.architectcoders.arquitectomarvel.di.MainViewModelModuleForPagingSource
+import com.architectcoders.arquitectomarvel.di.MainViewModelModuleForPasswordManagement
 import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterRemoteMediator
 import com.architectcoders.data.repository.MarvelRepository
 import com.architectcoders.usecases.*
@@ -14,7 +17,7 @@ import javax.inject.Singleton
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
-    replaces = [MainViewModelModule::class]
+    replaces = [MainViewModelModuleForPagingSource::class]
 )
 class FakeMainViewModelModule {
 
@@ -24,8 +27,14 @@ class FakeMainViewModelModule {
         marvelRepository: MarvelRepository
     ): GetPagingSourceFromCharacterEntity =
         GetPagingSourceFromCharacterEntity(marvelRepository)
+}
 
-    // CharacterRemoteMediator
+@Module
+@TestInstallIn(
+    components = [SingletonComponent::class],
+    replaces = [MainViewModelModuleForCharacterRemoteMediator::class]
+)
+class FakeMainViewModelModuleForCharacterRemoteMediator {
 
     @Singleton
     @Provides
@@ -71,8 +80,14 @@ class FakeMainViewModelModule {
             getLastTimeStampFromCharacterEntity,
             getLocalCharactersCount
         )
+}
 
-    // Password management
+@Module
+@TestInstallIn(
+    components = [SingletonComponent::class],
+    replaces = [MainViewModelModuleForPasswordManagement::class]
+)
+class FakeMainViewModelModuleForPasswordManagement {
 
     @Singleton
     @Provides
@@ -98,8 +113,14 @@ class FakeMainViewModelModule {
     @Provides
     fun isHintCorrectProvider(marvelRepository: MarvelRepository): IsRecoveryHintCorrect =
         IsRecoveryHintCorrect(marvelRepository)
+}
 
-    // Favorites
+@Module
+@TestInstallIn(
+    components = [SingletonComponent::class],
+    replaces = [MainViewModelModuleForFavorites::class]
+)
+class FakeMainViewModelModuleForFavorites {
 
     @Singleton
     @Provides
