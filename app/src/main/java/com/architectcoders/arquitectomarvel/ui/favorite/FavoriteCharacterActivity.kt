@@ -25,6 +25,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
+@ExperimentalPagingApi
 @AndroidEntryPoint
 class FavoriteCharacterActivity : AppCompatActivity() {
 
@@ -50,7 +51,6 @@ class FavoriteCharacterActivity : AppCompatActivity() {
         }
     }
 
-    @ExperimentalPagingApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFavoriteCharacterBinding.inflate(layoutInflater)

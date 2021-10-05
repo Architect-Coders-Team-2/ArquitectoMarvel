@@ -37,6 +37,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
+@ExperimentalPagingApi
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -63,7 +64,6 @@ class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModels()
     private val networkLogicViewModel: NetworkLogicViewModel by viewModels()
 
-    @ExperimentalPagingApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
