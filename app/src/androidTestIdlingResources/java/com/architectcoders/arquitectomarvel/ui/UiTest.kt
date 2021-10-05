@@ -1,7 +1,9 @@
 package com.architectcoders.arquitectomarvel.ui
 
+import android.content.Context
 import androidx.paging.ExperimentalPagingApi
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.*
@@ -14,26 +16,28 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
 import com.architectcoders.arquitectomarvel.R
-import com.architectcoders.arquitectomarvel.data.database.RoomDataSource
+import com.architectcoders.arquitectomarvel.data.database.MarvelDatabase
 import com.architectcoders.arquitectomarvel.data.server.RetrofitDataSource
 import com.architectcoders.arquitectomarvel.di.AppModuleForEndPointBaseUrl
+import com.architectcoders.arquitectomarvel.fakeModules.FakeAppModuleForRoom
 import com.architectcoders.arquitectomarvel.fakeModules.FakeCharacterDetailModuleForCharacterId
 import com.architectcoders.arquitectomarvel.fakeModules.FakeDataModuleBinderForRetrofit
-import com.architectcoders.arquitectomarvel.fakeModules.FakeDataModuleBinderForRoom
+import com.architectcoders.arquitectomarvel.mockWebServer.MockWebserverDispatcher
 import com.architectcoders.arquitectomarvel.ui.common.EspressoIdlingResource
 import com.architectcoders.arquitectomarvel.ui.main.MainActivity
-import com.architectcoders.arquitectomarvel.mockWebServer.MockWebserverDispatcher
-import com.architectcoders.data.source.LocalDataSource
 import com.architectcoders.data.source.RemoteDataSource
 import com.jakewharton.espresso.OkHttp3IdlingResource
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.*
@@ -45,11 +49,12 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
+@ExperimentalCoroutinesApi
 @HiltAndroidTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @LargeTest
 @UninstallModules(
-    FakeDataModuleBinderForRoom::class,
+    FakeAppModuleForRoom::class,
     FakeDataModuleBinderForRetrofit::class,
     AppModuleForEndPointBaseUrl::class,
     FakeCharacterDetailModuleForCharacterId::class
@@ -233,11 +238,16 @@ class UiTest {
 
     @Module
     @InstallIn(SingletonComponent::class)
-    abstract class DataModuleBinderForRoom {
+    class AppModuleForRoomDatabaseProvider {
 
         @Singleton
-        @Binds
-        abstract fun bindsRoomDataSource(roomDataSource: RoomDataSource): LocalDataSource
+        @Provides
+        fun databaseProvider(@ApplicationContext appContext: Context): MarvelDatabase =
+            Room.databaseBuilder(
+                appContext,
+                MarvelDatabase::class.java,
+                "marvelDb"
+            ).build()
     }
 
     @Module
