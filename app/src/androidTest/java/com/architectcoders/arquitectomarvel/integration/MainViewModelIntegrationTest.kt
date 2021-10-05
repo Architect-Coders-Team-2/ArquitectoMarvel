@@ -4,12 +4,12 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.architectcoders.arquitectomarvel.ui.main.MainViewModel
 import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterRemoteMediator
+import com.architectcoders.arquitectomarvel.utils.CoroutineDispatchersTestImpl
 import com.architectcoders.usecases.*
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import junit.framework.Assert.assertTrue
-import kotlinx.coroutines.Dispatchers
-import org.junit.Assert.assertEquals
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -17,12 +17,13 @@ import org.junit.runner.RunWith
 import javax.inject.Inject
 
 @ExperimentalPagingApi
+@ExperimentalCoroutinesApi
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class MainViewModelIntegrationTest {
 
     @get:Rule
-    val rule = HiltAndroidRule(this)
+    val hiltRule = HiltAndroidRule(this)
 
     @Inject
     lateinit var getPagingSourceFromCharacterEntity: GetPagingSourceFromCharacterEntity
@@ -52,9 +53,9 @@ class MainViewModelIntegrationTest {
 
     @Before
     fun setUp() {
-        rule.inject()
+        hiltRule.inject()
         mainViewModel = MainViewModel(
-            Dispatchers.Unconfined,
+            CoroutineDispatchersTestImpl(),
             characterRemoteMediator,
             getPagingSourceFromCharacterEntity,
             isPasswordAlreadyStored,
@@ -67,58 +68,46 @@ class MainViewModelIntegrationTest {
     }
 
     @Test
-    fun ifUpdatePasswordStateIsCalled_checkPasswordStateValue() {
+    fun callUpdatePasswordState_checkPasswordStateValue() {
         mainViewModel.updatePasswordState(MainViewModel.PasswordState.SUCCESSFUL)
         assertEquals(mainViewModel.passwordState.value, MainViewModel.PasswordState.SUCCESSFUL)
     }
 
     @Test
-    fun ifCredentialsAreStored_checkIfPasswordIsCorrect() {
-        mainViewModel.ifDeviceNeitherHaveBiometricLoginNorPassword {
-            mainViewModel.checkIfPasswordIsCorrect("pwd") { isCorrect ->
-                assertTrue(isCorrect)
-            }
-        }
-    }
-
-    @Test
-    fun ifCredentialsAreStored_checkIfHintIsCorrect() {
-        mainViewModel.ifDeviceNeitherHaveBiometricLoginNorPassword {
-            mainViewModel.checkIfHintIsCorrect("hint") { isCorrect ->
-                assertTrue(isCorrect)
-            }
-        }
-    }
-
-    @Test
-    fun ifSaveCredentials_checkIfPasswordIsCorrect() {
+    fun saveCredentials_checkIfPasswordIsCorrect() {
         mainViewModel.saveCredentials("myPassword", "myHint")
+        mainViewModel.ifDeviceNeitherHaveBiometricLoginNorPassword {
+            mainViewModel.checkIfPasswordIsCorrect("myPassword") { isCorrect ->
+                assertTrue(isCorrect)
+            }
+        }
+    }
+
+    @Test
+    fun saveCredentials_checkIfHintIsCorrect() {
+        mainViewModel.saveCredentials("myPassword", "myHint")
+        mainViewModel.ifDeviceNeitherHaveBiometricLoginNorPassword {
+            mainViewModel.checkIfHintIsCorrect("myHint") { isCorrect ->
+                assertTrue(isCorrect)
+            }
+        }
+    }
+
+    @Test
+    fun saveCredentials_deleteCredentials_checkIfPasswordIsDeleted() {
+        mainViewModel.saveCredentials("myPassword", "myHint")
+        mainViewModel.deleteCredentials()
         mainViewModel.checkIfPasswordIsCorrect("myPassword") {
-            assertTrue(it)
+            assertFalse(it)
         }
     }
 
     @Test
-    fun ifSaveCredentials_checkIfHintIsCorrect() {
+    fun saveCredentials_deleteCredentials_checkIfHintIsDeleted() {
         mainViewModel.saveCredentials("myPassword", "myHint")
+        mainViewModel.deleteCredentials()
         mainViewModel.checkIfHintIsCorrect("myHint") {
-            assertTrue(it)
-        }
-    }
-
-    @Test
-    fun ifDeleteCredentials_checkIfPasswordIsEmpty() {
-        mainViewModel.deleteCredentials()
-        mainViewModel.checkIfPasswordIsCorrect("") {
-            assertTrue(it)
-        }
-    }
-
-    @Test
-    fun ifDeleteCredentials_checkIfHintIsEmpty() {
-        mainViewModel.deleteCredentials()
-        mainViewModel.checkIfHintIsCorrect("") {
-            assertTrue(it)
+            assertFalse(it)
         }
     }
 }

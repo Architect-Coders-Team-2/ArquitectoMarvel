@@ -2,10 +2,11 @@ package com.architectcoders.arquitectomarvel.integration
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.architectcoders.arquitectomarvel.ui.favorite.FavoriteCharacterViewModel
+import com.architectcoders.arquitectomarvel.utils.CoroutineDispatchersTestImpl
 import com.architectcoders.usecases.GetLocalFavoriteCharacters
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -24,11 +25,12 @@ class FavoriteCharacterViewModelIntegrationTest {
 
     private lateinit var favoriteCharacterViewModel: FavoriteCharacterViewModel
 
+    @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
         rule.inject()
         favoriteCharacterViewModel = FavoriteCharacterViewModel(
-            Dispatchers.Unconfined,
+            CoroutineDispatchersTestImpl(),
             getLocalFavoriteCharacters
         )
     }

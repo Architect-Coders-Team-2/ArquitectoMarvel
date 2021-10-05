@@ -82,6 +82,10 @@ dependencies {
     testImplementation testLibsForAllModules.values()
     testImplementation testLibsForApp.values()
     androidTestImplementation androidTestLibs.values()
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1") {
+        // conflicts with mockito due to direct inclusion of byte buddy
+        exclude group: "org.jetbrains.kotlinx", module: "kotlinx-coroutines-debug"
+    }
     kaptTest kaptTestLibs.values()
     kaptAndroidTest kaptAndroidTestLibs.values()
 }

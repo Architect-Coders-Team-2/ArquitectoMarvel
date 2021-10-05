@@ -1,16 +1,24 @@
 package com.architectcoders.arquitectomarvel.integration
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.asFlow
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.architectcoders.arquitectomarvel.utils.getOrAwaitValue
+import com.architectcoders.arquitectomarvel.data.database.ComicEntity
+import com.architectcoders.arquitectomarvel.data.database.MarvelDao
+import com.architectcoders.arquitectomarvel.data.database.toCharacterEntity
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel
 import com.architectcoders.arquitectomarvel.ui.detail.GetComicsInteractor
 import com.architectcoders.arquitectomarvel.ui.detail.Resource
+import com.architectcoders.arquitectomarvel.utils.CoroutineDispatchersTestImpl
 import com.architectcoders.usecases.*
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import kotlinx.coroutines.Dispatchers
+import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.test.runBlockingTest
 import mockedCharacter
 import org.junit.Before
 import org.junit.Rule
@@ -25,9 +33,6 @@ class CharacterDetailViewModelIntegrationTest {
 
     @get:Rule
     val hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    val rule = InstantTaskExecutorRule()
 
     @Inject
     lateinit var getComicsForCharacter: GetComicsForCharacter
@@ -47,13 +52,16 @@ class CharacterDetailViewModelIntegrationTest {
     @Inject
     lateinit var getComicsInteractor: GetComicsInteractor
 
+    @Inject
+    lateinit var marvelDao: MarvelDao
+
     private lateinit var characterDetailViewModel: CharacterDetailViewModel
 
     @Before
     fun setUp() {
         hiltRule.inject()
         characterDetailViewModel = CharacterDetailViewModel(
-            Dispatchers.Unconfined,
+            CoroutineDispatchersTestImpl(),
             mockedCharacter.id,
             getLocalCharacterById,
             isLocalCharacterFavorite,
@@ -64,13 +72,22 @@ class CharacterDetailViewModelIntegrationTest {
     }
 
     @Test
-    fun observingComicResource_retrievesComics() {
-        val result = characterDetailViewModel.comicResource.getOrAwaitValue()
-        assert(result is Resource.Loading)
+    fun observingComicResource_retrievesComics() = runBlocking {
+        val result =
+            characterDetailViewModel.comicResource.asFlow()
+                .stateIn(
+                    TestCoroutineScope(),
+                    SharingStarted.WhileSubscribed(5000),
+                    Resource.Loading()
+                )
+        assertTrue(result.value is Resource.Loading<List<ComicEntity>>)
     }
 
     @Test
     fun confirmIfUiModelState_isSetUiDetails() {
-        assert(characterDetailViewModel.uiModel.value is CharacterDetailViewModel.UiModel.SetUiDetails)
+        runBlockingTest {
+            marvelDao.insertAllLocalCharacters(listOf(mockedCharacter.toCharacterEntity))
+        }
+        assertTrue(characterDetailViewModel.uiModel.value is CharacterDetailViewModel.UiModel.SetUiDetails)
     }
 }

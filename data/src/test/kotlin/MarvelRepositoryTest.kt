@@ -102,7 +102,9 @@ class MarvelRepositoryTest {
 
     @Test
     fun `verify if getLocalCharactersCount is invoked`(): Unit = runBlocking {
-        marvelRepository.getLocalCharactersCount()
+        whenever(localDataSource.getLocalCharactersCount()).thenReturn(4)
+        val result = marvelRepository.getLocalCharactersCount()
+        assertEquals(result, 4)
         verify(localDataSource).getLocalCharactersCount()
     }
 
