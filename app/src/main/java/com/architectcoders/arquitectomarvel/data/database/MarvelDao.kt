@@ -72,7 +72,7 @@ interface MarvelDao {
     suspend fun deleteCredentials()
 
     @Query("SELECT * FROM credentialsentity")
-    suspend fun getCredentials(): CredentialsEntity
+    suspend fun getCredentials(): CredentialsEntity?
 
     @Query("DELETE FROM favoritecharacterentity")
     suspend fun deleteAllLocalFavoriteCharacter()
