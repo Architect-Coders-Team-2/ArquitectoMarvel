@@ -4,7 +4,7 @@ import app.cash.turbine.test
 import com.architectcoders.arquitectomarvel.ui.common.NetworkLogicViewModel
 import com.architectcoders.usecases.ClearNetworks
 import com.architectcoders.usecases.HandleNetworkManager
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -15,6 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.stub
+import utils.CoroutineDispatchersTestImpl
 import kotlin.time.ExperimentalTime
 
 @RunWith(MockitoJUnitRunner::class)
@@ -28,11 +29,12 @@ class NetworkLogicViewModelTest {
 
     private lateinit var networkLogicViewModel: NetworkLogicViewModel
 
+    @ExperimentalCoroutinesApi
     @Before
     fun setup() {
         networkLogicViewModel =
             NetworkLogicViewModel(
-                Dispatchers.Unconfined,
+                CoroutineDispatchersTestImpl(),
                 handleNetworkManager,
                 clearNetworks
             )

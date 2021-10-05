@@ -1,11 +1,13 @@
 package main
 
+import utils.CoroutineDispatchersTestImpl
 import androidx.paging.ExperimentalPagingApi
 import app.cash.turbine.test
 import com.architectcoders.arquitectomarvel.ui.main.MainViewModel
 import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterRemoteMediator
 import com.architectcoders.usecases.*
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -51,11 +53,12 @@ class MainViewModelTest {
 
     private lateinit var mainViewModel: MainViewModel
 
+    @ExperimentalCoroutinesApi
     @ExperimentalPagingApi
     @Before
     fun setup() {
         mainViewModel = MainViewModel(
-            Dispatchers.Unconfined,
+            CoroutineDispatchersTestImpl(),
             characterRemoteMediator,
             getPagingSourceFromCharacterEntity,
             isPasswordAlreadyStored,
@@ -90,12 +93,11 @@ class MainViewModelTest {
     @Test
     fun `confirm if password is already stored`(): Unit = runBlocking {
         whenever(isPasswordAlreadyStored.invoke(Unit)).thenReturn(true)
-        mainViewModel.ifDeviceNeitherHaveBiometricLoginNorPassword(listener)
-        argumentCaptor<Boolean>().apply {
-            verify(listener).invoke(capture())
-            assertEquals(true, firstValue)
+        mainViewModel.ifDeviceNeitherHaveBiometricLoginNorPassword {
+            launch {
+                assert(it)
+            }
         }
-        verify(isPasswordAlreadyStored).invoke(Unit)
     }
 
     @Test

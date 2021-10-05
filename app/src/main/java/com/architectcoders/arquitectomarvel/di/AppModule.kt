@@ -20,7 +20,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class AppModuleForRoom {
+class AppModuleForRoomDatabaseProvider {
 
     @Singleton
     @Provides
@@ -30,6 +30,11 @@ class AppModuleForRoom {
             MarvelDatabase::class.java,
             "marvelDb"
         ).build()
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+class AppModuleForRoomDaoProvider {
 
     @Singleton
     @Provides
