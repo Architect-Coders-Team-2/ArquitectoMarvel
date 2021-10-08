@@ -5,7 +5,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.architectcoders.arquitectomarvel.ui.common.CoroutineDispatchers
 import com.architectcoders.arquitectomarvel.ui.main.MainViewModel
 import com.architectcoders.arquitectomarvel.ui.main.pagination.CharacterRemoteMediator
-import com.architectcoders.arquitectomarvel.utils.CoroutineDispatchersTestImpl
 import com.architectcoders.usecases.*
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -27,7 +26,7 @@ class MainViewModelIntegrationTest {
     val hiltRule = HiltAndroidRule(this)
 
     @Inject
-    lateinit var coroutineDispatchersTestImpl: CoroutineDispatchersTestImpl
+    lateinit var coroutineDispatchers: CoroutineDispatchers
 
     @Inject
     lateinit var getPagingSourceFromCharacterEntity: GetPagingSourceFromCharacterEntity
@@ -59,7 +58,7 @@ class MainViewModelIntegrationTest {
     fun setUp() {
         hiltRule.inject()
         mainViewModel = MainViewModel(
-            coroutineDispatchersTestImpl,
+            coroutineDispatchers,
             characterRemoteMediator,
             getPagingSourceFromCharacterEntity,
             isPasswordAlreadyStored,
