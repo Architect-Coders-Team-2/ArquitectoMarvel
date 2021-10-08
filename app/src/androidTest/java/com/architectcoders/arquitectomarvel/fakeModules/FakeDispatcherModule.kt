@@ -6,12 +6,13 @@ import com.architectcoders.arquitectomarvel.utils.CoroutineDispatchersTestImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @Module
 @TestInstallIn(
-    components = [ViewModelComponent::class],
+    components = [SingletonComponent::class],
     replaces = [DispatcherModule::class]
 )
 abstract class FakeDispatcherModule {

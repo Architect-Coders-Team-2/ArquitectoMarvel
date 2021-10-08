@@ -22,7 +22,7 @@ class FavoriteCharacterViewModelIntegrationTest {
     val rule = HiltAndroidRule(this)
 
     @Inject
-    lateinit var coroutineDispatchersTestImpl: CoroutineDispatchersTestImpl
+    lateinit var coroutineDispatchers: CoroutineDispatchers
 
     @Inject
     lateinit var getLocalFavoriteCharacters: GetLocalFavoriteCharacters
@@ -34,7 +34,7 @@ class FavoriteCharacterViewModelIntegrationTest {
     fun setUp() {
         rule.inject()
         favoriteCharacterViewModel = FavoriteCharacterViewModel(
-            coroutineDispatchersTestImpl,
+            coroutineDispatchers,
             getLocalFavoriteCharacters
         )
     }

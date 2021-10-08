@@ -27,7 +27,7 @@ class MainViewModelIntegrationTest {
     val hiltRule = HiltAndroidRule(this)
 
     @Inject
-    lateinit var coroutineDispatchersTestImpl: CoroutineDispatchersTestImpl
+    lateinit var coroutineDispatchers: CoroutineDispatchers
 
     @Inject
     lateinit var getPagingSourceFromCharacterEntity: GetPagingSourceFromCharacterEntity
@@ -59,7 +59,7 @@ class MainViewModelIntegrationTest {
     fun setUp() {
         hiltRule.inject()
         mainViewModel = MainViewModel(
-            coroutineDispatchersTestImpl,
+            coroutineDispatchers,
             characterRemoteMediator,
             getPagingSourceFromCharacterEntity,
             isPasswordAlreadyStored,
