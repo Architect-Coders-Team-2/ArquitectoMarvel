@@ -1,6 +1,7 @@
 package com.architectcoders.arquitectomarvel.integration
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.architectcoders.arquitectomarvel.ui.common.CoroutineDispatchers
 import com.architectcoders.arquitectomarvel.ui.favorite.FavoriteCharacterViewModel
 import com.architectcoders.arquitectomarvel.utils.CoroutineDispatchersTestImpl
 import com.architectcoders.usecases.GetLocalFavoriteCharacters
@@ -21,6 +22,9 @@ class FavoriteCharacterViewModelIntegrationTest {
     val rule = HiltAndroidRule(this)
 
     @Inject
+    lateinit var coroutineDispatchersTestImpl: CoroutineDispatchersTestImpl
+
+    @Inject
     lateinit var getLocalFavoriteCharacters: GetLocalFavoriteCharacters
 
     private lateinit var favoriteCharacterViewModel: FavoriteCharacterViewModel
@@ -30,7 +34,7 @@ class FavoriteCharacterViewModelIntegrationTest {
     fun setUp() {
         rule.inject()
         favoriteCharacterViewModel = FavoriteCharacterViewModel(
-            CoroutineDispatchersTestImpl(),
+            coroutineDispatchersTestImpl,
             getLocalFavoriteCharacters
         )
     }

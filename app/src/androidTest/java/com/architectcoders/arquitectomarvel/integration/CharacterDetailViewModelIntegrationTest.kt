@@ -5,6 +5,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.architectcoders.arquitectomarvel.data.database.ComicEntity
 import com.architectcoders.arquitectomarvel.data.database.MarvelDao
 import com.architectcoders.arquitectomarvel.data.database.toCharacterEntity
+import com.architectcoders.arquitectomarvel.ui.common.CoroutineDispatchers
 import com.architectcoders.arquitectomarvel.ui.detail.CharacterDetailViewModel
 import com.architectcoders.arquitectomarvel.ui.detail.GetComicsInteractor
 import com.architectcoders.arquitectomarvel.ui.detail.Resource
@@ -35,6 +36,9 @@ class CharacterDetailViewModelIntegrationTest {
     val hiltRule = HiltAndroidRule(this)
 
     @Inject
+    lateinit var coroutineDispatchersTestImpl: CoroutineDispatchersTestImpl
+
+    @Inject
     lateinit var getComicsForCharacter: GetComicsForCharacter
 
     @Inject
@@ -61,7 +65,7 @@ class CharacterDetailViewModelIntegrationTest {
     fun setUp() {
         hiltRule.inject()
         characterDetailViewModel = CharacterDetailViewModel(
-            CoroutineDispatchersTestImpl(),
+            coroutineDispatchersTestImpl,
             mockedCharacter.id,
             getLocalCharacterById,
             isLocalCharacterFavorite,
