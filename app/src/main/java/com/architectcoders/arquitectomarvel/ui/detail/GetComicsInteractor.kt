@@ -15,6 +15,7 @@ class GetComicsInteractor(
     private val insertRemoteComicsForLocalCharacter: InsertRemoteComicsForLocalCharacter,
     private val getComicsForCharacter: GetComicsForCharacter,
 ) {
+    @Suppress("UNCHECKED_CAST")
     fun networkBoundResourceResult(characterId: Int) = networkBoundResource(
         query = {
             getComicsForCharacter.invoke(characterId) as Flow<List<ComicEntity>>
