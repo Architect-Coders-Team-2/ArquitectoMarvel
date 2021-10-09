@@ -156,7 +156,7 @@ class CharacterDetailActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        networkLogicViewModel.unregisterNetworkManager()
+        networkLogicViewModel.clearNetworks()
     }
 
     override fun onBackPressed() {

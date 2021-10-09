@@ -1,8 +1,7 @@
 package com.architectcoders.data.repository
 
-import com.architectcoders.data.source.BiometricPromptDataSource
 import com.architectcoders.data.source.AuthenticationStateDataSource
-import com.architectcoders.data.source.LocalDataSource
+import com.architectcoders.data.source.BiometricPromptDataSource
 
 class BiometricRepository(
     private val authenticationStateDataSource: AuthenticationStateDataSource,

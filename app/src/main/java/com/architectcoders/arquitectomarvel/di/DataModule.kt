@@ -17,16 +17,23 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+// Providers
+
 @Module
 @InstallIn(SingletonComponent::class)
-class DataModuleProvider {
+class DataModuleProviderForMarvelRepo {
 
     @Singleton
     @Provides
     fun marvelRepositoryProvider(
-        retrofitDataSource: RetrofitDataSource,
-        roomDataSource: RoomDataSource
-    ): MarvelRepository = MarvelRepository(retrofitDataSource, roomDataSource)
+        remoteDataSource: RemoteDataSource,
+        localDataSource: LocalDataSource
+    ): MarvelRepository = MarvelRepository(remoteDataSource, localDataSource)
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+class DataModuleProviderForNetwork {
 
     @Singleton
     @Provides
@@ -34,21 +41,40 @@ class DataModuleProvider {
         NetworkRepository(networkDataSourceImpl)
 }
 
+// Binders
+
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class DataModuleBinder {
+abstract class DataModuleBinderForRoom {
 
     @Singleton
     @Binds
     abstract fun bindsRoomDataSource(roomDataSource: RoomDataSource): LocalDataSource
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class DataModuleBinderForCredentials {
 
     @Singleton
     @Binds
-    abstract fun bindsCredentialDataSource(marvelCredentialDataSource: MarvelCredentialDataSource): CredentialsDataSource
+    abstract fun bindsCredentialDataSource(
+        marvelCredentialDataSource: MarvelCredentialDataSource
+    ): CredentialsDataSource
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class DataModuleBinderForRetrofit {
 
     @Singleton
     @Binds
     abstract fun bindsRetrofitDataSource(retrofitDataSource: RetrofitDataSource): RemoteDataSource
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class DataModuleBinderForNetwork {
 
     @Singleton
     @Binds

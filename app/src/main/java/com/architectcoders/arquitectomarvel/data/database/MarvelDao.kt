@@ -51,8 +51,9 @@ interface MarvelDao {
     @Query("SELECT * FROM ComicEntity WHERE characterId = :idCharacter")
     fun selectComicsForCharacter(idCharacter: Int): Flow<List<ComicEntity>>
 
+    @Suppress("UNCHECKED_CAST")
     @Transaction
-    suspend fun fetchComicsForCharacter(map: Map<String, Any>) {
+    suspend fun insertRemoteComicsForLocalCharacter(map: Map<String, Any>) {
         val idCharacter = map[CHARACTER_ID] as Int
         val comics = map[COMICS] as List<ComicEntity>
         deleteComicsForCharacter(idCharacter)
@@ -72,7 +73,7 @@ interface MarvelDao {
     suspend fun deleteCredentials()
 
     @Query("SELECT * FROM credentialsentity")
-    suspend fun getCredentials(): CredentialsEntity
+    suspend fun getCredentials(): CredentialsEntity?
 
     @Query("DELETE FROM favoritecharacterentity")
     suspend fun deleteAllLocalFavoriteCharacter()

@@ -2,6 +2,7 @@ package com.architectcoders.arquitectomarvel.ui.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.architectcoders.arquitectomarvel.ui.common.CoroutineDispatchers
 import com.architectcoders.domain.character.Character
 import com.architectcoders.usecases.DeleteLocalFavoriteCharacter
 import com.architectcoders.usecases.GetLocalCharacterById
@@ -19,12 +20,13 @@ import javax.inject.Named
 
 @HiltViewModel
 class CharacterDetailViewModel @Inject constructor(
+    private val coroutineDispatchers: CoroutineDispatchers,
     @Named("characterId") private val characterId: Int,
     private val getLocalCharacterById: GetLocalCharacterById,
     private val isLocalCharacterFavorite: IsLocalCharacterFavorite,
     private val insertLocalFavoriteCharacter: InsertLocalFavoriteCharacter,
     private val deleteLocalFavoriteCharacter: DeleteLocalFavoriteCharacter,
-    private val getComicsInteractor: GetComicsInteractor
+    getComicsInteractor: GetComicsInteractor
 ) : ViewModel() {
 
     val comicResource = getComicsInteractor.networkBoundResourceResult(characterId)
@@ -57,8 +59,9 @@ class CharacterDetailViewModel @Inject constructor(
         loadCharacterById(characterId)
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun loadCharacterById(characterId: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineDispatchers.main) {
             try {
                 val character = getLocalCharacterById.invoke(characterId)
                 val isCharacterFavorite = isLocalCharacterFavorite.invoke(characterId) as Flow<Int>
@@ -74,7 +77,7 @@ class CharacterDetailViewModel @Inject constructor(
         selectedCharacter: Character,
         isCharacterFavorite: Boolean,
     ) {
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineDispatchers.main) {
             if (isCharacterFavorite) {
                 insertLocalFavoriteCharacter.invoke(selectedCharacter)
             } else {

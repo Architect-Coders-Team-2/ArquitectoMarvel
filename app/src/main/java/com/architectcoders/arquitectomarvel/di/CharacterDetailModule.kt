@@ -42,8 +42,11 @@ class CharacterDetailModule {
     @Provides
     fun deleteLocalFavoriteCharacterProvider(marvelRepository: MarvelRepository): DeleteLocalFavoriteCharacter =
         DeleteLocalFavoriteCharacter(marvelRepository)
+}
 
-    // Comic Interactor
+@Module
+@InstallIn(ViewModelComponent::class)
+class CharacterDetailModuleForComicInteractor {
 
     @ViewModelScoped
     @Provides
@@ -52,8 +55,8 @@ class CharacterDetailModule {
 
     @ViewModelScoped
     @Provides
-    fun insertComicsForCharacterLocalProvider(marvelRepository: MarvelRepository): InsertComicsForCharacterLocal =
-        InsertComicsForCharacterLocal(marvelRepository)
+    fun insertComicsForCharacterLocalProvider(marvelRepository: MarvelRepository): InsertRemoteComicsForLocalCharacter =
+        InsertRemoteComicsForLocalCharacter(marvelRepository)
 
     @ViewModelScoped
     @Provides
@@ -64,12 +67,12 @@ class CharacterDetailModule {
     @Provides
     fun getComicsInteractorProvider(
         getRemoteComicsFromCharacterId: GetRemoteComicsFromCharacterId,
-        insertComicsForCharacterLocal: InsertComicsForCharacterLocal,
+        insertRemoteComicsForLocalCharacter: InsertRemoteComicsForLocalCharacter,
         getComicsForCharacter: GetComicsForCharacter
     ): GetComicsInteractor =
         GetComicsInteractor(
             getRemoteComicsFromCharacterId,
-            insertComicsForCharacterLocal,
+            insertRemoteComicsForLocalCharacter,
             getComicsForCharacter
         )
 }
