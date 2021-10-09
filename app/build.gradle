@@ -1,6 +1,16 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlin-parcelize'
+    id 'dagger.hilt.android.plugin'
+}
+
+def secretProperties() {
+    def file = file("secret.properties")
+    def properties = new Properties()
+    properties.load(new FileInputStream(file))
+    return properties
 }
 
 android {
@@ -9,37 +19,94 @@ android {
 
     defaultConfig {
         applicationId "com.architectcoders.arquitectomarvel"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.architectcoders.arquitectomarvel.CustomTestRunner"
+    }
+
+    def MARVEL_API_KEY = 'MARVEL_API_KEY'
+    def MARVEL_PRIVATE_KEY = 'MARVEL_PRIVATE_KEY'
+
+    def apikey = "default-apikey"
+    def privatekey = "default-privatekey"
+    try {
+        apikey = secretProperties()[MARVEL_API_KEY]
+        privatekey = secretProperties()[MARVEL_PRIVATE_KEY]
+    } catch (FileNotFoundException exception) {
+        println(exception.message)
+        println("This exception is handled and intended to be thrown when github actions runs \"gradle build\" on the project.")
     }
 
     buildTypes {
         release {
             minifyEnabled false
+            buildConfigField("String", MARVEL_API_KEY, "\"" + apikey + "\"")
+            buildConfigField("String", MARVEL_PRIVATE_KEY, "\"" + privatekey + "\"")
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            buildConfigField("String", MARVEL_API_KEY, "\"" + apikey + "\"")
+            buildConfigField("String", MARVEL_PRIVATE_KEY, "\"" + privatekey + "\"")
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    flavorDimensions "version"
+    productFlavors {
+        prod {
+            dimension "version"
+            versionNameSuffix "-prod"
+        }
+        idlingResources {
+            dimension "version"
+            versionNameSuffix "-idlingResources"
+        }
+    }
+
+    variantFilter { variant ->
+        if(variant.flavors*.name.contains("idlingResources") && variant.buildType*.name.contains("release")) {
+            setIgnore(true)
+        }
+    }
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '11'
+    }
+
+    buildFeatures {
+        viewBinding true
     }
 }
 
 dependencies {
+    implementation project(":usecases")
+    implementation project(":data")
+    implementation project(":domain")
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.3.2'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.3.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation androidLibs.values()
+    implementation kotlinLibs.values()
+    implementation libs.values()
+    kapt androidKaptLibs.values()
+
+    testImplementation testLibsForAllModules.values()
+    testImplementation testLibsForApp.values()
+    androidTestImplementation androidTestLibs.values()
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1") {
+        // conflicts with mockito due to direct inclusion of byte buddy
+        exclude group: "org.jetbrains.kotlinx", module: "kotlinx-coroutines-debug"
+    }
+    kaptTest kaptTestLibs.values()
+    kaptAndroidTest kaptAndroidTestLibs.values()
+}
+
+kapt {
+    correctErrorTypes = true
 }

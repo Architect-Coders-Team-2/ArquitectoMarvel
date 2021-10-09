@@ -1,0 +1,22 @@
+name: On PR check Build and Unit Test
+
+on:
+  pull_request:
+
+jobs:
+  test:
+    name: Build and Unit Test
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Android Build
+        run: bash ./gradlew build
+
+      - name: Unit tests
+        run: bash ./gradlew test
