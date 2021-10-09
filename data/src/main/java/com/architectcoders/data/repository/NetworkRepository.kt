@@ -8,5 +8,5 @@ class NetworkRepository(
     suspend fun handleNetworkManager(listener: (Boolean) -> Unit) =
         networkDataSource.handleNetworkManager(listener)
 
-    fun unregisterNetworkCallback() = networkDataSource.unregisterNetworkCallback()
+    fun clearNetworks() = networkDataSource.clearNetworks()
 }

@@ -1,3 +1,5 @@
+package utils
+
 import com.architectcoders.arquitectomarvel.ui.common.CoroutineDispatchers
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi

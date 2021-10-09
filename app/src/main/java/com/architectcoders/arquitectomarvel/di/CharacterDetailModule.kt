@@ -42,8 +42,11 @@ class CharacterDetailModule {
     @Provides
     fun deleteLocalFavoriteCharacterProvider(marvelRepository: MarvelRepository): DeleteLocalFavoriteCharacter =
         DeleteLocalFavoriteCharacter(marvelRepository)
+}
 
-    // Comic Interactor
+@Module
+@InstallIn(ViewModelComponent::class)
+class CharacterDetailModuleForComicInteractor {
 
     @ViewModelScoped
     @Provides

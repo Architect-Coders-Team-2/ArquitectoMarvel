@@ -59,6 +59,7 @@ class CharacterDetailViewModel @Inject constructor(
         loadCharacterById(characterId)
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun loadCharacterById(characterId: Int) {
         viewModelScope.launch(coroutineDispatchers.main) {
             try {

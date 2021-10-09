@@ -1,6 +1,6 @@
 package main
 
-import CoroutineDispatchersTestImpl
+import utils.CoroutineDispatchersTestImpl
 import androidx.paging.ExperimentalPagingApi
 import app.cash.turbine.test
 import com.architectcoders.arquitectomarvel.ui.main.MainViewModel

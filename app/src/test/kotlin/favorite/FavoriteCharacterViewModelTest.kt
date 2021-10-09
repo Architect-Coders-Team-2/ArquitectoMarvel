@@ -1,6 +1,6 @@
 package favorite
 
-import CoroutineDispatchersTestImpl
+import utils.CoroutineDispatchersTestImpl
 import app.cash.turbine.test
 import com.architectcoders.arquitectomarvel.data.database.FavoriteCharacterEntity
 import com.architectcoders.arquitectomarvel.data.database.toFavoriteCharacterEntityList

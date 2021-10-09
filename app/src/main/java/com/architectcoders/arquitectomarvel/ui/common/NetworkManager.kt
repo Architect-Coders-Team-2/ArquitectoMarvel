@@ -33,7 +33,6 @@ class NetworkManager(
         networkCallback = createNetworkCallback()
         val networkRequest = NetworkRequest.Builder().addCapability(NET_CAPABILITY_INTERNET).build()
         connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
-        _isInternetAvailable.value = false
     }
 
     private fun createNetworkCallback() = object : ConnectivityManager.NetworkCallback() {
@@ -88,8 +87,7 @@ class NetworkManager(
         }
     }
 
-    fun unregisterNetworkCallback() {
+    fun clearNetworks() {
         validNetworks.clear()
-        connectivityManager.unregisterNetworkCallback(networkCallback)
     }
 }

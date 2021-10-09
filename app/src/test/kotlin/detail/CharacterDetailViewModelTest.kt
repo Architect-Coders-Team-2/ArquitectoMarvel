@@ -1,6 +1,6 @@
 package detail
 
-import CoroutineDispatchersTestImpl
+import utils.CoroutineDispatchersTestImpl
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.architectcoders.arquitectomarvel.data.database.toComicEntity

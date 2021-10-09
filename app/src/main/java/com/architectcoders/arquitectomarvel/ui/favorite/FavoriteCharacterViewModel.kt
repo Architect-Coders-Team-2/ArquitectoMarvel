@@ -39,6 +39,7 @@ class FavoriteCharacterViewModel @Inject constructor(
         loadFavoriteCharacters()
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun loadFavoriteCharacters() {
         viewModelScope.launch(coroutineDispatchers.main) {
             val localFavoriteCharacters =
