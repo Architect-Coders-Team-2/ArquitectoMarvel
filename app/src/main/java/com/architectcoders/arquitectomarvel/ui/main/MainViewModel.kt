@@ -28,6 +28,8 @@ class MainViewModel
     private val isRecoveryHintCorrect: IsRecoveryHintCorrect,
     private val deleteAllLocalFavoriteCharacter: DeleteAllLocalFavoriteCharacter
 ) : ViewModel() {
+
+    @Suppress("UNCHECKED_CAST")
     @ExperimentalPagingApi
     val pager = Pager(
         config = PagingConfig(pageSize = REQUEST_LIMIT / 2),

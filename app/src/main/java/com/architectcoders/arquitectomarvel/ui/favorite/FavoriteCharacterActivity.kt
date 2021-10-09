@@ -11,7 +11,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.ExperimentalPagingApi
 import androidx.recyclerview.widget.GridLayoutManager
 import com.architectcoders.arquitectomarvel.R
 import com.architectcoders.arquitectomarvel.databinding.ActivityFavoriteCharacterBinding
@@ -25,7 +24,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
-@ExperimentalPagingApi
 @AndroidEntryPoint
 class FavoriteCharacterActivity : AppCompatActivity() {
 
@@ -36,20 +34,6 @@ class FavoriteCharacterActivity : AppCompatActivity() {
     private var menuItem: MenuItem? = null
     private val favoriteCharacterViewModel: FavoriteCharacterViewModel by viewModels()
     private val networkLogicViewModel: NetworkLogicViewModel by viewModels()
-
-    private fun navigateTo(character: Character, view: View) {
-        Event(character).getContentIfNotHandled()?.let { resultValue ->
-            val options =
-                ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    this,
-                    view,
-                    getString(R.string.character_image)
-                )
-            startActivity<CharacterDetailActivity>(options = options.toBundle()) {
-                putExtra(EXTRA_SELECTED_CHARACTER, resultValue.id)
-            }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +51,20 @@ class FavoriteCharacterActivity : AppCompatActivity() {
         binding.favoriteCharacterList.apply {
             layoutManager = gridLayoutManager
             adapter = favoriteCharacterAdapter
+        }
+    }
+
+    private fun navigateTo(character: Character, view: View) {
+        Event(character).getContentIfNotHandled()?.let { resultValue ->
+            val options =
+                ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    this,
+                    view,
+                    getString(R.string.character_image)
+                )
+            startActivity<CharacterDetailActivity>(options = options.toBundle()) {
+                putExtra(EXTRA_SELECTED_CHARACTER, resultValue.id)
+            }
         }
     }
 
@@ -136,6 +134,6 @@ class FavoriteCharacterActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        networkLogicViewModel.unregisterNetworkManager()
+        networkLogicViewModel.clearNetworks()
     }
 }

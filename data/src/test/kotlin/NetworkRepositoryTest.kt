@@ -33,7 +33,7 @@ class NetworkRepositoryTest {
 
     @Test
     fun `verify if unregisterNetworkCallback is invoked`() {
-        networkRepository.unregisterNetworkCallback()
-        verify(networkDataSource).unregisterNetworkCallback()
+        networkRepository.clearNetworks()
+        verify(networkDataSource).clearNetworks()
     }
 }

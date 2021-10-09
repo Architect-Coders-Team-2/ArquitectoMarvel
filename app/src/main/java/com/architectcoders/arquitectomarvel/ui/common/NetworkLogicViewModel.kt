@@ -3,7 +3,7 @@ package com.architectcoders.arquitectomarvel.ui.common
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.architectcoders.usecases.HandleNetworkManager
-import com.architectcoders.usecases.UnregisterNetworkCallback
+import com.architectcoders.usecases.ClearNetworks
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,7 +14,7 @@ import javax.inject.Inject
 class NetworkLogicViewModel @Inject constructor(
     private val coroutineDispatchers: CoroutineDispatchers,
     private val handleNetworkManager: HandleNetworkManager,
-    private val unregisterNetworkCallback: UnregisterNetworkCallback
+    private val clearNetworks: ClearNetworks
 ) : ViewModel() {
 
     private val _uiNetworkModel: MutableStateFlow<UiNetworkModel> =
@@ -38,7 +38,7 @@ class NetworkLogicViewModel @Inject constructor(
         }
     }
 
-    fun unregisterNetworkManager() {
-        unregisterNetworkCallback.invoke()
+    fun clearNetworks() {
+        clearNetworks.invoke()
     }
 }

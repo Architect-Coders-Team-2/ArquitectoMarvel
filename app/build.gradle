@@ -53,7 +53,24 @@ android {
             buildConfigField("String", MARVEL_PRIVATE_KEY, "\"" + privatekey + "\"")
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
 
+    flavorDimensions "version"
+    productFlavors {
+        prod {
+            dimension "version"
+            versionNameSuffix "-prod"
+        }
+        idlingResources {
+            dimension "version"
+            versionNameSuffix "-idlingResources"
+        }
+    }
+
+    variantFilter { variant ->
+        if(variant.flavors*.name.contains("idlingResources") && variant.buildType*.name.contains("release")) {
+            setIgnore(true)
+        }
     }
 
     compileOptions {

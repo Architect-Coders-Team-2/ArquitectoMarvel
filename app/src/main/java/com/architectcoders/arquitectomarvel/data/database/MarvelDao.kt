@@ -51,6 +51,7 @@ interface MarvelDao {
     @Query("SELECT * FROM ComicEntity WHERE characterId = :idCharacter")
     fun selectComicsForCharacter(idCharacter: Int): Flow<List<ComicEntity>>
 
+    @Suppress("UNCHECKED_CAST")
     @Transaction
     suspend fun insertRemoteComicsForLocalCharacter(map: Map<String, Any>) {
         val idCharacter = map[CHARACTER_ID] as Int

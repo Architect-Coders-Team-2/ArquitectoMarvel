@@ -1,10 +1,9 @@
 package network
 
-import utils.CoroutineDispatchersTestImpl
 import app.cash.turbine.test
 import com.architectcoders.arquitectomarvel.ui.common.NetworkLogicViewModel
+import com.architectcoders.usecases.ClearNetworks
 import com.architectcoders.usecases.HandleNetworkManager
-import com.architectcoders.usecases.UnregisterNetworkCallback
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -16,6 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.stub
+import utils.CoroutineDispatchersTestImpl
 import kotlin.time.ExperimentalTime
 
 @RunWith(MockitoJUnitRunner::class)
@@ -25,7 +25,7 @@ class NetworkLogicViewModelTest {
     private lateinit var handleNetworkManager: HandleNetworkManager
 
     @Mock
-    private lateinit var unregisterNetworkCallback: UnregisterNetworkCallback
+    private lateinit var clearNetworks: ClearNetworks
 
     private lateinit var networkLogicViewModel: NetworkLogicViewModel
 
@@ -36,7 +36,7 @@ class NetworkLogicViewModelTest {
             NetworkLogicViewModel(
                 CoroutineDispatchersTestImpl(),
                 handleNetworkManager,
-                unregisterNetworkCallback
+                clearNetworks
             )
     }
 
@@ -51,7 +51,7 @@ class NetworkLogicViewModelTest {
 
     @ExperimentalTime
     @Test
-    fun `Confirm with success response from service`() = runBlocking {
+    fun `confirm with success response from service`() = runBlocking {
 
         val lambdaCaptor = argumentCaptor<(Boolean) -> Unit>()
 
@@ -62,7 +62,8 @@ class NetworkLogicViewModelTest {
         networkLogicViewModel.uiNetworkModel.test {
             lambdaCaptor.firstValue.invoke(true)
             assertEquals(
-                (networkLogicViewModel.uiNetworkModel.value as NetworkLogicViewModel.UiNetworkModel.SetNetworkAvailability).isAvailable,
+                (networkLogicViewModel.uiNetworkModel.value
+                        as NetworkLogicViewModel.UiNetworkModel.SetNetworkAvailability).isAvailable,
                 NetworkLogicViewModel.UiNetworkModel.SetNetworkAvailability(true).isAvailable
             )
             cancelAndConsumeRemainingEvents()
