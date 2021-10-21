@@ -11,9 +11,10 @@ import com.architectcoders.usecases.*
 import retrofit2.HttpException
 import java.io.IOException
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 @ExperimentalPagingApi
-class CharacterRemoteMediator(
+class CharacterRemoteMediator @Inject constructor(
     private val getRemoteCharacters: GetRemoteCharacters,
     private val deleteAllLocalCharacters: DeleteAllLocalCharacters,
     private val insertAllLocalCharacters: InsertAllLocalCharacters,
