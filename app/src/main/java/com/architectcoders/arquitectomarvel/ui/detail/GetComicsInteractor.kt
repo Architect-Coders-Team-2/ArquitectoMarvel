@@ -9,8 +9,9 @@ import com.architectcoders.usecases.GetComicsForCharacter
 import com.architectcoders.usecases.GetRemoteComicsFromCharacterId
 import com.architectcoders.usecases.InsertRemoteComicsForLocalCharacter
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class GetComicsInteractor(
+class GetComicsInteractor @Inject constructor(
     private val getRemoteComicsFromCharacterId: GetRemoteComicsFromCharacterId,
     private val insertRemoteComicsForLocalCharacter: InsertRemoteComicsForLocalCharacter,
     private val getComicsForCharacter: GetComicsForCharacter,
