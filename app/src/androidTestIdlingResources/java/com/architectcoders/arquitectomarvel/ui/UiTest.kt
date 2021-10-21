@@ -157,6 +157,8 @@ class UiTest {
             .perform(typeText("hint"))
             .check(matches(withText("hint")))
 
+        onView(isRoot()).perform(closeSoftKeyboard())
+
         onView(withId(android.R.id.button1)).perform(click())
     }
 
