@@ -5,9 +5,8 @@ import android.content.SharedPreferences
 import com.architectcoders.arquitectomarvel.biometric.AuthenticationStateDataSourceImpl
 import com.architectcoders.arquitectomarvel.biometric.BiometricPromptDataSourceImpl
 import com.architectcoders.arquitectomarvel.ui.common.BIOMETRIC_PREFERENCES
-import com.architectcoders.data.repository.BiometricRepository
 import com.architectcoders.data.source.AuthenticationStateDataSource
-import com.architectcoders.usecases.*
+import com.architectcoders.data.source.BiometricPromptDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -24,43 +23,6 @@ class MainActivityProvider {
     @Provides
     fun biometricSharedPreferencesProvider(@ActivityContext context: Context): SharedPreferences =
         context.getSharedPreferences(BIOMETRIC_PREFERENCES, Context.MODE_PRIVATE)
-
-    @ActivityScoped
-    @Provides
-    fun biometricRepositoryProvider(
-        authenticationStateDataSourceImpl: AuthenticationStateDataSourceImpl,
-        biometricDataSourceImpl: BiometricPromptDataSourceImpl,
-    ): BiometricRepository =
-        BiometricRepository(authenticationStateDataSourceImpl, biometricDataSourceImpl)
-
-    @ActivityScoped
-    @Provides
-    fun checkBiometricLoginValidityStateProvider(
-        biometricRepository: BiometricRepository
-    ): CheckAuthenticationState = CheckAuthenticationState(biometricRepository)
-
-    @ActivityScoped
-    @Provides
-    fun checkIfUserIsAlreadyAuthenticatedProvider(
-        biometricRepository: BiometricRepository
-    ): CheckIfUserIsAlreadyAuthenticated = CheckIfUserIsAlreadyAuthenticated(biometricRepository)
-
-    @ActivityScoped
-    @Provides
-    fun saveAuthenticationStateProvider(
-        biometricRepository: BiometricRepository
-    ): SaveAuthenticationState = SaveAuthenticationState(biometricRepository)
-
-    @ActivityScoped
-    @Provides
-    fun canUserUseBiometricAuthenticationProvider(
-        biometricRepository: BiometricRepository
-    ): CanUserUseBiometricAuthentication = CanUserUseBiometricAuthentication(biometricRepository)
-
-    @ActivityScoped
-    @Provides
-    fun setBiometricAuthenticationProvider(biometricRepository: BiometricRepository): SetBiometricAuthentication =
-        SetBiometricAuthentication(biometricRepository)
 }
 
 @Module
@@ -72,4 +34,10 @@ abstract class MainActivityBinder {
     abstract fun bindsAuthenticationStateDataSource(
         authenticationStateDataSourceImpl: AuthenticationStateDataSourceImpl
     ): AuthenticationStateDataSource
+
+    @ActivityScoped
+    @Binds
+    abstract fun bindsBiometricPromptDataSource(
+        biometricPromptDataSourceImpl: BiometricPromptDataSourceImpl
+    ): BiometricPromptDataSource
 }
