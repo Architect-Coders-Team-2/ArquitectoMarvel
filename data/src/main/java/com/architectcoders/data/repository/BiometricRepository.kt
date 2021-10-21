@@ -2,8 +2,9 @@ package com.architectcoders.data.repository
 
 import com.architectcoders.data.source.AuthenticationStateDataSource
 import com.architectcoders.data.source.BiometricPromptDataSource
+import javax.inject.Inject
 
-class BiometricRepository(
+class BiometricRepository @Inject constructor(
     private val authenticationStateDataSource: AuthenticationStateDataSource,
     private val biometricPromptDataSource: BiometricPromptDataSource
 ) {

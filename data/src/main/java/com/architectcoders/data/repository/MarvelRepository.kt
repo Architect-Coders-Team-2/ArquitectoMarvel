@@ -5,13 +5,17 @@ import com.architectcoders.data.source.RemoteDataSource
 import com.architectcoders.domain.character.Character
 import com.architectcoders.domain.character.CharactersPayload
 import com.architectcoders.domain.comic.ComicsPayload
+import javax.inject.Inject
 
-class MarvelRepository(
+class MarvelRepository @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource
 ) {
     suspend fun getRemoteCharacters(offset: Int): CharactersPayload =
         remoteDataSource.getRemoteCharacters(offset)
+
+    suspend fun getRemoteComicsFromCharacterId(characterId: Int): ComicsPayload? =
+        remoteDataSource.getRemoteComics(characterId)
 
     suspend fun getLocalCharactersCount(): Int =
         localDataSource.getLocalCharactersCount()
@@ -21,9 +25,6 @@ class MarvelRepository(
 
     fun isLocalCharacterFavorite(characterId: Int): Any =
         localDataSource.isLocalCharacterFavorite(characterId)
-
-    suspend fun getRemoteComicsFromCharacterId(characterId: Int): ComicsPayload? =
-        remoteDataSource.getRemoteComics(characterId)
 
     suspend fun insertAllLocalCharacters(characterList: List<Character>) =
         localDataSource.insertAllLocalCharacters(characterList)
