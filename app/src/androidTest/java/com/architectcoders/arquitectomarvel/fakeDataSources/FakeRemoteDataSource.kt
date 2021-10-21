@@ -8,8 +8,9 @@ import mockedCharactersPayload
 import mockedComicsPayload
 import javax.inject.Inject
 
-class FakeRemoteDataSource @Inject constructor(override val credentialsDataSource: CredentialsDataSource) :
-    RemoteDataSource {
+class FakeRemoteDataSource @Inject constructor(
+    override val credentialsDataSource: CredentialsDataSource
+) : RemoteDataSource {
     override suspend fun getRemoteCharacters(offset: Int): CharactersPayload =
         mockedCharactersPayload
 
