@@ -14,13 +14,13 @@ def secretProperties() {
 }
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    compileSdkVersion 31
+    buildToolsVersion "31.0.0"
 
     defaultConfig {
         applicationId "com.architectcoders.arquitectomarvel"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
 
@@ -84,6 +84,10 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    hilt {
+        enableAggregatingTask = true
+    }
 }
 
 dependencies {
@@ -99,7 +103,7 @@ dependencies {
     testImplementation testLibsForAllModules.values()
     testImplementation testLibsForApp.values()
     androidTestImplementation androidTestLibs.values()
-    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1") {
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2") {
         // conflicts with mockito due to direct inclusion of byte buddy
         exclude group: "org.jetbrains.kotlinx", module: "kotlinx-coroutines-debug"
     }
