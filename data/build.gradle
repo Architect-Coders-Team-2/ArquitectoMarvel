@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'kotlin'
+    id 'kotlin-kapt'
 }
 
 java {
@@ -12,5 +13,7 @@ dependencies {
     implementation project(":domain")
 
     implementation kotlinLibs.values()
+    implementation hiltCore.values()
+    kapt hiltCompiler.values()
     testImplementation testLibsForAllModules.values()
 }
