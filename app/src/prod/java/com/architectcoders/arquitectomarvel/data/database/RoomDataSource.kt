@@ -7,7 +7,9 @@ import com.architectcoders.domain.character.Character
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class RoomDataSource @Inject constructor(private val marvelDao: MarvelDao) : LocalDataSource {
+class RoomDataSource @Inject constructor(
+    private val marvelDao: MarvelDao
+) : LocalDataSource {
 
     override suspend fun getLocalCharacterById(characterId: Int): Character =
         marvelDao.getLocalCharacterById(characterId).toDomainCharacter
